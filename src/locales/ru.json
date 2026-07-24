@@ -1,0 +1,99 @@
+{
+  "common": {
+    "all": "Все",
+    "close": "Закрыть",
+    "clear": "Очистить",
+    "remove": "Удалить",
+    "recordsCount": "{{count}} записей",
+    "previousPage": "Предыдущая страница",
+    "previous": "Назад",
+    "nextPage": "Следующая страница",
+    "next": "Далее",
+    "pagesAriaLabel": "Страницы"
+  },
+  "nav": {
+    "dashboard": "Панель управления",
+    "students": "Учащиеся",
+    "groups": "Группы",
+    "teachers": "Преподаватели",
+    "attendance": "Посещаемость",
+    "exams": "Оценивание",
+    "homework": "Домашнее задание",
+    "behaviour": "Поведение",
+    "booking": "Запись",
+    "parents": "Родители",
+    "contracts": "Договоры",
+    "hr": "HR",
+    "moliya": "Финансы",
+    "reports": "Отчёты",
+    "marketing": "Маркетинг",
+    "sms": "SMS",
+    "filials": "Филиалы",
+    "turnstile": "Турникет",
+    "dailyMenu": "Ежедневное меню",
+    "schedule": "Расписание занятий",
+    "profile": "Профиль",
+    "notifications": "Уведомления",
+    "contactAdmin": "Обращение к администратору",
+    "closeMenu": "Закрыть меню",
+    "openMenu": "Открыть меню"
+  },
+  "auth": {
+    "login": {
+      "heading": "Вход в кабинет преподавателя",
+      "subheading": "Войдите, чтобы работать со своими группами",
+      "phoneLabel": "Номер телефона",
+      "passwordLabel": "Пароль",
+      "phoneError": "Введите номер телефона полностью",
+      "passwordError": "Введите пароль",
+      "submitting": "Вход...",
+      "submit": "Войти",
+      "genericError": "Неверный номер телефона или пароль",
+      "notTeacher": "Это приложение только для преподавателей"
+    }
+  },
+  "profile": {
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "language": "Язык",
+    "languageUz": "O'zbekcha",
+    "languageRu": "Русский",
+    "notifications": "Уведомления",
+    "contactAdmin": "Связаться с администратором",
+    "logout": "Выйти",
+    "toggleTheme": "Сменить тему",
+    "roles": {
+      "admin": "Администратор",
+      "qabul": "Ресепшн",
+      "kassa": "Касса"
+    }
+  },
+  "status": {
+    "active": "Активен",
+    "inactive": "Неактивен",
+    "linked": "Привязан",
+    "unlinked": "Не привязан",
+    "paid": "Оплачено",
+    "debtor": "Задолженность",
+    "error": "Ошибка",
+    "cancelled": "Отменено",
+    "completed": "Завершено",
+    "notArrived": "Не пришёл",
+    "full": "Заполнена",
+    "late": "Опоздал",
+    "noRoom": "Нет аудитории",
+    "deadlineSoon": "Срок скоро истекает",
+    "pending": "Ожидает",
+    "vacant": "Свободно",
+    "confirmed": "Подтверждено",
+    "arrived": "Пришёл",
+    "departed": "Ушёл"
+  },
+  "billing": {
+    "demoBanner": "Демо, осталось {{days}} дн.",
+    "expiringBanner": "Подписка истекает через {{days}} дн., продлите",
+    "expiredTitle": "Срок подписки истёк",
+    "expiredDescription": "Свяжитесь с администрацией",
+    "logout": "Выйти"
+  }
+}

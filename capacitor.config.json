@@ -1,0 +1,10 @@
+{
+  "appId": "uz.ncrm.ustoz",
+  "appName": "Ustoz",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "url": "https://ustoz.ncrm.uz",
+    "cleartext": false
+  }
+}

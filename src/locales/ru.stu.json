@@ -1,0 +1,9 @@
+{
+  "stu": {
+    "stats": {
+      "totalStudents": "Всего учеников",
+      "totalGroups": "Количество групп",
+      "totalFilials": "Количество филиалов"
+    }
+  }
+}

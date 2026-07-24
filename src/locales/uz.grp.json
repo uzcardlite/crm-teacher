@@ -1,0 +1,43 @@
+{
+  "grp": {
+    "addStudents": {
+      "label": "Talabalar qo'shish",
+      "selectedCount": "{{count}} tanlandi",
+      "noAvailable": "Qo'shish uchun talaba yo'q — barcha talabalar allaqachon guruhda.",
+      "submit": "Qo'shish",
+      "added": "{{count}} ta talaba guruhga qo'shildi",
+      "addedWithSkipped": "{{added}} ta talaba qo'shildi, {{skipped}} tasi allaqachon guruhda edi",
+      "allAlreadyActive": "Tanlangan talabalar allaqachon guruhda"
+    },
+    "inlineRoom": {
+      "title": "Yangi xona",
+      "nameLabel": "Nomi",
+      "filialLabel": "Filial",
+      "nameError": "Xona nomini kiriting",
+      "save": "Saqlash",
+      "cancel": "Bekor qilish",
+      "created": "Xona qo'shildi",
+      "error": "Xona yaratilmadi",
+      "addAria": "Xona qo'shish"
+    },
+    "inlineTeacher": {
+      "title": "Yangi o'qituvchi",
+      "nameLabel": "Ism",
+      "phoneLabel": "Telefon",
+      "subjectLabel": "Fan",
+      "filialLabel": "Filial",
+      "salaryTypeLabel": "Maosh turi",
+      "salaryTypeFixed": "Belgilangan",
+      "salaryTypeHourly": "Soatbay",
+      "salaryAmountLabel": "Maosh summasi",
+      "nameError": "O'qituvchi ismini kiriting",
+      "salaryError": "Maosh summasini kiriting",
+      "filialError": "Filialni tanlang",
+      "save": "Saqlash",
+      "cancel": "Bekor qilish",
+      "created": "O'qituvchi qo'shildi",
+      "error": "O'qituvchi yaratilmadi",
+      "addAria": "O'qituvchi qo'shish"
+    }
+  }
+}

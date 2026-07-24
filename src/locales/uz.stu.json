@@ -1,0 +1,9 @@
+{
+  "stu": {
+    "stats": {
+      "totalStudents": "Jami o'quvchilar",
+      "totalGroups": "Guruhlar soni",
+      "totalFilials": "Filiallar soni"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "common": {
+    "all": "Barchasi",
+    "close": "Yopish",
+    "clear": "Tozalash",
+    "remove": "O'chirish",
+    "recordsCount": "{{count}} ta yozuv",
+    "previousPage": "Oldingi sahifa",
+    "previous": "Oldingi",
+    "nextPage": "Keyingi sahifa",
+    "next": "Keyingi",
+    "pagesAriaLabel": "Sahifalar"
+  },
+  "nav": {
+    "dashboard": "Boshqaruv paneli",
+    "students": "O'quvchilar",
+    "groups": "Guruhlar",
+    "teachers": "O'qituvchilar",
+    "attendance": "Davomat",
+    "exams": "Baholash",
+    "homework": "Uy vazifasi",
+    "behaviour": "Xulq",
+    "booking": "Yozilish",
+    "parents": "Ota-onalar",
+    "contracts": "Shartnomalar",
+    "hr": "HR",
+    "moliya": "Moliya",
+    "reports": "Hisobotlar",
+    "marketing": "Marketing",
+    "sms": "SMS",
+    "filials": "Filiallar",
+    "turnstile": "Turniket",
+    "dailyMenu": "Kunlik menyu",
+    "schedule": "Dars jadvali",
+    "profile": "Profil",
+    "notifications": "Bildirishnomalar",
+    "contactAdmin": "Administratorga murojaat",
+    "closeMenu": "Menyuni yopish",
+    "openMenu": "Menyuni ochish"
+  },
+  "auth": {
+    "login": {
+      "heading": "Ustoz kabinetiga kirish",
+      "subheading": "Guruhlaringiz bilan ishlash uchun tizimga kiring",
+      "phoneLabel": "Telefon raqam",
+      "passwordLabel": "Parol",
+      "phoneError": "Telefon raqamini to'liq kiriting",
+      "passwordError": "Parolni kiriting",
+      "submitting": "Kirilmoqda...",
+      "submit": "Kirish",
+      "genericError": "Telefon raqami yoki parol noto'g'ri",
+      "notTeacher": "Bu ilova faqat o'qituvchilar uchun"
+    }
+  },
+  "profile": {
+    "profile": "Profil",
+    "settings": "Sozlamalar",
+    "language": "Til",
+    "languageUz": "O'zbekcha",
+    "languageRu": "Русский",
+    "notifications": "Bildirishnomalar",
+    "contactAdmin": "Adminga bog'lanish",
+    "logout": "Chiqish",
+    "toggleTheme": "Mavzuni almashtirish",
+    "roles": {
+      "admin": "Admin",
+      "qabul": "Qabul",
+      "kassa": "Kassa"
+    }
+  },
+  "status": {
+    "active": "Faol",
+    "inactive": "Nofaol",
+    "linked": "Bog'langan",
+    "unlinked": "Bog'lanmagan",
+    "paid": "To'langan",
+    "debtor": "Qarzdor",
+    "error": "Xato",
+    "cancelled": "Bekor qilingan",
+    "completed": "Yakunlangan",
+    "notArrived": "Kelmadi",
+    "full": "To'lgan",
+    "late": "Kechikdi",
+    "noRoom": "Xonasiz",
+    "deadlineSoon": "Muddat yaqin",
+    "pending": "Kutilmoqda",
+    "vacant": "Band emas",
+    "confirmed": "Tasdiqlangan",
+    "arrived": "Keldi",
+    "departed": "Chiqdi"
+  },
+  "billing": {
+    "demoBanner": "Demo, {{days}} kun qoldi",
+    "expiringBanner": "Obuna {{days}} kunda tugaydi, yangilang",
+    "expiredTitle": "Obuna muddati tugadi",
+    "expiredDescription": "Administratsiya bilan bog'laning",
+    "logout": "Chiqish"
+  }
+}

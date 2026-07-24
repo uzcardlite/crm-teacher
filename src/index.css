@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page-bg: 248 249 251;
+  --surface: 255 255 255;
+  --surface-raised: 255 255 255;
+  --surface-sunken: 249 250 251;
+  --line: 243 244 246;
+  --line-strong: 229 231 235;
+  --fg: 17 24 39;
+  --fg-secondary: 55 65 81;
+  --fg-muted: 107 114 128;
+  --fg-faint: 156 163 175;
+}
+
+.dark {
+  --page-bg: 14 16 26;
+  --surface: 24 27 41;
+  --surface-raised: 30 34 52;
+  --surface-sunken: 18 21 33;
+  --line: 41 47 64;
+  --line-strong: 55 63 84;
+  --fg: 237 238 242;
+  --fg-secondary: 199 201 214;
+  --fg-muted: 148 152 172;
+  --fg-faint: 100 104 122;
+}
+
+body {
+  margin: 0;
+  @apply bg-background text-fg antialiased;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}

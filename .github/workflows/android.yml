@@ -1,0 +1,60 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Capacitor CLI 8.x requires Node >= 22.
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          # Capacitor 8's Android library compiles to Java 21.
+          java-version: 21
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build web assets
+        run: npm run build
+        env:
+          VITE_API_URL: https://crm-backend-production-49b2.up.railway.app
+
+      # The android/ project is not committed; generate it fresh from
+      # capacitor.config.json (appId uz.ncrm.ustoz) on every build.
+      - name: Add Capacitor Android platform
+        run: npx cap add android
+
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ustoz-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
