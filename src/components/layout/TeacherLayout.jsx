@@ -8,6 +8,7 @@ import { TEACHER_NAV_ITEMS, teacherRouteTitle } from "../../constants/teacherNav
 import { getChatUnreadCount } from "../../api/teacher";
 import { prefetchAllRoutes, prefetchRoute } from "../../utils/prefetch";
 import { cn } from "../../utils/cn";
+import KoshinStar from "../ui/KoshinStar";
 import ProfileDropdown from "./ProfileDropdown";
 
 const CHAT_PATH = "/teacher/chat";
@@ -65,9 +66,14 @@ export default function TeacherLayout() {
   return (
     <div className="min-h-dvh bg-background">
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3">
-        <h1 className="truncate text-sm font-semibold text-fg">
-          {teacherRouteTitle(location.pathname, t)}
-        </h1>
+        {/* National accent: a small koshin star mark in brand amber next to the
+            page title — a quiet, consistent amber cue across every screen. */}
+        <div className="flex min-w-0 items-center gap-2">
+          <KoshinStar size={16} strokeWidth={7} className="shrink-0 text-accent" />
+          <h1 className="truncate text-sm font-semibold text-fg">
+            {teacherRouteTitle(location.pathname, t)}
+          </h1>
+        </div>
         <ProfileDropdown placement="header" />
       </header>
 

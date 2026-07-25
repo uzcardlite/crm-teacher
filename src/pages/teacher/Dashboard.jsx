@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Banknote, CalendarCheck, Users, UsersRound } from "lucide-react";
 import { getTeacherMe } from "../../api/teacher";
 import Card from "../../components/ui/Card";
+import KoshinStar from "../../components/ui/KoshinStar";
 import Skeleton from "../../components/ui/Skeleton";
 import StatCard from "../../components/ui/StatCard";
 import { toast } from "../../components/ui/Toast";
@@ -45,9 +46,17 @@ export default function Dashboard() {
 
   return (
     <div className={PAGE_CLASS}>
-      <p className="text-sm text-fg-muted">
-        {t("teacher.dashboard.greeting", { name: data.full_name?.split(" ")[0] || "" })}
-      </p>
+      {/* Soft national greeting banner: a light amber wash with a faint koshin
+          star watermark tucked into the corner (overflow-hidden clips it). */}
+      <div className="relative overflow-hidden rounded-card border border-line bg-accent-light/10 px-4 py-3.5">
+        <KoshinStar
+          size={76}
+          className="pointer-events-none absolute -right-5 -top-5 text-accent/[0.06]"
+        />
+        <p className="relative text-sm text-fg-muted">
+          {t("teacher.dashboard.greeting", { name: data.full_name?.split(" ")[0] || "" })}
+        </p>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <StatCard
           compact
