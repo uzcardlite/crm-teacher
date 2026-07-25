@@ -1,8 +1,9 @@
 # Loyiha qoidalari
 
-- Bu multi-tenant CRM tizimining frontend qismi (React + Vite + Tailwind). Backend allaqachon tayyor va Railway'da ishlab turibdi: https://crm-backend-production-49b2.up.railway.app
-- To'liq skelet [CRM_loyiha_skeleti.md](../CRM_loyiha_skeleti.md) faylida — undan chetlashma.
-- Papka strukturasi skeletning 6-bo'limiga mos bo'lsin.
+- Bu MUSTAQIL "Ustoz" (o'qituvchi) ilovasi — multi-tenant CRM'ning o'qituvchi kabineti (React + Vite + Capacitor, appId `uz.ncrm.ustoz`). Admin/superadmin ilova alohida `crm-frontend` repoda yashaydi; bu repo undan nusxalab ajratilgan va faqat o'qituvchi qismini saqlaydi.
+- Marshrutlar FAQAT `/login` + `/teacher/*` (App.jsx shunga qayta yozilgan). Admin/superadmin sahifalari, komponentlari va api modullari bu repodan olib tashlangan — ularni qayta qo'shma.
+- Backend allaqachon tayyor va Railway'da ishlab turibdi: https://crm-backend-production-49b2.up.railway.app
+- Mobil ilova (Capacitor) `server.url` orqali `https://ustoz.ncrm.uz`ni yuklaydi — UI o'zgarishlari serverga deploy qilinganda ilovaga yetib boradi.
 - DIZAYN TIZIMI (juda muhim, hamma joyda izchil qo'llanilsin):
   - Sidebar: to'q tungi-ko'k fon (#12182B), oq-kulrang matn (#C7C9D6), faol bo'lim amber fon (#F5A623) bilan ajratiladi, matni to'q amber (#412402)
   - Asosiy kontent foni: `bg-background` (light #F8F9FB, dark #0E101A)
@@ -33,10 +34,6 @@ komponentlarda `dark:` variantini yozish shart emas:
 token'lari ikkala rejimda bir xil qoladi — ularga tegilmaydi. Sidebar ham
 ikkala rejimda to'q ko'k.
 
-Grafiklarda (recharts) o'q/to'r/yorliq ranglari `src/constants/moliya.js`
-dagi `CHART_COLORS` orqali CSS o'zgaruvchilaridan olinadi — qattiq hex
-yozilmaydi, aks holda qorong'i rejimda ko'rinmay qoladi.
-
 ## Rangli StatCard variantlari
 
 `StatCard` `variant` propini oladi: `plain` (default, oq karta) va gradient
@@ -56,20 +53,14 @@ Bir qatorda taxminan 2 rangli + 2 oq; yonma-yon bir xil rang qo'yilmaydi,
 kamida bitta neytral (`plain`) qoldiriladi. `orange` sahifaning asosiy
 xarajat/bosh ko'rsatkichi bo'lib, qatorda ko'pi bilan bitta.
 
-## Kanonik sahifa joylashuvi (majburiy)
+## Sahifa joylashuvi (mobil-first o'qituvchi kabineti)
 
-Har bir admin/superadmin sahifa aynan shu tartibda quriladi:
+Bu ilova telefon-kenglikdagi ustun (`max-w-lg`) sifatida quriladi:
+`TeacherLayout` yopishqoq yengil header + pastki tab-bar beradi (sidebar yo'q).
+Sahifalar `/teacher/*` marshrutlarida, App.jsx'da `React.lazy()` orqali yuklanadi.
 
-`p-6` sahifa konteyneri → `PageHeader` (mb-6) → `StatGrid` (mb-6) → `Tabs`
-(mb-4, joriy tab URL'da `?tab=`) → `FilterBar` (mb-4) → `Table` yoki karta
-grid (ma'lumot bo'lmasa `EmptyState`) → `Pagination` → `Modal`'lar JSX oxirida.
-
-- Vertikal ritm faqat shu qiymatlar: sahifa `p-6`, bloklar orasi `mb-6`,
-  blok ichidagi elementlar orasi `mb-4`, karta ichi `gap-3`|`gap-4`,
-  forma `gap-4`. Boshqa oraliq qiymat yozilmaydi.
-- Portal (mobil) ritmi: `/portal/*` sahifalar admin `p-6`/`mb-6` ritmiga
-  bo'ysunmaydi — `max-w-lg` konteyner + `px-4 pt-4 pb-24 space-y-4`,
-  kartalar `padding="p-4"`, karta ichi `gap-3`.
+- Sahifa ritmi: `max-w-lg` konteyner + `px-4 pt-4 pb-24 space-y-4`,
+  kartalar `padding="p-4"`, karta ichi `gap-3`, forma `gap-4`.
 - Modal formasi: bir ustunli — `flex flex-col gap-4`; ikki ustunli —
   `grid grid-cols-1 gap-4 md:grid-cols-2`. Footer doim
   `[secondary "Bekor qilish"] [primary "Saqlash"]`, yuborilayotganda primary
@@ -77,10 +68,7 @@ grid (ma'lumot bo'lmasa `EmptyState`) → `Pagination` → `Modal`'lar JSX oxiri
 - O'tishlar faqat `transition-colors` (interaktiv element) va
   `transition-shadow` (karta hover). Boshqa animatsiya yo'q.
 - Spinner faqat 2 joyda: `Suspense` fallback va tugma ichidagi band holat.
-  Qolgan barcha yuklanish holatlari `Skeleton` (yoki `Table`/`StatGrid`ning
-  `loading` propi).
-- Paginatsiya faqat `ui/Pagination` orqali; sanalar/summalar uchun jadval
-  ustuniga `nowrap` / `align="right"`; bo'sh katak `—`.
+  Qolgan barcha yuklanish holatlari `Skeleton`.
 
 ## Qisqalik qoidasi
 
@@ -90,4 +78,4 @@ Bundan MUSTASNO: ma'lumotlar bazasiga ta'sir qiluvchi amal (migratsiya, seed, pr
 
 ## Yangi sahifa qo'shish qoidasi
 
-Har qanday yangi admin/superadmin sahifa: (1) App.jsx'ga React.lazy() orqali qo'shiladi, statik import EMAS; (2) src/utils/prefetch.js'dagi routeImports xaritasiga ham qo'shiladi (App.jsx'dagi lazy() aynan shu xaritadagi funksiyani ishlatsin: `lazy(routeImports["/app/yangi-sahifa"])`). Ikkalasi bajarilmasa, bundle hajmi oshadi va prefetch ishlamaydi.
+Har qanday yangi `/teacher/*` sahifa: (1) App.jsx'ga React.lazy() orqali qo'shiladi, statik import EMAS; (2) src/utils/prefetch.js'dagi routeImports xaritasiga ham qo'shiladi (App.jsx'dagi lazy() aynan shu xaritadagi funksiyani ishlatsin: `lazy(routeImports["/teacher/yangi-sahifa"])`); (3) kerak bo'lsa `src/constants/teacherNav.js`ga tab qo'shiladi. Ikkalasi bajarilmasa, bundle hajmi oshadi va prefetch ishlamaydi.
