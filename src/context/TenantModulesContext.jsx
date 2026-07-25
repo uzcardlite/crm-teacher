@@ -12,7 +12,7 @@ const TenantModulesContext = createContext(null);
 
 // Modules available to every tenant regardless of tariff. Must stay in sync
 // with the backend's ALWAYS_ON_MODULES (app/core/module_gate.py).
-const ALWAYS_ON_MODULES = new Set(["hr"]);
+const ALWAYS_ON_MODULES = new Set(["hr", "teacher_cabinet"]);
 
 export function TenantModulesProvider({ children }) {
   const { user } = useAuth();
