@@ -2,21 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  Bell,
   ChevronRight,
   ChevronUp,
   Globe,
-  Headset,
   LogOut,
   Moon,
-  Settings,
   Sun,
-  User,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import Avatar from "../ui/Avatar";
 import { cn } from "../../utils/cn";
-import { prefetchRoute } from "../../utils/prefetch";
 import { LANG_KEY, getStoredLang } from "../../i18n";
 
 const ROLE_LABEL_KEYS = { admin: "profile.roles.admin", qabul: "profile.roles.qabul", kassa: "profile.roles.kassa" };
@@ -75,12 +70,6 @@ export default function ProfileDropdown({ onNavigate, placement = "sidebar" }) {
     document.documentElement.lang = next;
   }
 
-  function goTo(path) {
-    setOpen(false);
-    onNavigate?.();
-    navigate(path);
-  }
-
   function handleLogout() {
     setOpen(false);
     onNavigate?.();
@@ -124,24 +113,6 @@ export default function ProfileDropdown({ onNavigate, placement = "sidebar" }) {
           <div className="py-1">
             <button
               type="button"
-              onClick={() => goTo("/app/profile")}
-              onMouseEnter={() => prefetchRoute("/app/profile")}
-              className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-fg-secondary transition-colors hover:bg-surface-sunken"
-            >
-              <User size={16} className="text-fg-faint" />
-              {t("profile.profile")}
-            </button>
-            <button
-              type="button"
-              onClick={() => goTo("/app/profile?tab=markaz")}
-              onMouseEnter={() => prefetchRoute("/app/profile")}
-              className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-fg-secondary transition-colors hover:bg-surface-sunken"
-            >
-              <Settings size={16} className="text-fg-faint" />
-              {t("profile.settings")}
-            </button>
-            <button
-              type="button"
               onClick={toggleLanguage}
               className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-fg-secondary transition-colors hover:bg-surface-sunken"
             >
@@ -151,25 +122,6 @@ export default function ProfileDropdown({ onNavigate, placement = "sidebar" }) {
                 {lang === "uz" ? t("profile.languageUz") : t("profile.languageRu")}
                 <ChevronRight size={14} />
               </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => goTo("/app/notifications")}
-              onMouseEnter={() => prefetchRoute("/app/notifications")}
-              className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-fg-secondary transition-colors hover:bg-surface-sunken"
-            >
-              <Bell size={16} className="text-fg-faint" />
-              <span className="flex-1">{t("profile.notifications")}</span>
-              <ChevronRight size={14} className="text-fg-faint" />
-            </button>
-            <button
-              type="button"
-              onClick={() => goTo("/app/contact-admin")}
-              onMouseEnter={() => prefetchRoute("/app/contact-admin")}
-              className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-fg-secondary transition-colors hover:bg-surface-sunken"
-            >
-              <Headset size={16} className="text-fg-faint" />
-              {t("profile.contactAdmin")}
             </button>
           </div>
 
