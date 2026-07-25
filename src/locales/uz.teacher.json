@@ -10,7 +10,9 @@
       "booking": "Yozilish",
       "schedule": "Jadval",
       "salary": "Maoshim",
-      "chat": "Suhbat"
+      "chat": "Suhbat",
+      "more": "Menyu",
+      "close": "Yopish"
     },
     "common": {
       "save": "Saqlash",
