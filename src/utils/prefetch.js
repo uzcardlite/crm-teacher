@@ -1,32 +1,7 @@
 // Route path -> dynamic import map. App.jsx lazy() calls reuse these same
 // functions so prefetch and render share one chunk (no double download).
 export const routeImports = {
-  // tenant (admin) pages
-  "/app/dashboard": () => import("../pages/admin/Dashboard"),
-  "/app/students": () => import("../pages/admin/Students"),
-  "/app/hr": () => import("../pages/admin/HR"),
-  "/app/hr/employees/:employeeId": () => import("../pages/admin/HrEmployeeProfile"),
-  "/app/marketing": () => import("../pages/admin/Marketing"),
-  "/app/sms": () => import("../pages/admin/Sms"),
-  "/app/moliya": () => import("../pages/admin/Moliya"),
-  "/app/reports": () => import("../pages/admin/Reports"),
-  "/app/groups": () => import("../pages/admin/Groups"),
-  "/app/teachers": () => import("../pages/admin/Teachers"),
-  "/app/schedule": () => import("../pages/admin/Schedule"),
-  "/app/exams": () => import("../pages/admin/Exams"),
-  "/app/homework": () => import("../pages/admin/Homework"),
-  "/app/behaviour": () => import("../pages/admin/Behaviour"),
-  "/app/booking": () => import("../pages/admin/Booking"),
-  "/app/attendance": () => import("../pages/admin/Attendance"),
-  "/app/parents": () => import("../pages/admin/Parents"),
-  "/app/contracts": () => import("../pages/admin/Contracts"),
-  "/app/menu": () => import("../pages/admin/DailyMenu"),
-  "/app/filials": () => import("../pages/admin/Filials"),
-  "/app/turnstile": () => import("../pages/admin/Turnstile"),
-  "/app/profile": () => import("../pages/admin/Profile"),
-  "/app/notifications": () => import("../pages/admin/Notifications"),
-  "/app/contact-admin": () => import("../pages/admin/ContactAdmin"),
-  // teacher cabinet pages
+  // teacher cabinet pages (this standalone Ustoz app ships only these)
   "/teacher/dashboard": () => import("../pages/teacher/Dashboard"),
   "/teacher/groups": () => import("../pages/teacher/Groups"),
   "/teacher/groups/:groupId": () => import("../pages/teacher/GroupDetail"),
@@ -39,12 +14,6 @@ export const routeImports = {
   "/teacher/salary": () => import("../pages/teacher/Salary"),
   "/teacher/chat": () => import("../pages/teacher/Chat"),
   "/teacher/chat/:threadId": () => import("../pages/teacher/ChatThread"),
-  // superadmin pages
-  "/superadmin/dashboard": () => import("../pages/superadmin/SuperAdminDashboard"),
-  "/superadmin/tenants": () => import("../pages/superadmin/TenantsList"),
-  "/superadmin/tenants/:tenantId": () => import("../pages/superadmin/TenantDetail"),
-  "/superadmin/leads": () => import("../pages/superadmin/LeadsPipeline"),
-  "/superadmin/roles": () => import("../pages/superadmin/RolesManagement"),
 };
 
 const prefetched = new Set();
