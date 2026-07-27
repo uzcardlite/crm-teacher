@@ -2,30 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Unified Milliy palette — shared verbatim with the Farzandim (crm-portal)
+   app so the two apps read as one family. Light = crisp, saturated; dark =
+   deep premium navy. RGB triplets (Tailwind <alpha-value> compatible). */
 :root {
-  --page-bg: 248 249 251;
+  --page-bg: 245 247 251;
   --surface: 255 255 255;
   --surface-raised: 255 255 255;
-  --surface-sunken: 249 250 251;
-  --line: 243 244 246;
-  --line-strong: 229 231 235;
-  --fg: 17 24 39;
-  --fg-secondary: 55 65 81;
-  --fg-muted: 107 114 128;
-  --fg-faint: 156 163 175;
+  --surface-sunken: 239 242 248;
+  --line: 230 234 242;
+  --line-strong: 212 219 230;
+  --fg: 18 24 39;
+  --fg-secondary: 58 66 82;
+  --fg-muted: 104 112 128;
+  --fg-faint: 150 158 172;
 }
 
 .dark {
-  --page-bg: 14 16 26;
-  --surface: 24 27 41;
-  --surface-raised: 30 34 52;
-  --surface-sunken: 18 21 33;
-  --line: 41 47 64;
-  --line-strong: 55 63 84;
-  --fg: 237 238 242;
-  --fg-secondary: 199 201 214;
-  --fg-muted: 148 152 172;
-  --fg-faint: 100 104 122;
+  --page-bg: 11 13 21;
+  --surface: 22 26 39;
+  --surface-raised: 30 35 53;
+  --surface-sunken: 16 19 30;
+  --line: 38 44 61;
+  --line-strong: 52 60 81;
+  --fg: 236 238 244;
+  --fg-secondary: 188 194 210;
+  --fg-muted: 138 145 165;
+  --fg-faint: 92 99 118;
 }
 
 body {
