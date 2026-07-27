@@ -36,6 +36,24 @@ export function getMonthNames() {
   return i18n.language === "ru" ? MONTHS.ru : MONTHS.uz;
 }
 
+// Weekday names, hardcoded per language for the same ICU reason as the months.
+// Indexed by Date.getDay() (0 = Sunday).
+const WEEKDAYS = {
+  uz: ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"],
+  ru: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+};
+
+// Human date line for headers/greetings, e.g. "Yakshanba, 27 Iyul".
+// Uses the hardcoded month/weekday tables, never Intl, so it reads correctly
+// in both languages across every browser ICU build.
+export function formatLongDate(value = new Date()) {
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return EMPTY_VALUE;
+  const weekdays = i18n.language === "ru" ? WEEKDAYS.ru : WEEKDAYS.uz;
+  const months = getMonthNames();
+  return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
+}
+
 // Every formatter renders the SAME placeholder when there is nothing to show:
 // an em dash, matching the empty cell Table draws. Never a hyphen.
 export const EMPTY_VALUE = "—";

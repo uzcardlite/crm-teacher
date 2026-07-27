@@ -75,10 +75,10 @@ export default function TeacherLayout() {
 
   return (
     <div className="min-h-dvh bg-background">
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3">
-        {/* National accent: a small koshin star mark in brand amber next to the
-            page title — a quiet, consistent amber cue across every screen. */}
-        <div className="flex min-w-0 items-center gap-2">
+      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/85 px-4 py-3 shadow-card backdrop-blur-md">
+        {/* National accent: a koshin star in a soft amber chip next to the page
+            title — a quiet, consistent brand cue across every screen. */}
+        <div className="flex min-w-0 items-center gap-2.5">
           {moreTabs.length > 0 && (
             <button
               type="button"
@@ -89,8 +89,10 @@ export default function TeacherLayout() {
               <Menu size={20} />
             </button>
           )}
-          <KoshinStar size={16} strokeWidth={7} className="shrink-0 text-accent" />
-          <h1 className="truncate text-sm font-semibold text-fg">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
+            <KoshinStar size={15} strokeWidth={7} />
+          </span>
+          <h1 className="truncate text-base font-semibold text-fg">
             {teacherRouteTitle(location.pathname, t)}
           </h1>
         </div>
@@ -147,7 +149,7 @@ export default function TeacherLayout() {
         <Outlet />
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/90 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-md">
         <div className="mx-auto flex max-w-lg items-stretch justify-around">
           {primaryTabs.map((item) => (
             <NavLink
@@ -156,20 +158,36 @@ export default function TeacherLayout() {
               onMouseEnter={() => prefetchRoute(item.to)}
               className={({ isActive }) =>
                 cn(
-                  "flex flex-1 flex-col items-center gap-1 py-2 text-xs font-medium transition-colors",
-                  isActive ? "text-accent" : "text-fg-muted",
+                  "relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] font-medium transition-colors",
+                  isActive ? "text-accent" : "text-fg-muted hover:text-fg-secondary",
                 )
               }
             >
-              <span className="relative">
-                <item.icon size={20} />
-                {item.to === CHAT_PATH && unreadCount > 0 && (
-                  <span className="absolute -right-2 -top-1 inline-flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-[10px] font-semibold leading-none text-white">
-                    {unreadCount > 99 ? "99+" : unreadCount}
+              {({ isActive }) => (
+                <>
+                  {/* Active indicator: a short amber bar hugging the top edge. */}
+                  <span
+                    className={cn(
+                      "absolute inset-x-6 top-0 h-0.5 rounded-full bg-accent transition-opacity",
+                      isActive ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "relative flex h-8 w-12 items-center justify-center rounded-full transition-colors",
+                      isActive && "bg-accent-light/25",
+                    )}
+                  >
+                    <item.icon size={20} />
+                    {item.to === CHAT_PATH && unreadCount > 0 && (
+                      <span className="absolute right-1 top-0.5 inline-flex min-w-[16px] items-center justify-center rounded-full bg-danger px-1 text-[10px] font-semibold leading-none text-white">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
                   </span>
-                )}
-              </span>
-              <span>{t(item.labelKey)}</span>
+                  <span>{t(item.labelKey)}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </div>

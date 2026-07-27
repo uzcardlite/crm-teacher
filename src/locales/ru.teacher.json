@@ -25,7 +25,9 @@
       "calculatedSalary": "Начисленная зарплата",
       "groupsCount": "Группы",
       "studentsCount": "Ученики",
-      "lessonsThisMonth": "Занятий в этом месяце"
+      "lessonsThisMonth": "Занятий в этом месяце",
+      "overviewTitle": "Показатели",
+      "quickActionsTitle": "Быстрые действия"
     },
     "groups": {
       "loadError": "Не удалось загрузить группы",

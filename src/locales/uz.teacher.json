@@ -25,7 +25,9 @@
       "calculatedSalary": "Hisoblangan maosh",
       "groupsCount": "Guruhlar",
       "studentsCount": "O'quvchilar",
-      "lessonsThisMonth": "Bu oydagi darslar"
+      "lessonsThisMonth": "Bu oydagi darslar",
+      "overviewTitle": "Ko'rsatkichlar",
+      "quickActionsTitle": "Tezkor amallar"
     },
     "groups": {
       "loadError": "Guruhlarni yuklab bo'lmadi",
