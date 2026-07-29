@@ -65,15 +65,12 @@ describe("formatDate / formatDateTime", () => {
 describe("formatMoney", () => {
   it("groups digits and appends the uz currency word", async () => {
     await i18n.changeLanguage("uz");
-    const result = formatMoney(1250000);
-    // uz-UZ groups with a non-breaking space; normalise before comparing.
-    expect(result.replace(/ /g, " ")).toBe(`1 250 000 ${i18n.t("finance.currency")}`);
+    expect(formatMoney(1250000)).toBe(`1.250.000 ${i18n.t("finance.currency")}`);
   });
 
   it("groups digits and appends the ru currency word, switching from uz", async () => {
     await i18n.changeLanguage("ru");
-    const result = formatMoney(1250000);
-    expect(result.replace(/ /g, " ")).toBe(`1 250 000 ${i18n.t("finance.currency")}`);
+    expect(formatMoney(1250000)).toBe(`1.250.000 ${i18n.t("finance.currency")}`);
     // The currency word itself must actually change between languages,
     // otherwise this test would pass even if the language switch did nothing.
     await i18n.changeLanguage("uz");

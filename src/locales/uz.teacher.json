@@ -230,7 +230,18 @@
       "loadError": "Suhbatlarni yuklab bo'lmadi",
       "messagesError": "Xabarlarni yuklab bo'lmadi",
       "createError": "Suhbatni ochib bo'lmadi",
-      "sendError": "Xabar yuborilmadi"
+      "sendError": "Xabar yuborilmadi",
+      "noGroup": "Guruhsiz",
+      "bulkButton": "Guruhga xabar",
+      "bulkTitle": "Guruhga ommaviy xabar",
+      "bulkSelectAll": "Hammasini tanlash",
+      "bulkNoStudents": "Kamida bitta o'quvchini tanlang",
+      "bulkBodyLabel": "Xabar matni",
+      "bulkBodyError": "Xabar matnini yozing",
+      "bulkSending": "Yuborilmoqda... {{done}}/{{total}}",
+      "bulkSend": "Yuborish ({{count}})",
+      "bulkSuccess": "{{count}} ota-onaga xabar yuborildi",
+      "bulkPartial": "{{sent}} ta yuborildi, {{failed}} ta yuborilmadi"
     }
   }
 }
