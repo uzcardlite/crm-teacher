@@ -21,8 +21,10 @@
     },
     "dashboard": {
       "loadError": "Ma'lumotlarni yuklab bo'lmadi",
-      "greeting": "Assalomu alaykum, {{name}}",
+      "greeting": "Assalomu alaykum, {{name}} ustoz",
       "calculatedSalary": "Hisoblangan maosh",
+      "showSalary": "Maoshni ko'rsatish",
+      "hideSalary": "Maoshni yashirish",
       "groupsCount": "Guruhlar",
       "studentsCount": "O'quvchilar",
       "lessonsThisMonth": "Bu oydagi darslar",

@@ -21,8 +21,10 @@
     },
     "dashboard": {
       "loadError": "Не удалось загрузить данные",
-      "greeting": "Здравствуйте, {{name}}",
+      "greeting": "Здравствуйте, устоз {{name}}",
       "calculatedSalary": "Начисленная зарплата",
+      "showSalary": "Показать зарплату",
+      "hideSalary": "Скрыть зарплату",
       "groupsCount": "Группы",
       "studentsCount": "Ученики",
       "lessonsThisMonth": "Занятий в этом месяце",
