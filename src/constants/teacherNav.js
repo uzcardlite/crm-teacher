@@ -25,7 +25,10 @@ export const TEACHER_NAV_ITEMS = [
   { to: "/teacher/exams", labelKey: "teacher.nav.exams", icon: GraduationCap, permission: "teacher_cabinet.grades", primary: true },
   { to: "/teacher/attendance", labelKey: "teacher.nav.attendance", icon: CalendarCheck, permission: "teacher_cabinet.attendance", primary: true },
   { to: "/teacher/groups", labelKey: "teacher.nav.groups", icon: UsersRound, permission: "teacher_cabinet.view", primary: true },
-  { to: "/teacher/chat", labelKey: "teacher.nav.chat", icon: MessagesSquare, permission: "teacher_cabinet.chat", primary: true },
+  // Chat deliberately has no `primary` flag and is excluded from the drawer:
+  // its entry point is the labelled header pill (Farzandim-style), so it stays
+  // here only for the route title and permission gate.
+  { to: "/teacher/chat", labelKey: "teacher.nav.chat", icon: MessagesSquare, permission: "teacher_cabinet.chat", headerOnly: true },
   { to: "/teacher/homework", labelKey: "teacher.nav.homework", icon: ClipboardList, permission: "teacher_cabinet.homework" },
   { to: "/teacher/behaviour", labelKey: "teacher.nav.behaviour", icon: Star, permission: "teacher_cabinet.behaviour" },
   { to: "/teacher/booking", labelKey: "teacher.nav.booking", icon: CalendarClock, permission: "teacher_cabinet.booking" },

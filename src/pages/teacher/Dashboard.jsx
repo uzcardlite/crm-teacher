@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Banknote,
   CalendarCheck,
-  CalendarDays,
-  ChevronRight,
+  Check,
+  Clock,
   Eye,
   EyeOff,
-  MessagesSquare,
   Users,
   UsersRound,
+  X,
 } from "lucide-react";
-import { getTeacherMe } from "../../api/teacher";
+import {
+  bulkMarkMyAttendance,
+  getTeacherMe,
+  listMyAttendance,
+  listMyGroups,
+  listMyGroupStudents,
+} from "../../api/teacher";
 import { useAuth } from "../../context/AuthContext";
 import { useTenantModules } from "../../context/TenantModulesContext";
 import Avatar from "../../components/ui/Avatar";
+import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import KoshinStar from "../../components/ui/KoshinStar";
+import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
 import StatCard from "../../components/ui/StatCard";
 import { toast } from "../../components/ui/Toast";
@@ -28,44 +35,205 @@ import { cn } from "../../utils/cn";
 // Cabinet home: the teacher's own scope only — no centre-wide finance stats.
 const PAGE_CLASS = "mx-auto max-w-lg space-y-5 px-4 pb-24 pt-4";
 
-// Quick actions map to existing routes; each is gated by the same
-// teacher_cabinet.* permission as its nav tab, so nothing shows a teacher a
-// screen they can't open. Each tile carries its own semantic tint so the row
-// reads as a colourful, inviting launcher instead of four grey rows.
-const QUICK_ACTIONS = [
-  {
-    to: "/teacher/attendance",
-    labelKey: "teacher.nav.attendance",
-    icon: CalendarCheck,
-    permission: "teacher_cabinet.attendance",
-    iconClass: "bg-success-bg text-success",
+// Same three-state config as the full Attendance page, so marking looks
+// identical wherever the teacher does it.
+const STATUS_CONFIG = {
+  present: {
+    labelKey: "growth.attendance.statusPresent",
+    icon: Check,
+    activeClass: "border-success bg-success text-white",
+    idleClass: "border-line-strong text-fg-muted hover:bg-success-bg",
   },
-  {
-    to: "/teacher/groups",
-    labelKey: "teacher.nav.groups",
-    icon: UsersRound,
-    permission: "teacher_cabinet.view",
-    iconClass: "bg-scheduleBlock-violet-bg text-scheduleBlock-violet-text",
+  absent: {
+    labelKey: "growth.attendance.statusAbsent",
+    icon: X,
+    activeClass: "border-danger bg-danger text-white",
+    idleClass: "border-line-strong text-fg-muted hover:bg-danger-bg",
   },
-  {
-    to: "/teacher/schedule",
-    labelKey: "teacher.nav.schedule",
-    icon: CalendarDays,
-    permission: "teacher_cabinet.view",
-    iconClass: "bg-info-bg text-info",
+  late: {
+    labelKey: "growth.attendance.statusLate",
+    icon: Clock,
+    activeClass: "border-accent bg-accent text-accent-dark",
+    idleClass: "border-line-strong text-fg-muted hover:bg-accent-light/30",
   },
-  {
-    to: "/teacher/chat",
-    labelKey: "teacher.nav.chat",
-    icon: MessagesSquare,
-    permission: "teacher_cabinet.chat",
-    iconClass: "bg-scheduleBlock-teal-bg text-scheduleBlock-teal-text",
-  },
-];
+};
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Quick attendance for TODAY, embedded on the home screen: pick a group
+// (the first one is auto-selected), tap statuses, save — no page hop.
+function QuickAttendance() {
+  const { t } = useTranslation();
+  const [groups, setGroups] = useState([]);
+  const [groupId, setGroupId] = useState("");
+  const [roster, setRoster] = useState([]);
+  const [attendanceMap, setAttendanceMap] = useState({});
+  const [loadingRoster, setLoadingRoster] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    listMyGroups()
+      .then((list) => {
+        setGroups(list);
+        if (list.length > 0) setGroupId(String(list[0].id));
+      })
+      .catch((error) => toast.error(getErrorMessage(error, t("teacher.attendance.groupsError"))));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!groupId) return;
+    setLoadingRoster(true);
+    Promise.all([
+      listMyGroupStudents(groupId),
+      listMyAttendance({ group_id: groupId, date: todayISO() }),
+    ])
+      .then(([groupStudents, records]) => {
+        setRoster(groupStudents);
+        const map = {};
+        records.forEach((record) => {
+          map[record.student_id] = record.status;
+        });
+        setAttendanceMap(map);
+      })
+      .catch((error) => toast.error(getErrorMessage(error, t("teacher.attendance.loadError"))))
+      .finally(() => setLoadingRoster(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupId]);
+
+  async function handleSave() {
+    const records = roster
+      .filter((student) => attendanceMap[student.student_id])
+      .map((student) => ({
+        student_id: student.student_id,
+        status: attendanceMap[student.student_id],
+      }));
+    if (records.length === 0) {
+      toast.error(t("teacher.attendance.noStatus"));
+      return;
+    }
+    setSaving(true);
+    try {
+      await bulkMarkMyAttendance({ group_id: groupId, date: todayISO(), records });
+      toast.success(t("teacher.attendance.saved"));
+    } catch (error) {
+      toast.error(getErrorMessage(error, t("teacher.attendance.saveError")));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (groups.length === 0) return null;
+
+  return (
+    <section className="space-y-3">
+      <div className="flex items-center gap-2 px-0.5">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-fg-muted">
+          {t("teacher.dashboard.quickAttendanceTitle")}
+        </h2>
+        <span className="ml-auto text-xs text-fg-faint">{formatLongDate()}</span>
+      </div>
+
+      <Card padding="p-0" className="overflow-hidden">
+        <div className="border-b border-line bg-surface-sunken/50 px-3 py-2.5">
+          <Select
+            value={groupId}
+            onChange={(event) => setGroupId(event.target.value)}
+            className="w-full"
+          >
+            {groups.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        {loadingRoster ? (
+          <div>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-0"
+              >
+                <Skeleton className="h-4 w-32" />
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-10 rounded-btn" />
+                  <Skeleton className="h-8 w-10 rounded-btn" />
+                  <Skeleton className="h-8 w-10 rounded-btn" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : roster.length === 0 ? (
+          <p className="px-4 py-6 text-center text-sm text-fg-muted">
+            {t("teacher.attendance.emptyTitle")}
+          </p>
+        ) : (
+          <>
+            <ul className="divide-y divide-line">
+              {roster.map((student) => {
+                const currentStatus = attendanceMap[student.student_id];
+                return (
+                  <li
+                    key={student.student_id}
+                    className="flex items-center justify-between gap-2 px-3 py-2.5"
+                  >
+                    <span className="flex min-w-0 items-center gap-2">
+                      <Avatar
+                        photoUrl={student.photo_url}
+                        name={student.student_full_name}
+                        size="sm"
+                      />
+                      <span className="truncate text-sm font-medium text-fg-secondary">
+                        {student.student_full_name}
+                      </span>
+                    </span>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {Object.entries(STATUS_CONFIG).map(([status, config]) => {
+                        const Icon = config.icon;
+                        const isActive = currentStatus === status;
+                        return (
+                          <button
+                            key={status}
+                            type="button"
+                            onClick={() =>
+                              setAttendanceMap((prev) => ({
+                                ...prev,
+                                [student.student_id]: status,
+                              }))
+                            }
+                            aria-label={t(config.labelKey)}
+                            className={cn(
+                              "flex h-8 w-10 items-center justify-center rounded-btn border transition-colors",
+                              isActive ? config.activeClass : config.idleClass,
+                            )}
+                          >
+                            <Icon size={15} />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="border-t border-line p-3">
+              <Button className="w-full" onClick={handleSave} disabled={saving}>
+                {saving ? t("teacher.common.saving") : t("teacher.attendance.saveToday")}
+              </Button>
+            </div>
+          </>
+        )}
+      </Card>
+    </section>
+  );
+}
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { hasPermission } = useTenantModules();
   const [data, setData] = useState(null);
@@ -109,7 +277,7 @@ export default function Dashboard() {
 
   const summary = data.summary || {};
   const firstName = data.full_name?.split(" ")[0] || "";
-  const actions = QUICK_ACTIONS.filter((item) => hasPermission(item.permission));
+  const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
 
   return (
     <div className={PAGE_CLASS}>
@@ -210,54 +378,10 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Quick actions: colourful launcher tiles with a faint koshin
-          watermark, one semantic tint per destination. */}
-      {actions.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="px-0.5 text-xs font-semibold uppercase tracking-wide text-fg-muted">
-            {t("teacher.dashboard.quickActionsTitle")}
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {actions.map((item) => (
-              <Card
-                key={item.to}
-                padding="p-4"
-                hoverable
-                className={cn(
-                  "relative flex cursor-pointer items-center gap-3 overflow-hidden",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-                )}
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate(item.to)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    navigate(item.to);
-                  }
-                }}
-              >
-                <KoshinStar
-                  size={52}
-                  className="pointer-events-none absolute -bottom-4 -right-4 text-accent/[0.07]"
-                />
-                <span
-                  className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-btn",
-                    item.iconClass,
-                  )}
-                >
-                  <item.icon size={20} />
-                </span>
-                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-fg">
-                  {t(item.labelKey)}
-                </span>
-                <ChevronRight size={16} className="shrink-0 text-fg-faint" />
-              </Card>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Quick attendance replaces the old launcher tiles: marking today's
+          lesson is the teacher's most frequent action, so it lives right on
+          the home screen. */}
+      {canMarkAttendance && <QuickAttendance />}
     </div>
   );
 }

@@ -62,10 +62,13 @@
     "contactAdmin": "Связаться с администратором",
     "logout": "Выйти",
     "toggleTheme": "Сменить тему",
+    "darkMode": "Тёмная тема",
+    "lightMode": "Светлая тема",
     "roles": {
       "admin": "Администратор",
       "qabul": "Ресепшн",
-      "kassa": "Касса"
+      "kassa": "Касса",
+      "teacher": "Учитель"
     }
   },
   "status": {

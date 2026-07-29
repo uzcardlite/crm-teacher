@@ -19,6 +19,11 @@
       "saving": "Saqlanmoqda...",
       "cancel": "Bekor qilish"
     },
+    "chatButton": {
+      "label": "O'quvchim",
+      "aria": "O'quvchilar bilan chat",
+      "ariaUnread": "O'quvchilar bilan chat, {{count}} o'qilmagan xabar"
+    },
     "dashboard": {
       "loadError": "Ma'lumotlarni yuklab bo'lmadi",
       "greeting": "Assalomu alaykum, {{name}} ustoz",
@@ -29,7 +34,7 @@
       "studentsCount": "O'quvchilar",
       "lessonsThisMonth": "Bu oydagi darslar",
       "overviewTitle": "Ko'rsatkichlar",
-      "quickActionsTitle": "Tezkor amallar"
+      "quickAttendanceTitle": "Tezkor davomat"
     },
     "groups": {
       "loadError": "Guruhlarni yuklab bo'lmadi",
@@ -53,6 +58,7 @@
       "loadError": "Davomatni yuklab bo'lmadi",
       "noStatus": "Hech bo'lmasa bitta o'quvchini belgilang",
       "saved": "Davomat saqlandi",
+      "saveToday": "Bugungi davomatni saqlash",
       "saveError": "Davomatni saqlab bo'lmadi",
       "groupLabel": "Guruh",
       "noGroups": "Guruh yo'q",

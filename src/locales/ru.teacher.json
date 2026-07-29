@@ -19,6 +19,11 @@
       "saving": "Сохранение...",
       "cancel": "Отмена"
     },
+    "chatButton": {
+      "label": "O'quvchim",
+      "aria": "Чат с учениками",
+      "ariaUnread": "Чат с учениками, непрочитанных: {{count}}"
+    },
     "dashboard": {
       "loadError": "Не удалось загрузить данные",
       "greeting": "Здравствуйте, устоз {{name}}",
@@ -29,7 +34,7 @@
       "studentsCount": "Ученики",
       "lessonsThisMonth": "Занятий в этом месяце",
       "overviewTitle": "Показатели",
-      "quickActionsTitle": "Быстрые действия"
+      "quickAttendanceTitle": "Быстрая посещаемость"
     },
     "groups": {
       "loadError": "Не удалось загрузить группы",
@@ -53,6 +58,7 @@
       "loadError": "Не удалось загрузить посещаемость",
       "noStatus": "Отметьте хотя бы одного ученика",
       "saved": "Посещаемость сохранена",
+      "saveToday": "Сохранить сегодняшнюю посещаемость",
       "saveError": "Не удалось сохранить посещаемость",
       "groupLabel": "Группа",
       "noGroups": "Групп нет",
