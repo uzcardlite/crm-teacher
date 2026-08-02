@@ -218,7 +218,11 @@
       "sessionsGiven": "Berilgan darslar",
       "groupColumn": "Guruh",
       "sessionsColumn": "Dars soni",
-      "subtotalColumn": "Summa"
+      "subtotalColumn": "Summa",
+      "historyTitle": "Oxirgi 6 oy",
+      "hintHourly": "{{sessions}} ta dars × {{rate}} so'm",
+      "hintFixed": "Belgilangan oylik maosh: {{rate}} so'm",
+      "hintPercentage": "Guruhlardan yig'ilgan to'lovlarning {{percent}}%"
     },
     "chat": {
       "newThread": "Yangi suhbat",

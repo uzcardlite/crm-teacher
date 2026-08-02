@@ -218,7 +218,11 @@
       "sessionsGiven": "Проведено занятий",
       "groupColumn": "Группа",
       "sessionsColumn": "Занятий",
-      "subtotalColumn": "Сумма"
+      "subtotalColumn": "Сумма",
+      "historyTitle": "Последние 6 месяцев",
+      "hintHourly": "{{sessions}} занятий × {{rate}} сум",
+      "hintFixed": "Фиксированный оклад: {{rate}} сум",
+      "hintPercentage": "{{percent}}% от собранных оплат групп"
     },
     "chat": {
       "newThread": "Новый чат",

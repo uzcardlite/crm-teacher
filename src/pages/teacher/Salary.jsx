@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Banknote, CalendarCheck } from "lucide-react";
-import { getMyPayroll } from "../../api/payroll";
+import { getMyPayroll, getMyPayrollHistory } from "../../api/payroll";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
 import Input from "../../components/ui/Input";
@@ -10,12 +10,93 @@ import StatCard from "../../components/ui/StatCard";
 import Table from "../../components/ui/Table";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
-import { formatMoney } from "../../utils/format";
+import { cn } from "../../utils/cn";
+import { formatMoney, formatMonth, groupThousands } from "../../utils/format";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
 
 function currentMonth() {
   return new Date().toISOString().slice(0, 7);
+}
+
+// One-line explanation of how the month's total was produced, per salary type.
+function rateHint(t, history, sessionsTotal) {
+  if (!history?.salary_type || history.salary_amount == null) return null;
+  const rate = groupThousands(Number(history.salary_amount));
+  switch (history.salary_type) {
+    case "hourly":
+      return t("teacher.salary.hintHourly", { sessions: sessionsTotal, rate });
+    case "fixed":
+      return t("teacher.salary.hintFixed", { rate });
+    case "percentage":
+      return t("teacher.salary.hintPercentage", { percent: rate });
+    default:
+      return null;
+  }
+}
+
+// Horizontal single-series bar list: month label, thin accent bar scaled to
+// the 6-month max, value in text tokens. Tapping a row loads that month.
+function HistoryChart({ months, activeMonth, onSelect }) {
+  const { t } = useTranslation();
+  const max = Math.max(...months.map((m) => Number(m.total_amount) || 0));
+
+  return (
+    <Card padding="p-4" className="space-y-1">
+      <h2 className="pb-2 text-xs font-semibold uppercase tracking-wide text-fg-muted">
+        {t("teacher.salary.historyTitle")}
+      </h2>
+      <ul>
+        {months.map((item) => {
+          const amount = Number(item.total_amount) || 0;
+          const isActive = item.month === activeMonth;
+          const widthPct = max > 0 ? Math.max((amount / max) * 100, amount > 0 ? 4 : 0) : 0;
+          return (
+            <li key={item.month}>
+              <button
+                type="button"
+                onClick={() => onSelect(item.month)}
+                aria-label={`${formatMonth(item.month)}: ${formatMoney(amount)}`}
+                aria-pressed={isActive}
+                className={cn(
+                  "grid w-full grid-cols-[72px_1fr_auto] items-center gap-2 rounded-btn px-1.5 py-2 text-left transition-colors",
+                  isActive ? "bg-accent-light/20" : "hover:bg-surface-sunken",
+                )}
+              >
+                <span
+                  className={cn(
+                    "truncate text-xs",
+                    isActive ? "font-semibold text-fg" : "text-fg-muted",
+                  )}
+                >
+                  {formatMonth(item.month)}
+                </span>
+                <span className="h-2 overflow-hidden">
+                  {amount > 0 && (
+                    <span
+                      className={cn(
+                        "block h-full rounded-r",
+                        isActive ? "bg-accent" : "bg-accent/50 dark:bg-accent/40",
+                      )}
+                      style={{ width: `${widthPct}%` }}
+                    />
+                  )}
+                </span>
+                <span
+                  className={cn(
+                    "text-xs tabular-nums",
+                    isActive ? "font-semibold text-fg" : "text-fg-muted",
+                  )}
+                >
+                  {amount > 0 ? groupThousands(amount) : "—"}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </Card>
+  );
 }
 
 // The teacher's OWN payroll only — no centre finance, no other teacher, no
@@ -25,6 +106,13 @@ export default function Salary() {
   const [month, setMonth] = useState(currentMonth());
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [history, setHistory] = useState(null);
+
+  useEffect(() => {
+    getMyPayrollHistory()
+      .then(setHistory)
+      .catch(() => setHistory(null));
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -53,6 +141,7 @@ export default function Salary() {
   const breakdown = data?.breakdown || [];
   const sessionsTotal = breakdown.reduce((sum, item) => sum + (item.sessions_count || 0), 0);
   const isEmpty = data && Number(data.total_amount) === 0 && breakdown.length === 0;
+  const hint = rateHint(t, history, sessionsTotal);
 
   return (
     <div className={PAGE_CLASS}>
@@ -104,10 +193,15 @@ export default function Salary() {
               value={sessionsTotal}
             />
           </div>
+          {hint && <p className="px-0.5 text-xs text-fg-muted">{hint}</p>}
           {breakdown.length > 0 && (
             <Table columns={columns} data={breakdown} rowKey={(row) => row.group_id} />
           )}
         </>
+      )}
+
+      {history?.months?.length > 0 && (
+        <HistoryChart months={history.months} activeMonth={month} onSelect={setMonth} />
       )}
     </div>
   );
