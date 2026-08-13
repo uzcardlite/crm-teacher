@@ -138,6 +138,8 @@ export default {
         // Hover elevation for interactive cards — replaces `hover:shadow-md`,
         // which is too heavy for this UI.
         "card-hover": "0 4px 12px 0 rgb(0 0 0 / 0.06)",
+        // Soft gilt glow under an active gold element (bottom-tab pill, FAB).
+        "glow-accent": "0 6px 18px -6px rgba(242, 169, 60, 0.55)",
       },
     },
   },

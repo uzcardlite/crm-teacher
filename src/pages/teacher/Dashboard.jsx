@@ -287,10 +287,15 @@ export default function Dashboard() {
           stars. The greeting is large and warm; the teacher's calculated
           salary lives INSIDE this card, masked until the eye is pressed. */}
       <div className="relative overflow-hidden rounded-card bg-gradient-orange px-5 pb-5 pt-6 text-white shadow-card dark:bg-gradient-orange-dark">
+        {/* Soft light bloom top-left lifts the flat fill into a gilt sheen. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full bg-white/15 blur-3xl"
+        />
         <KoshinStar
           size={170}
           strokeWidth={3}
-          className="pointer-events-none absolute -right-12 -top-14 text-white/10"
+          className="pointer-events-none absolute -right-12 -top-14 text-white/[0.14]"
         />
         <KoshinStar
           size={72}

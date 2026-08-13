@@ -293,24 +293,24 @@ export default function TeacherLayout() {
               onMouseEnter={() => prefetchRoute(item.to)}
               className={({ isActive }) =>
                 cn(
-                  "relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] font-medium transition-colors",
-                  isActive ? "text-accent" : "text-fg-muted hover:text-fg-secondary",
+                  "relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] transition-colors",
+                  isActive
+                    ? "text-accent font-semibold"
+                    : "text-fg-muted font-medium hover:text-fg-secondary",
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  {/* Active indicator: a short amber bar hugging the top edge. */}
+                  {/* Active tab: the icon rides a gilt gradient pill with a
+                      soft gold glow — a finished, tappable marker rather than a
+                      faint tint. Inactive icons sit flat. */}
                   <span
                     className={cn(
-                      "absolute inset-x-6 top-0 h-0.5 rounded-full bg-accent transition-opacity",
-                      isActive ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "relative flex h-8 w-12 items-center justify-center rounded-full transition-colors",
-                      isActive && "bg-accent-light/25",
+                      "relative flex h-9 w-14 items-center justify-center rounded-full transition-all duration-200",
+                      isActive
+                        ? "bg-gradient-gold text-accent-fg shadow-glow-accent"
+                        : "text-fg-muted",
                     )}
                   >
                     <item.icon size={20} />
