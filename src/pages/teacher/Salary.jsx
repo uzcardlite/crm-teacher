@@ -188,7 +188,7 @@ export default function Salary() {
             />
             <div className="relative flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <p className="flex items-center gap-1.5 text-xs font-medium text-white/75">
+                <p className="flex items-center gap-1.5 text-xs font-medium text-white/85">
                   <Banknote size={15} />
                   {t("teacher.salary.calculatedSalary")}
                 </p>
@@ -198,7 +198,7 @@ export default function Salary() {
               </div>
               <div className="shrink-0 border-l border-white/25 pl-4 text-right">
                 <p className="font-display text-2xl font-semibold tabular-nums">{sessionsTotal}</p>
-                <p className="text-[11px] font-medium text-white/75">
+                <p className="text-[11px] font-medium text-white/85">
                   {t("teacher.salary.sessionsGiven")}
                 </p>
               </div>

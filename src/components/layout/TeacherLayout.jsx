@@ -195,7 +195,7 @@ export default function TeacherLayout() {
                 </button>
               </div>
               <p className="mt-3 truncate text-base font-semibold">{user?.full_name}</p>
-              <p className="truncate text-xs text-white/75">
+              <p className="truncate text-xs text-white/85">
                 {t("profile.roles.teacher")}
               </p>
             </div>

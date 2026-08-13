@@ -101,7 +101,10 @@ export default {
         // Brand gradients for the redesign: warm gilt and glazed feruza. Used
         // on the primary action, the salary hero, and stat cards.
         "gradient-gold": "linear-gradient(135deg, #F8C25A 0%, #DE8A26 100%)",
-        "gradient-feruza": "linear-gradient(135deg, #2FC3B6 0%, #0E7E75 100%)",
+        // Deep glazed feruza — dark enough that white text stays legible
+        // across the whole sweep (the bright mint it started as failed WCAG on
+        // its light end), and closer to real Samarkand tile besides.
+        "gradient-feruza": "linear-gradient(135deg, #12897F 0%, #0B5F58 100%)",
         "gradient-clay": "linear-gradient(135deg, #D98552 0%, #B0532A 100%)",
         "gradient-blue-dark": "linear-gradient(135deg, #1E3A8A 0%, #172554 100%)",
         "gradient-green-dark": "linear-gradient(135deg, #065F46 0%, #0B4A3B 100%)",
