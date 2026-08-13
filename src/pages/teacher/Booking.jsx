@@ -207,7 +207,7 @@ export default function Booking() {
                 <Card key={slot.id} padding="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex flex-col gap-1">
-                      <p className="text-sm font-semibold text-fg">{formatDate(slot.date)}</p>
+                      <p className="font-display text-base font-semibold text-fg">{formatDate(slot.date)}</p>
                       <p className="text-xs text-fg-muted">
                         {hm(slot.start_time)}–{hm(slot.end_time)}
                       </p>
@@ -257,7 +257,7 @@ export default function Booking() {
             <Card key={booking.id} padding="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-1">
-                  <h3 className="truncate text-sm font-semibold text-fg">
+                  <h3 className="truncate font-display text-base font-semibold text-fg">
                     {booking.student_name}
                   </h3>
                   <p className="text-xs text-fg-muted">{meta}</p>

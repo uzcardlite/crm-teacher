@@ -205,7 +205,7 @@ export default function Homework() {
             <Card key={hw.id} padding="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-1">
-                  <h3 className="truncate text-sm font-semibold text-fg">{hw.title}</h3>
+                  <h3 className="truncate font-display text-base font-semibold text-fg">{hw.title}</h3>
                   <p className="flex items-center gap-1.5 text-xs text-fg-muted">
                     <CalendarDays size={14} className="text-fg-faint" />
                     {formatDate(hw.due_date)}

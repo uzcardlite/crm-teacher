@@ -248,7 +248,7 @@ export default function Exams() {
             >
               <span className="flex min-w-0 items-center gap-3">
                 <Avatar photoUrl={student.photo_url} name={student.student_full_name} size="sm" />
-                <span className="truncate text-sm font-medium text-fg">
+                <span className="truncate font-display text-base font-semibold text-fg">
                   {student.student_full_name}
                 </span>
               </span>

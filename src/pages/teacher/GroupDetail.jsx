@@ -91,7 +91,7 @@ export default function GroupDetail() {
             onClick={() => openProfile(student)}
           >
             <Avatar photoUrl={student.photo_url} name={student.student_full_name} size="sm" />
-            <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
+            <span className="min-w-0 flex-1 truncate font-display text-base font-semibold text-fg">
               {student.student_full_name}
             </span>
             <Badge variant={statusVariant(student.status)}>{statusLabel(student.status)}</Badge>

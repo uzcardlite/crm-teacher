@@ -238,7 +238,7 @@ export default function Behaviour() {
             <Card key={row.id} padding="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-1">
-                  <h3 className="truncate text-sm font-semibold text-fg">
+                  <h3 className="truncate font-display text-base font-semibold text-fg">
                     {row.student_full_name}
                   </h3>
                   <p className="flex items-center gap-1.5 text-xs text-fg-muted">

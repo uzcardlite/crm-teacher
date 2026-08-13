@@ -5,6 +5,7 @@ import { getMySchedule } from "../../api/teacher";
 import Badge from "../../components/ui/Badge";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
+import KoshinStar from "../../components/ui/KoshinStar";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
@@ -73,13 +74,14 @@ export default function Schedule() {
           .filter(Boolean)
           .join(" · ");
         return (
-          <Card
-            key={item.group_id}
-            padding="p-4"
-            className="flex items-start justify-between gap-3"
-          >
-            <div className="min-w-0 flex flex-col gap-1">
-              <p className="truncate text-sm font-semibold text-fg">{item.group_name}</p>
+          <Card key={item.group_id} padding="p-4" className="flex items-start gap-3">
+            {/* Feruza koshin tile — the schedule's glazed-tile marker,
+                distinct from the gold used for the group list. */}
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-gradient-feruza text-white shadow-card">
+              <KoshinStar size={20} strokeWidth={6} />
+            </span>
+            <div className="min-w-0 flex flex-1 flex-col gap-1">
+              <p className="truncate font-display text-base font-semibold text-fg">{item.group_name}</p>
               <p className="text-xs text-fg-muted">{meta || "—"}</p>
               {days.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1">

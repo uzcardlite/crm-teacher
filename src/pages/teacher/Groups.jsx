@@ -6,6 +6,7 @@ import { listMyGroups } from "../../api/teacher";
 import Badge from "../../components/ui/Badge";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
+import KoshinStar from "../../components/ui/KoshinStar";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
@@ -32,12 +33,13 @@ export default function Groups() {
     return (
       <div className={PAGE_CLASS}>
         {Array.from({ length: 4 }).map((_, index) => (
-          <Card key={index} padding="p-4" className="flex items-center justify-between gap-3">
-            <div className="flex flex-col gap-1.5">
+          <Card key={index} padding="p-4" className="flex items-center gap-3">
+            <Skeleton className="h-11 w-11 shrink-0 rounded-btn" />
+            <div className="flex flex-1 flex-col gap-1.5">
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-3 w-20" />
             </div>
-            <Skeleton className="h-5 w-12 rounded-full" />
+            <Skeleton className="h-5 w-8 rounded-full" />
           </Card>
         ))}
       </div>
@@ -64,19 +66,22 @@ export default function Groups() {
           key={group.id}
           padding="p-4"
           hoverable
-          className="flex cursor-pointer items-center justify-between gap-3"
+          className="flex cursor-pointer items-center gap-3"
           onClick={() => navigate(`/teacher/groups/${group.id}`)}
         >
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-fg">{group.name}</p>
+          {/* Gilt koshin tile: the national marker that makes each group read
+              at a glance as part of the redesigned system. */}
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-gradient-gold text-accent-fg shadow-card">
+            <KoshinStar size={20} strokeWidth={6} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-display text-base font-semibold text-fg">{group.name}</p>
             <p className="text-xs text-fg-muted">
               {t("teacher.groups.studentsCount", { count: group.current_students_count })}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="neutral">{group.current_students_count}</Badge>
-            <ChevronRight size={16} className="text-fg-faint" />
-          </div>
+          <Badge variant="neutral">{group.current_students_count}</Badge>
+          <ChevronRight size={16} className="shrink-0 text-fg-faint" />
         </Card>
       ))}
     </div>

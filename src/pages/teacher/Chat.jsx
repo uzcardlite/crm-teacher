@@ -280,7 +280,7 @@ export default function Chat() {
                 <div className="min-w-0 flex-1">
                   <p
                     className={cn(
-                      "truncate text-sm text-fg",
+                      "truncate font-display text-base text-fg",
                       thread.unread_count > 0 ? "font-semibold" : "font-medium",
                     )}
                   >
