@@ -1,0 +1,47 @@
+name: CI
+
+# android.yml only proves the Capacitor/Gradle wrapper still assembles, and it
+# runs on master pushes alone. This job is the actual code gate: it runs on
+# every branch and every pull request, before anything reaches Vercel.
+on:
+  push:
+  pull_request:
+
+# A newer push to the same branch makes the running job pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint + test + build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        # 22.x matches android.yml (Capacitor CLI 8 needs >= 22) and Vercel's
+        # default runtime, so CI, the APK build and production agree.
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test:run
+
+      - name: Build
+        # VITE_API_URL is baked in at build time; android.yml passes the same
+        # value. CI only needs it to be a valid URL so the bundle resolves.
+        run: npm run build
+        env:
+          VITE_API_URL: https://crm-backend-production-49b2.up.railway.app

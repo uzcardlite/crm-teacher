@@ -9,23 +9,18 @@ import uzPages from "./locales/uz.pages.json";
 import ruPages from "./locales/ru.pages.json";
 import uzFinance from "./locales/uz.finance.json";
 import ruFinance from "./locales/ru.finance.json";
-import uzStaff from "./locales/uz.staff.json";
-import ruStaff from "./locales/ru.staff.json";
 import uzGrowth from "./locales/uz.growth.json";
 import ruGrowth from "./locales/ru.growth.json";
-import uzGrp from "./locales/uz.grp.json";
-import ruGrp from "./locales/ru.grp.json";
-import uzStu from "./locales/uz.stu.json";
-import ruStu from "./locales/ru.stu.json";
-import uzFil from "./locales/uz.fil.json";
-import ruFil from "./locales/ru.fil.json";
-import uzAtt from "./locales/uz.att.json";
-import ruAtt from "./locales/ru.att.json";
 import uzTeacher from "./locales/uz.teacher.json";
 import ruTeacher from "./locales/ru.teacher.json";
 
-const uzAll = { ...uz, ...uzPages, ...uzFinance, ...uzStaff, ...uzGrowth, ...uzGrp, ...uzStu, ...uzFil, ...uzAtt, ...uzTeacher };
-const ruAll = { ...ru, ...ruPages, ...ruFinance, ...ruStaff, ...ruGrowth, ...ruGrp, ...ruStu, ...ruFil, ...ruAtt, ...ruTeacher };
+// The staff/att/fil/grp/stu namespaces came along when this repo was copied
+// out of crm-frontend, but no /teacher/* page ever referenced them. They were
+// shipped in every bundle and drifted from the admin app unnoticed (uz.staff
+// labelled the `hourly` salary type "Foiz" and had no `percentage` at all), so
+// they are gone. Anything the teacher cabinet needs lives in the files below.
+const uzAll = { ...uz, ...uzPages, ...uzFinance, ...uzGrowth, ...uzTeacher };
+const ruAll = { ...ru, ...ruPages, ...ruFinance, ...ruGrowth, ...ruTeacher };
 
 export const LANG_KEY = "crm_lang";
 export const DEFAULT_LANG = "uz";

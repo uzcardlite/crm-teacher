@@ -1,9 +1,0 @@
-{
-  "att": {
-    "attendance": {
-      "noGroupsOnDate": "Bu kunga guruh yo'q",
-      "noGroupsOnDateTitle": "Bu kunga dars rejalashtirilgan guruh yo'q",
-      "noGroupsOnDateDescription": "Tanlangan sanada darsi bo'lgan guruhlar topilmadi. Boshqa sanani tanlang."
-    }
-  }
-}

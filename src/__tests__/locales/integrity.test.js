@@ -4,17 +4,29 @@
 // file pair by their full set of leaf-key paths (not just top-level
 // namespaces), so a missing nested key -- including a plural variant like
 // `foo_one` / `foo_other` -- fails the test.
+//
+// The pairs are discovered with import.meta.glob rather than listed by hand:
+// the hand-written list had silently stopped covering uz.teacher.json (the
+// largest file in the app) and four other namespaces, so the parity check was
+// passing while most of the translations went unchecked.
 import { describe, expect, it } from "vitest";
-import uz from "../../locales/uz.json";
-import ru from "../../locales/ru.json";
-import uzPages from "../../locales/uz.pages.json";
-import ruPages from "../../locales/ru.pages.json";
-import uzFinance from "../../locales/uz.finance.json";
-import ruFinance from "../../locales/ru.finance.json";
-import uzStaff from "../../locales/uz.staff.json";
-import ruStaff from "../../locales/ru.staff.json";
-import uzGrowth from "../../locales/uz.growth.json";
-import ruGrowth from "../../locales/ru.growth.json";
+
+const modules = import.meta.glob("../../locales/*.json", { eager: true });
+
+// "../../locales/uz.finance.json" -> { lang: "uz", area: "finance.json" }
+function parse(path) {
+  const file = path.split("/").pop();
+  const [lang, ...rest] = file.split(".");
+  return { lang, area: rest.join("."), file };
+}
+
+const byArea = new Map();
+for (const [path, mod] of Object.entries(modules)) {
+  const { lang, area } = parse(path);
+  const entry = byArea.get(area) ?? {};
+  entry[lang] = mod.default ?? mod;
+  byArea.set(area, entry);
+}
 
 // Collects every leaf path in dotted notation, e.g. "pages.students.name".
 function leafPaths(obj, prefix = "") {
@@ -30,16 +42,24 @@ function leafPaths(obj, prefix = "") {
   return paths.sort();
 }
 
-const PAIRS = [
-  ["uz.json / ru.json", uz, ru],
-  ["uz.pages.json / ru.pages.json", uzPages, ruPages],
-  ["uz.finance.json / ru.finance.json", uzFinance, ruFinance],
-  ["uz.staff.json / ru.staff.json", uzStaff, ruStaff],
-  ["uz.growth.json / ru.growth.json", uzGrowth, ruGrowth],
-];
+const PAIRS = [...byArea.entries()].map(([area, langs]) => [
+  `uz.${area} / ru.${area}`,
+  langs.uz,
+  langs.ru,
+]);
 
 describe("locale key parity", () => {
+  it("finds locale files to check", () => {
+    // Guards the glob itself: if the path or the naming convention changes,
+    // it.each below would silently run zero cases and the suite stay green.
+    expect(PAIRS.length).toBeGreaterThan(0);
+  });
+
   it.each(PAIRS)("%s expose identical key sets", (_label, left, right) => {
+    // A file with no twin in the other language is the same bug one level up.
+    expect(left, "uz file missing").toBeTruthy();
+    expect(right, "ru file missing").toBeTruthy();
+
     const leftKeys = new Set(leafPaths(left));
     const rightKeys = new Set(leafPaths(right));
 
