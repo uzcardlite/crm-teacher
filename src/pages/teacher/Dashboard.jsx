@@ -53,8 +53,10 @@ const STATUS_CONFIG = {
   late: {
     labelKey: "growth.attendance.statusLate",
     icon: Clock,
-    activeClass: "border-accent bg-accent text-accent-dark",
-    idleClass: "border-line-strong text-fg-muted hover:bg-accent-light/30",
+    // Amber "warning", not the gold accent: gold is reserved for the primary
+    // action, so a status never competes with a button for it.
+    activeClass: "border-warning bg-warning text-white",
+    idleClass: "border-line-strong text-fg-muted hover:bg-warning-bg",
   },
 };
 
@@ -309,7 +311,7 @@ export default function Dashboard() {
             <p className="text-xs font-medium uppercase tracking-wider text-white/70">
               {formatLongDate()}
             </p>
-            <p className="mt-1 truncate text-xl font-bold leading-tight">
+            <p className="mt-1 truncate font-display text-2xl font-semibold leading-tight">
               {t("teacher.dashboard.greeting", { name: firstName })}
             </p>
             {data.subject && (

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Banknote, CalendarCheck } from "lucide-react";
+import { Banknote } from "lucide-react";
 import { getMyPayroll, getMyPayrollHistory } from "../../api/payroll";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
 import Input from "../../components/ui/Input";
+import KoshinStar from "../../components/ui/KoshinStar";
 import Skeleton from "../../components/ui/Skeleton";
-import StatCard from "../../components/ui/StatCard";
 import Table from "../../components/ui/Table";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
@@ -177,21 +177,32 @@ export default function Salary() {
         />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard
-              compact
-              variant="green"
-              icon={Banknote}
-              label={t("teacher.salary.calculatedSalary")}
-              value={formatMoney(data.total_amount)}
+          {/* Gilt-on-feruza hero: the month's calculated salary is the payoff,
+              set in the heritage serif, with sessions as the secondary metric
+              and a koshin watermark. */}
+          <div className="relative overflow-hidden rounded-card bg-gradient-feruza px-5 py-5 text-white shadow-card">
+            <KoshinStar
+              size={140}
+              strokeWidth={4}
+              className="pointer-events-none absolute -bottom-12 -right-8 text-accent-light/20"
             />
-            <StatCard
-              compact
-              variant="blue"
-              icon={CalendarCheck}
-              label={t("teacher.salary.sessionsGiven")}
-              value={sessionsTotal}
-            />
+            <div className="relative flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <p className="flex items-center gap-1.5 text-xs font-medium text-white/75">
+                  <Banknote size={15} />
+                  {t("teacher.salary.calculatedSalary")}
+                </p>
+                <p className="mt-1 truncate font-display text-3xl font-semibold tracking-wide tabular-nums">
+                  {formatMoney(data.total_amount)}
+                </p>
+              </div>
+              <div className="shrink-0 border-l border-white/25 pl-4 text-right">
+                <p className="font-display text-2xl font-semibold tabular-nums">{sessionsTotal}</p>
+                <p className="text-[11px] font-medium text-white/75">
+                  {t("teacher.salary.sessionsGiven")}
+                </p>
+              </div>
+            </div>
           </div>
           {hint && <p className="px-0.5 text-xs text-fg-muted">{hint}</p>}
           {breakdown.length > 0 && (

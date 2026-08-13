@@ -173,13 +173,13 @@ export default function TeacherLayout() {
             onClick={() => setMenuOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-surface shadow-card">
-            {/* Profile header: dark navy like the CRM sidebar, koshin
-                watermark, avatar + name + subject. */}
-            <div className="relative overflow-hidden bg-sidebar px-4 pb-4 pt-4 text-white">
+            {/* Profile header: glazed-feruza tile panel with a gilt koshin
+                watermark — the gold-on-turquoise pairing of a madrasa portal. */}
+            <div className="relative overflow-hidden bg-gradient-feruza px-4 pb-4 pt-4 text-white">
               <KoshinStar
                 size={110}
                 strokeWidth={4}
-                className="pointer-events-none absolute -right-8 -top-8 text-white/10"
+                className="pointer-events-none absolute -right-8 -top-8 text-accent-light/25"
               />
               <div className="flex items-start justify-between">
                 <span className="rounded-full bg-white/15 p-1">
@@ -189,13 +189,13 @@ export default function TeacherLayout() {
                   type="button"
                   onClick={() => setMenuOpen(false)}
                   aria-label={t("teacher.nav.close")}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-sidebar-text transition-colors hover:bg-sidebar-hover"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/15"
                 >
                   <X size={18} />
                 </button>
               </div>
               <p className="mt-3 truncate text-base font-semibold">{user?.full_name}</p>
-              <p className="truncate text-xs text-sidebar-text">
+              <p className="truncate text-xs text-white/75">
                 {t("profile.roles.teacher")}
               </p>
             </div>

@@ -36,8 +36,9 @@ const STATUS_CONFIG = {
   late: {
     labelKey: "growth.attendance.statusLate",
     icon: Clock,
-    activeClass: "border-accent bg-accent text-accent-dark",
-    idleClass: "border-line-strong text-fg-muted hover:bg-accent-light/30",
+    // Amber "warning", not the gold accent — gold stays the action colour.
+    activeClass: "border-warning bg-warning text-white",
+    idleClass: "border-line-strong text-fg-muted hover:bg-warning-bg",
   },
 };
 
