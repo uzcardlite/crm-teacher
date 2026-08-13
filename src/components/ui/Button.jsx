@@ -2,6 +2,9 @@ import { cn } from "../../utils/cn";
 
 const VARIANT_STYLES = {
   primary: "bg-accent text-accent-dark hover:bg-accent-light",
+  // Gilt gradient for the single most important action on a screen (login,
+  // save attendance, start lesson). Use sparingly — one per screen.
+  brand: "bg-gradient-gold text-accent-fg shadow-card hover:opacity-95",
   secondary: "bg-surface border border-line-strong text-fg-secondary hover:bg-surface-sunken",
   ghost: "bg-transparent text-fg-secondary hover:bg-surface-sunken",
   danger: "bg-danger text-white hover:bg-danger/90",

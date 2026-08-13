@@ -6,6 +6,7 @@ import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import Spinner from "../../components/ui/Spinner";
+import KoshinStar from "../../components/ui/KoshinStar";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { isTeacherUser } from "../../utils/authRole";
@@ -58,14 +59,26 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 flex flex-col items-center gap-2 text-center">
-          <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-card">
-            <img src="/logo.svg" alt="Logo" className="h-full w-full object-cover" />
+    <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-background px-4">
+      {/* Ambient girih glow — a warm halo behind the brand mark, masked to the
+          top so the form area stays calm. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-accent/20 to-transparent blur-2xl"
+      />
+      <div className="relative w-full max-w-sm">
+        <div className="mb-7 flex flex-col items-center gap-3 text-center">
+          {/* Brand: the koshin (girih) star in gilt, with a soft glow ring —
+              the national answer to a generic app logo. */}
+          <span className="relative flex h-16 w-16 items-center justify-center">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 rounded-full bg-accent/25 blur-xl"
+            />
+            <KoshinStar size={56} strokeWidth={5} className="relative text-accent" />
           </span>
-          <h1 className="text-xl font-semibold text-fg">{t("auth.login.heading")}</h1>
-          <p className="text-sm text-fg-muted">{t("auth.login.subheading")}</p>
+          <h1 className="font-display text-3xl font-semibold text-fg">{t("auth.login.heading")}</h1>
+          <p className="max-w-[26ch] text-sm text-fg-muted">{t("auth.login.subheading")}</p>
         </div>
 
         <Card padding="p-6">
@@ -97,7 +110,7 @@ export default function Login() {
                 autoComplete="current-password"
               />
             </div>
-            <Button type="submit" size="lg" className="mt-2 w-full" disabled={submitting}>
+            <Button type="submit" variant="brand" size="lg" className="mt-2 w-full" disabled={submitting}>
               {submitting && <Spinner size={16} />}
               {submitting ? t("auth.login.submitting") : t("auth.login.submit")}
             </Button>

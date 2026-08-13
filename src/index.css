@@ -2,33 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Unified Milliy palette — shared verbatim with the Farzandim (crm-portal)
-   app so the two apps read as one family. Light = crisp, saturated; dark =
-   deep premium navy. RGB triplets (Tailwind <alpha-value> compatible). */
+/* "Samarqand koshinkori" neutral palette for the Ustoz redesign. The grounds
+   are deliberately WARM, not the cool navy the portal uses: light is aged
+   paper/sandstone, dark is warm obsidian — so the gold accent reads as gilt on
+   stone rather than a highlight on slate. This intentionally diverges from the
+   Farzandim (crm-portal) palette; the two apps no longer share neutrals.
+   RGB triplets (Tailwind <alpha-value> compatible). */
 :root {
-  --page-bg: 245 247 251;
-  --surface: 255 255 255;
+  --page-bg: 243 235 221;
+  --surface: 255 253 248;
   --surface-raised: 255 255 255;
-  --surface-sunken: 239 242 248;
-  --line: 230 234 242;
-  --line-strong: 212 219 230;
-  --fg: 18 24 39;
-  --fg-secondary: 58 66 82;
-  --fg-muted: 104 112 128;
-  --fg-faint: 150 158 172;
+  --surface-sunken: 246 239 227;
+  --line: 228 219 202;
+  --line-strong: 210 197 176;
+  --fg: 42 33 23;
+  --fg-secondary: 106 92 72;
+  --fg-muted: 154 139 116;
+  --fg-faint: 184 170 148;
 }
 
 .dark {
-  --page-bg: 11 13 21;
-  --surface: 22 26 39;
-  --surface-raised: 30 35 53;
-  --surface-sunken: 16 19 30;
-  --line: 38 44 61;
-  --line-strong: 52 60 81;
-  --fg: 236 238 244;
-  --fg-secondary: 188 194 210;
-  --fg-muted: 138 145 165;
-  --fg-faint: 92 99 118;
+  --page-bg: 20 16 23;
+  --surface: 30 25 34;
+  --surface-raised: 44 37 49;
+  --surface-sunken: 24 20 28;
+  --line: 46 40 52;
+  --line-strong: 64 56 72;
+  --fg: 244 236 222;
+  --fg-secondary: 185 172 154;
+  --fg-muted: 135 122 103;
+  --fg-faint: 96 87 76;
 }
 
 body {

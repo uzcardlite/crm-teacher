@@ -36,6 +36,31 @@ export default {
           DEFAULT: "#F5A623",
           light: "#FAC775",
           dark: "#854F0B",
+          // Near-black brown for text/icons sitting ON the gold gradient —
+          // the readable ink on gilt. Both themes.
+          fg: "#2A1B06",
+        },
+        // Feruza (turquoise) — the Samarkand-tile secondary. Sits beside the
+        // gold accent the way glazed tile sits against gilt on a madrasa
+        // portal. Same both themes, like accent. `bg` is the tinted chip fill.
+        secondary: {
+          DEFAULT: "#12897F",
+          light: "#3AC7BB",
+          dark: "#0B5F58",
+          bg: "#D6EFEC",
+        },
+        // Terrakota (fired-clay warmth) — third motif colour, used sparingly.
+        clay: {
+          DEFAULT: "#B85B30",
+          light: "#D98552",
+          dark: "#8A3F1F",
+          bg: "#F7E6DC",
+        },
+        // Kechikdi / "late" — the amber-warning semantic, distinct from the
+        // gold accent so a status never reads as a primary action.
+        warning: {
+          DEFAULT: "#B87A12",
+          bg: "#FBF0D5",
         },
         success: {
           DEFAULT: "#0F6E56",
@@ -73,6 +98,11 @@ export default {
         "gradient-purple": "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)",
         "gradient-rose": "linear-gradient(135deg, #FB7185 0%, #BE123C 100%)",
         "gradient-teal": "linear-gradient(135deg, #14B8A6 0%, #0F766E 100%)",
+        // Brand gradients for the redesign: warm gilt and glazed feruza. Used
+        // on the primary action, the salary hero, and stat cards.
+        "gradient-gold": "linear-gradient(135deg, #F8C25A 0%, #DE8A26 100%)",
+        "gradient-feruza": "linear-gradient(135deg, #2FC3B6 0%, #0E7E75 100%)",
+        "gradient-clay": "linear-gradient(135deg, #D98552 0%, #B0532A 100%)",
         "gradient-blue-dark": "linear-gradient(135deg, #1E3A8A 0%, #172554 100%)",
         "gradient-green-dark": "linear-gradient(135deg, #065F46 0%, #0B4A3B 100%)",
         "gradient-orange-dark": "linear-gradient(135deg, #92400E 0%, #6B370A 100%)",
@@ -87,6 +117,18 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Heritage serif for display type (screen titles, big numbers, brand).
+        // Pairing a serif display with the sans UI is what carries the
+        // "milliy + zamonaviy" idea. System stack — no webfont to load, and
+        // every face here covers Latin + Cyrillic (uz/ru).
+        display: [
+          "Iowan Old Style",
+          "Palatino Linotype",
+          "Palatino",
+          "Book Antiqua",
+          "Georgia",
+          "serif",
+        ],
       },
       boxShadow: {
         card: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
