@@ -6,7 +6,9 @@ import { cn } from "../../utils/cn";
 // size="sm"           — compact, for an empty table body or a card slot.
 const SIZE_STYLES = {
   sm: { wrapper: "gap-2 px-4 py-6", icon: "h-9 w-9", iconSize: 18, title: "text-sm" },
-  md: { wrapper: "gap-3 px-6 py-12", icon: "h-12 w-12", iconSize: 22, title: "text-sm" },
+  // Page-level empty state: the title carries the heritage display serif, a
+  // quiet echo of the koshin watermark behind it.
+  md: { wrapper: "gap-3 px-6 py-12", icon: "h-12 w-12", iconSize: 22, title: "font-display text-lg" },
 };
 
 export default function EmptyState({

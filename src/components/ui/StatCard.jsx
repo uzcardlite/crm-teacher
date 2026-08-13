@@ -100,9 +100,11 @@ export default function StatCard({
           <>
             <p
               className={cn(
-                "font-semibold",
+                // Heritage display serif with tabular figures — the stat value
+                // is the card's headline moment across every screen.
+                "font-display font-semibold tabular-nums",
                 isColored ? "text-white" : "text-fg",
-                compact ? "text-lg" : "text-2xl",
+                compact ? "text-xl" : "text-3xl",
               )}
             >
               {value === null || value === undefined || value === "" ? "—" : value}
