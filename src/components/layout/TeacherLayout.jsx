@@ -229,25 +229,29 @@ export default function TeacherLayout() {
                 onClick={toggleTheme}
                 className={cn(drawerRowClass, "text-fg-secondary hover:bg-surface-sunken")}
               >
+                {/* Icon + label name the CURRENT mode, and the switch is ON in
+                    that same mode — so nothing contradicts (dark → Moon +
+                    "Tungi rejim" + switch on). */}
                 {theme === "dark" ? (
-                  <Sun size={20} className="shrink-0 text-fg-faint" />
-                ) : (
                   <Moon size={20} className="shrink-0 text-fg-faint" />
+                ) : (
+                  <Sun size={20} className="shrink-0 text-fg-faint" />
                 )}
                 <span className="flex-1 text-left">
-                  {t(theme === "dark" ? "profile.lightMode" : "profile.darkMode")}
+                  {t(theme === "dark" ? "profile.darkMode" : "profile.lightMode")}
                 </span>
-                {/* Small track/knob switch so the current mode is glanceable. */}
+                {/* Flex + padding keeps the knob inside the track at both ends:
+                    32px inner width, 16px knob, 16px travel (translate-x-4). */}
                 <span
                   className={cn(
-                    "relative h-5 w-9 shrink-0 rounded-full transition-colors",
+                    "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition-colors",
                     theme === "dark" ? "bg-accent" : "bg-line-strong",
                   )}
                 >
                   <span
                     className={cn(
-                      "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-card transition-transform",
-                      theme === "dark" ? "translate-x-[18px]" : "translate-x-0.5",
+                      "h-4 w-4 rounded-full bg-white shadow-card transition-transform",
+                      theme === "dark" ? "translate-x-4" : "translate-x-0",
                     )}
                   />
                 </span>
