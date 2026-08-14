@@ -258,7 +258,7 @@ export default function Chat() {
           <section key={groupName} className="space-y-2">
             {/* Group section header: koshin chip + name + thread count. */}
             <div className="flex items-center gap-2 px-0.5 pt-1">
-              <KoshinStar size={13} strokeWidth={8} className="text-accent" />
+              <KoshinStar size={13} strokeWidth={8} className="text-accent-dark dark:text-accent" />
               <h2 className="min-w-0 flex-1 truncate text-xs font-semibold uppercase tracking-wide text-fg-muted">
                 {groupName}
               </h2>

@@ -75,7 +75,7 @@ export default function Login() {
               aria-hidden="true"
               className="absolute inset-0 rounded-full bg-accent/25 blur-xl"
             />
-            <KoshinStar size={56} strokeWidth={5} className="relative text-accent" />
+            <KoshinStar size={56} strokeWidth={5} className="relative text-accent-dark dark:text-accent" />
           </span>
           <h1 className="font-display text-3xl font-semibold text-fg">{t("auth.login.heading")}</h1>
           <p className="max-w-[26ch] text-sm text-fg-muted">{t("auth.login.subheading")}</p>

@@ -295,7 +295,7 @@ export default function TeacherLayout() {
                 cn(
                   "relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] transition-colors",
                   isActive
-                    ? "text-accent font-semibold"
+                    ? "text-accent-dark dark:text-accent font-semibold"
                     : "text-fg-muted font-medium hover:text-fg-secondary",
                 )
               }
