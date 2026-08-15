@@ -270,6 +270,10 @@
       "scoreLabel": "{{score}} балл",
       "allGraded": "Все оценены",
       "save": "Сохранить оценки"
+    },
+    "grading": {
+      "examsTab": "Экзамен",
+      "dailyTab": "Ежедн. оценка"
     }
   }
 }

@@ -7,7 +7,6 @@ import {
   GraduationCap,
   LayoutDashboard,
   MessagesSquare,
-  NotebookPen,
   Star,
   UsersRound,
 } from "lucide-react";
@@ -24,7 +23,6 @@ import {
 export const TEACHER_NAV_ITEMS = [
   { to: "/teacher/dashboard", labelKey: "teacher.nav.dashboard", icon: LayoutDashboard, permission: "teacher_cabinet.view", primary: true },
   { to: "/teacher/exams", labelKey: "teacher.nav.exams", icon: GraduationCap, permission: "teacher_cabinet.grades", primary: true },
-  { to: "/teacher/daily-grades", labelKey: "teacher.nav.dailyGrades", icon: NotebookPen, permission: "teacher_cabinet.grades", primary: true },
   { to: "/teacher/attendance", labelKey: "teacher.nav.attendance", icon: CalendarCheck, permission: "teacher_cabinet.attendance", primary: true },
   { to: "/teacher/groups", labelKey: "teacher.nav.groups", icon: UsersRound, permission: "teacher_cabinet.view", primary: true },
   // Chat deliberately has no `primary` flag and is excluded from the drawer:

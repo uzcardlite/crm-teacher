@@ -270,6 +270,10 @@
       "scoreLabel": "{{score}} ball",
       "allGraded": "Barchasi baholandi",
       "save": "Baholarni saqlash"
+    },
+    "grading": {
+      "examsTab": "Imtihon",
+      "dailyTab": "Kunlik baho"
     }
   }
 }
