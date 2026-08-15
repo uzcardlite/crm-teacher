@@ -39,6 +39,18 @@ export function bulkMarkMyAttendance(payload) {
     .then((res) => res.data);
 }
 
+export function listMyDailyGrades(params) {
+  return apiClient
+    .get("/api/v1/teacher/daily-grades", { params })
+    .then((res) => res.data);
+}
+
+export function bulkSaveMyDailyGrades(payload) {
+  return apiClient
+    .post("/api/v1/teacher/daily-grades/bulk", payload)
+    .then((res) => res.data);
+}
+
 export function listMyExams(params) {
   return apiClient.get("/api/v1/teacher/exams", { params }).then((res) => res.data);
 }

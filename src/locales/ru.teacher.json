@@ -12,7 +12,8 @@
       "salary": "Зарплата",
       "chat": "Чат",
       "more": "Меню",
-      "close": "Закрыть"
+      "close": "Закрыть",
+      "dailyGrades": "Ежедн. оценка"
     },
     "common": {
       "save": "Сохранить",
@@ -252,6 +253,23 @@
       "bulkSend": "Отправить ({{count}})",
       "bulkSuccess": "Сообщение отправлено {{count}} родителям",
       "bulkPartial": "Отправлено: {{sent}}, не отправлено: {{failed}}"
+    },
+    "dailyGrades": {
+      "group": "Группа",
+      "date": "Дата",
+      "groupsError": "Ошибка загрузки групп",
+      "loadError": "Ошибка загрузки данных",
+      "noScore": "Поставьте хотя бы одну оценку",
+      "saved": "Оценки сохранены",
+      "saveError": "Ошибка сохранения",
+      "noGroupsTitle": "Нет групп",
+      "noGroupsDescription": "Прикреплённых групп не найдено",
+      "emptyTitle": "В группе нет учеников",
+      "graded": "Оценено",
+      "notGraded": "Не отмечено",
+      "scoreLabel": "{{score}} балл",
+      "allGraded": "Все оценены",
+      "save": "Сохранить оценки"
     }
   }
 }

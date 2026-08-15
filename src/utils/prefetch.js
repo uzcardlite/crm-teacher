@@ -7,6 +7,7 @@ export const routeImports = {
   "/teacher/groups/:groupId": () => import("../pages/teacher/GroupDetail"),
   "/teacher/attendance": () => import("../pages/teacher/Attendance"),
   "/teacher/exams": () => import("../pages/teacher/Exams"),
+  "/teacher/daily-grades": () => import("../pages/teacher/DailyGrades"),
   "/teacher/homework": () => import("../pages/teacher/Homework"),
   "/teacher/behaviour": () => import("../pages/teacher/Behaviour"),
   "/teacher/booking": () => import("../pages/teacher/Booking"),

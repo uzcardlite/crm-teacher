@@ -12,7 +12,8 @@
       "salary": "Maoshim",
       "chat": "Suhbat",
       "more": "Menyu",
-      "close": "Yopish"
+      "close": "Yopish",
+      "dailyGrades": "Kunlik baho"
     },
     "common": {
       "save": "Saqlash",
@@ -252,6 +253,23 @@
       "bulkSend": "Yuborish ({{count}})",
       "bulkSuccess": "{{count}} ota-onaga xabar yuborildi",
       "bulkPartial": "{{sent}} ta yuborildi, {{failed}} ta yuborilmadi"
+    },
+    "dailyGrades": {
+      "group": "Guruh",
+      "date": "Sana",
+      "groupsError": "Guruhlarni yuklashda xatolik",
+      "loadError": "Ma'lumotni yuklashda xatolik",
+      "noScore": "Hech bo'lmasa bitta baho qo'ying",
+      "saved": "Baholar saqlandi",
+      "saveError": "Saqlashda xatolik",
+      "noGroupsTitle": "Guruhlar yo'q",
+      "noGroupsDescription": "Sizga biriktirilgan guruh topilmadi",
+      "emptyTitle": "Bu guruhda o'quvchi yo'q",
+      "graded": "Baholandi",
+      "notGraded": "Belgilanmagan",
+      "scoreLabel": "{{score}} ball",
+      "allGraded": "Barchasi baholandi",
+      "save": "Baholarni saqlash"
     }
   }
 }

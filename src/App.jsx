@@ -19,6 +19,7 @@ const TeacherGroups = lazy(routeImports["/teacher/groups"]);
 const TeacherGroupDetail = lazy(routeImports["/teacher/groups/:groupId"]);
 const TeacherAttendance = lazy(routeImports["/teacher/attendance"]);
 const TeacherExams = lazy(routeImports["/teacher/exams"]);
+const TeacherDailyGrades = lazy(routeImports["/teacher/daily-grades"]);
 const TeacherHomework = lazy(routeImports["/teacher/homework"]);
 const TeacherBehaviour = lazy(routeImports["/teacher/behaviour"]);
 const TeacherBooking = lazy(routeImports["/teacher/booking"]);
@@ -75,6 +76,7 @@ function TeacherApp() {
               <Route path="groups/:groupId" element={<TeacherGroupDetail />} />
               <Route path="attendance" element={<TeacherAttendance />} />
               <Route path="exams" element={<TeacherExams />} />
+              <Route path="daily-grades" element={<TeacherDailyGrades />} />
               <Route path="homework" element={<TeacherHomework />} />
               <Route
                 path="behaviour"
