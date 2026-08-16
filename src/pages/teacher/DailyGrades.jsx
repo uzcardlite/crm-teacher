@@ -11,24 +11,21 @@ import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import DateInput from "../../components/ui/DateInput";
 import EmptyState from "../../components/ui/EmptyState";
+import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { cn } from "../../utils/cn";
+import {
+  DEFAULT_DAILY_GRADE_MAX,
+  scoreColorClass,
+  scoreGridClass,
+  scoreOptions,
+  usesButtons,
+} from "../../utils/grading";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-28 pt-4";
-
-// 1–5 scores, coloured low→high. The palette is the same one the redesign
-// uses: danger, clay, warning, feruza(secondary), success — so a score reads
-// like attendance does elsewhere.
-const SCORES = [
-  { value: 1, active: "border-danger bg-danger text-white" },
-  { value: 2, active: "border-clay bg-clay text-white" },
-  { value: 3, active: "border-warning bg-warning text-white" },
-  { value: 4, active: "border-secondary bg-secondary text-white" },
-  { value: 5, active: "border-success bg-success text-white" },
-];
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -79,6 +76,34 @@ export default function DailyGrades() {
     [roster, gradesMap],
   );
   const allGraded = roster.length > 0 && gradedCount === roster.length;
+
+  // The scale comes from the group, not from this teacher's own setting: the
+  // backend stamps each grade with the group's scale, so grading against
+  // anything else here would just earn a 400.
+  const gradeMax =
+    groups.find((group) => String(group.id) === String(groupId))?.daily_grade_max ??
+    DEFAULT_DAILY_GRADE_MAX;
+  const asButtons = usesButtons(gradeMax);
+
+  function setScore(studentId, value) {
+    setGradesMap((prev) => ({ ...prev, [studentId]: value }));
+  }
+
+  // Free-typed scores need clamping before they reach the server; an empty
+  // field clears the grade rather than sending a 0.
+  function handleScoreInput(studentId, raw) {
+    if (raw === "") {
+      setGradesMap((prev) => {
+        const next = { ...prev };
+        delete next[studentId];
+        return next;
+      });
+      return;
+    }
+    const parsed = Number(raw);
+    if (Number.isNaN(parsed)) return;
+    setScore(studentId, Math.min(gradeMax, Math.max(1, Math.round(parsed))));
+  }
 
   async function handleSave() {
     const records = roster
@@ -136,6 +161,14 @@ export default function DailyGrades() {
           max={todayISO()}
         />
       </div>
+
+      {/* Which scale this group is graded on. Stated up front so the teacher
+          never has to infer it from how many buttons happen to be drawn. */}
+      {roster.length > 0 && (
+        <p className="px-0.5 text-xs text-fg-muted">
+          {t("teacher.dailyGrades.scaleHint", { max: gradeMax })}
+        </p>
+      )}
 
       {/* Progress */}
       {roster.length > 0 && (
@@ -198,33 +231,58 @@ export default function DailyGrades() {
                     </span>
                   )}
                 </div>
-                <div className="grid grid-cols-5 gap-2">
-                  {SCORES.map((score) => {
-                    const isActive = current === score.value;
-                    return (
-                      <button
-                        key={score.value}
-                        type="button"
-                        onClick={() =>
-                          setGradesMap((prev) => ({
-                            ...prev,
-                            [student.student_id]: score.value,
-                          }))
-                        }
-                        aria-pressed={isActive}
-                        aria-label={t("teacher.dailyGrades.scoreLabel", { score: score.value })}
-                        className={cn(
-                          "flex h-11 items-center justify-center rounded-btn border text-lg font-bold tabular-nums transition-colors",
-                          isActive
-                            ? score.active
-                            : "border-line-strong text-fg-muted hover:bg-surface-sunken",
-                        )}
-                      >
-                        {score.value}
-                      </button>
-                    );
-                  })}
-                </div>
+                {asButtons ? (
+                  <div className={cn("grid gap-2", scoreGridClass(gradeMax))}>
+                    {scoreOptions(gradeMax).map((value) => {
+                      const isActive = current === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setScore(student.student_id, value)}
+                          aria-pressed={isActive}
+                          aria-label={t("teacher.dailyGrades.scoreLabel", { score: value })}
+                          className={cn(
+                            "flex h-11 items-center justify-center rounded-btn border text-lg font-bold tabular-nums transition-colors",
+                            isActive
+                              ? scoreColorClass(value, gradeMax)
+                              : "border-line-strong text-fg-muted hover:bg-surface-sunken",
+                          )}
+                        >
+                          {value}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  // Past ~12 points a button per score stops fitting on a
+                  // phone, so the teacher types the number instead. The
+                  // coloured chip keeps the at-a-glance read of the grid.
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={gradeMax}
+                      value={current ?? ""}
+                      onChange={(event) =>
+                        handleScoreInput(student.student_id, event.target.value)
+                      }
+                      aria-label={t("teacher.dailyGrades.scoreInputLabel", { max: gradeMax })}
+                      className="flex-1"
+                    />
+                    <span
+                      className={cn(
+                        "flex h-11 min-w-[4.5rem] items-center justify-center rounded-btn border px-3 text-base font-bold tabular-nums",
+                        current
+                          ? scoreColorClass(current, gradeMax)
+                          : "border-line-strong text-fg-faint",
+                      )}
+                    >
+                      {current ? `${current}/${gradeMax}` : `–/${gradeMax}`}
+                    </span>
+                  </div>
+                )}
               </Card>
             );
           })}

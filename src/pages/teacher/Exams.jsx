@@ -4,6 +4,7 @@ import { GraduationCap, Plus } from "lucide-react";
 import {
   bulkSaveMyExamGrades,
   createMyExam,
+  getTeacherMe,
   listMyExamGrades,
   listMyExams,
   listMyGroups,
@@ -20,9 +21,12 @@ import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
+import { DEFAULT_EXAM_GRADE_MAX } from "../../utils/grading";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
-const EMPTY_FORM = { name: "", date: "", max_score: "100" };
+// max_score is filled in from the teacher's own exam scale when the modal
+// opens; this is only the shape, and the fallback before that call lands.
+const EMPTY_FORM = { name: "", date: "", max_score: String(DEFAULT_EXAM_GRADE_MAX) };
 
 export default function Exams() {
   const { t } = useTranslation();
@@ -36,6 +40,9 @@ export default function Exams() {
   const [loadingRoster, setLoadingRoster] = useState(false);
   const [savingGrades, setSavingGrades] = useState(false);
 
+  // The teacher's default exam scale (Settings -> Baholash). Only a default:
+  // each exam still stores whatever max_score it was created with.
+  const [examGradeMax, setExamGradeMax] = useState(DEFAULT_EXAM_GRADE_MAX);
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
@@ -47,6 +54,11 @@ export default function Exams() {
     listMyGroups()
       .then(setGroups)
       .catch((error) => toast.error(getErrorMessage(error, t("teacher.exams.groupsError"))));
+    // Silent: a missing default only means the field starts at 100, which is
+    // not worth a toast on top of whatever else failed.
+    getTeacherMe()
+      .then((me) => setExamGradeMax(Number(me?.grading?.exam_grade_max) || DEFAULT_EXAM_GRADE_MAX))
+      .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,7 +117,7 @@ export default function Exams() {
   }
 
   function openCreateModal() {
-    setForm(EMPTY_FORM);
+    setForm({ ...EMPTY_FORM, max_score: String(examGradeMax) });
     setErrors({});
     setCreateOpen(true);
   }

@@ -269,7 +269,9 @@
       "notGraded": "Belgilanmagan",
       "scoreLabel": "{{score}} ball",
       "allGraded": "Barchasi baholandi",
-      "save": "Baholarni saqlash"
+      "save": "Baholarni saqlash",
+      "scaleHint": "Bu guruh {{max}} ballik tizimda baholanadi",
+      "scoreInputLabel": "Ball (1–{{max}})"
     },
     "grading": {
       "examsTab": "Imtihon",

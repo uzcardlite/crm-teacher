@@ -269,7 +269,9 @@
       "notGraded": "Не отмечено",
       "scoreLabel": "{{score}} балл",
       "allGraded": "Все оценены",
-      "save": "Сохранить оценки"
+      "save": "Сохранить оценки",
+      "scaleHint": "Эта группа оценивается по {{max}}-балльной системе",
+      "scoreInputLabel": "Балл (1–{{max}})"
     },
     "grading": {
       "examsTab": "Экзамен",
