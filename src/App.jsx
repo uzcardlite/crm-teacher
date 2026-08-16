@@ -24,6 +24,7 @@ const TeacherBehaviour = lazy(routeImports["/teacher/behaviour"]);
 const TeacherBooking = lazy(routeImports["/teacher/booking"]);
 const TeacherSchedule = lazy(routeImports["/teacher/schedule"]);
 const TeacherSalary = lazy(routeImports["/teacher/salary"]);
+const TeacherSettings = lazy(routeImports["/teacher/settings"]);
 const TeacherChat = lazy(routeImports["/teacher/chat"]);
 const TeacherChatThread = lazy(routeImports["/teacher/chat/:threadId"]);
 
@@ -94,6 +95,9 @@ function TeacherApp() {
               />
               <Route path="schedule" element={<TeacherSchedule />} />
               <Route path="salary" element={<TeacherSalary />} />
+              {/* Settings is reached from the drawer, not the tab-bar, so it
+                  carries no permission gate beyond the cabinet itself. */}
+              <Route path="settings" element={<TeacherSettings />} />
               <Route
                 path="chat"
                 element={

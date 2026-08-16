@@ -25,3 +25,15 @@ export function uploadMyPhoto(file) {
   formData.append("file", file);
   return apiClient.post("/api/v1/auth/me/photo", formData).then((res) => res.data);
 }
+
+// Appearance prefs (theme/language) stored on the account. Merge semantics:
+// send only what changed, the server keeps the rest.
+export function updateUiPrefs(payload) {
+  return apiClient.patch("/api/v1/auth/me/ui-prefs", payload).then((res) => res.data);
+}
+
+// Bottom tab-bar customization ({ order, hidden }). Shares the backend's
+// sidebar_prefs column with the admin app; the paths are this app's own.
+export function updateTabBarPrefs(payload) {
+  return apiClient.patch("/api/v1/auth/me/sidebar", payload).then((res) => res.data);
+}

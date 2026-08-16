@@ -14,6 +14,7 @@ export const routeImports = {
   "/teacher/salary": () => import("../pages/teacher/Salary"),
   "/teacher/chat": () => import("../pages/teacher/Chat"),
   "/teacher/chat/:threadId": () => import("../pages/teacher/ChatThread"),
+  "/teacher/settings": () => import("../pages/teacher/Settings"),
 };
 
 const prefetched = new Set();

@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronRight, Globe, LogOut, Menu, MessageCircle, Moon, Sun, X } from "lucide-react";
+import {
+  ChevronRight,
+  Globe,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Moon,
+  Settings,
+  Sun,
+  X,
+} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTenantModules } from "../../context/TenantModulesContext";
 import SubscriptionExpired from "../../pages/SubscriptionExpired";
@@ -9,17 +19,20 @@ import { TEACHER_NAV_ITEMS, teacherRouteTitle } from "../../constants/teacherNav
 import { getChatUnreadCount } from "../../api/teacher";
 import { prefetchAllRoutes, prefetchRoute } from "../../utils/prefetch";
 import { cn } from "../../utils/cn";
-import { LANG_KEY, getStoredLang } from "../../i18n";
+import { getStoredLang } from "../../i18n";
+import {
+  getStoredTheme,
+  resolveTheme,
+  setLanguage as applyLanguage,
+  setTheme as applyTheme,
+} from "../../utils/appearance";
+import { applyTabBarPrefs } from "../../utils/tabBarPrefs";
 import Avatar from "../ui/Avatar";
 import KoshinStar from "../ui/KoshinStar";
 
 const CHAT_PATH = "/teacher/chat";
+const SETTINGS_PATH = "/teacher/settings";
 const UNREAD_POLL_MS = 12000;
-const THEME_KEY = "crm_theme";
-
-function getStoredTheme() {
-  return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
-}
 
 // Mobile-first cabinet shell: a sticky light header + a page container + a
 // fixed bottom tab-bar (there is no desktop sidebar). The whole cabinet is
@@ -27,7 +40,7 @@ function getStoredTheme() {
 // The ☰ drawer is the single home for everything personal: profile identity,
 // the overflow nav items, day/night mode, language and logout.
 export default function TeacherLayout() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -68,20 +81,15 @@ export default function TeacherLayout() {
     };
   }, [canChat, location.pathname]);
 
+  // Quick flip between light and dark. A teacher who wants "follow the
+  // system" picks it in Sozlamalar; this button only ever lands on an explicit
+  // choice, which is what makes it predictable as a one-tap control.
   function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem(THEME_KEY, next);
-    document.documentElement.classList.toggle("dark", next === "dark");
+    setTheme(applyTheme(resolveTheme(theme) === "dark" ? "light" : "dark"));
   }
 
-  // Mirrors toggleTheme exactly: flip, persist to localStorage, apply globally.
   function toggleLanguage() {
-    const next = lang === "uz" ? "ru" : "uz";
-    setLang(next);
-    localStorage.setItem(LANG_KEY, next);
-    i18n.changeLanguage(next);
-    document.documentElement.lang = next;
+    setLang(applyLanguage(lang === "uz" ? "ru" : "uz"));
   }
 
   function handleLogout() {
@@ -90,12 +98,19 @@ export default function TeacherLayout() {
     navigate("/login", { replace: true });
   }
 
-  const visibleTabs = TEACHER_NAV_ITEMS.filter(
+  // Permission gating first, then the teacher's own order/hidden list from
+  // Sozlamalar. Prefs never widen access: an item the role cannot see stays
+  // out either way.
+  const allowedTabs = TEACHER_NAV_ITEMS.filter(
     (item) => !item.permission || hasPermission(item.permission),
   );
+  const visibleTabs = applyTabBarPrefs(
+    allowedTabs.filter((item) => !item.headerOnly),
+    user?.sidebar_prefs,
+  ).concat(allowedTabs.filter((item) => item.headerOnly));
   // Up to 5 primary items in the bottom bar; header-only items (chat) live in
   // the header pill; the rest open from the ☰ menu.
-  const primaryTabs = visibleTabs.filter((item) => item.primary);
+  const primaryTabs = visibleTabs.filter((item) => item.primary).slice(0, 5);
   const moreTabs = visibleTabs.filter((item) => !item.primary && !item.headerOnly);
 
   // If /auth/me ever reports the teacher's tenant subscription as blocked,
@@ -106,6 +121,10 @@ export default function TeacherLayout() {
   if (user?.subscription?.blocked === true) {
     return <SubscriptionExpired />;
   }
+
+  // "system" is a valid choice, so the drawer's icon/label/switch describe the
+  // appearance in effect, not the raw stored value.
+  const isDark = resolveTheme(theme) === "dark";
 
   const drawerRowClass =
     "flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition-colors";
@@ -224,6 +243,22 @@ export default function TeacherLayout() {
             )}
 
             <div className="flex-1 overflow-y-auto py-2">
+              <NavLink
+                to={SETTINGS_PATH}
+                onMouseEnter={() => prefetchRoute(SETTINGS_PATH)}
+                className={({ isActive }) =>
+                  cn(
+                    drawerRowClass,
+                    isActive
+                      ? "bg-accent-light/20 text-accent-dark"
+                      : "text-fg-secondary hover:bg-surface-sunken",
+                  )
+                }
+              >
+                <Settings size={20} className="shrink-0 text-fg-faint" />
+                <span className="flex-1 text-left">{t("teacher.nav.settings")}</span>
+                <ChevronRight size={14} className="text-fg-faint" />
+              </NavLink>
               <button
                 type="button"
                 onClick={toggleTheme}
@@ -232,26 +267,26 @@ export default function TeacherLayout() {
                 {/* Icon + label name the CURRENT mode, and the switch is ON in
                     that same mode — so nothing contradicts (dark → Moon +
                     "Tungi rejim" + switch on). */}
-                {theme === "dark" ? (
+                {isDark ? (
                   <Moon size={20} className="shrink-0 text-fg-faint" />
                 ) : (
                   <Sun size={20} className="shrink-0 text-fg-faint" />
                 )}
                 <span className="flex-1 text-left">
-                  {t(theme === "dark" ? "profile.darkMode" : "profile.lightMode")}
+                  {t(isDark ? "profile.darkMode" : "profile.lightMode")}
                 </span>
                 {/* Flex + padding keeps the knob inside the track at both ends:
                     32px inner width, 16px knob, 16px travel (translate-x-4). */}
                 <span
                   className={cn(
                     "flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition-colors",
-                    theme === "dark" ? "bg-accent" : "bg-line-strong",
+                    isDark ? "bg-accent" : "bg-line-strong",
                   )}
                 >
                   <span
                     className={cn(
                       "h-4 w-4 rounded-full bg-white shadow-card transition-transform",
-                      theme === "dark" ? "translate-x-4" : "translate-x-0",
+                      isDark ? "translate-x-4" : "translate-x-0",
                     )}
                   />
                 </span>

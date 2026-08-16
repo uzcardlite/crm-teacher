@@ -170,3 +170,25 @@ export function markChatRead(threadId) {
 export function getChatUnreadCount() {
   return apiClient.get("/api/v1/teacher/chat/unread-count").then((res) => res.data);
 }
+
+// --- Settings ---
+
+export function getGradingSettings() {
+  return apiClient.get("/api/v1/teacher/settings/grading").then((res) => res.data);
+}
+
+export function updateGradingSettings(payload) {
+  return apiClient
+    .patch("/api/v1/teacher/settings/grading", payload)
+    .then((res) => res.data);
+}
+
+export function getNotificationSettings() {
+  return apiClient.get("/api/v1/teacher/settings/notifications").then((res) => res.data);
+}
+
+export function updateNotificationSettings(payload) {
+  return apiClient
+    .patch("/api/v1/teacher/settings/notifications", payload)
+    .then((res) => res.data);
+}

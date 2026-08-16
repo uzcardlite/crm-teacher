@@ -36,9 +36,17 @@ export const TEACHER_NAV_ITEMS = [
   { to: "/teacher/salary", labelKey: "teacher.nav.salary", icon: Banknote, permission: "teacher_cabinet.view" },
 ];
 
-const TITLE_BY_PATH = Object.fromEntries(
-  TEACHER_NAV_ITEMS.map((item) => [item.to, item.labelKey]),
-);
+// Reachable from the ☰ drawer rather than the tab-bar, so it lives outside
+// TEACHER_NAV_ITEMS (which is what the bar and the customizer iterate) but
+// still needs a header title.
+const EXTRA_TITLES = {
+  "/teacher/settings": "teacher.nav.settings",
+};
+
+const TITLE_BY_PATH = {
+  ...Object.fromEntries(TEACHER_NAV_ITEMS.map((item) => [item.to, item.labelKey])),
+  ...EXTRA_TITLES,
+};
 
 // Longest matching prefix wins so /teacher/groups/:id keeps the "Guruhlarim"
 // title. `t` is passed in — this plain module cannot use the hook itself.

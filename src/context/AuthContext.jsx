@@ -12,6 +12,7 @@ import {
   getRefreshToken,
   setTokens,
 } from "../utils/tokenStorage";
+import { applyServerPrefs } from "../utils/appearance";
 
 const AuthContext = createContext(null);
 
@@ -30,6 +31,7 @@ export function AuthProvider({ children }) {
     try {
       const me = await getMe();
       setUser(me);
+      applyServerPrefs(me.ui_prefs);
     } catch {
       clearTokens();
       setUser(null);
@@ -47,6 +49,9 @@ export function AuthProvider({ children }) {
     setTokens(tokens);
     const me = await getMe();
     setUser(me);
+    // Carry the account's theme/language onto this device at sign-in — the
+    // whole point of storing them server-side.
+    applyServerPrefs(me.ui_prefs);
     return me;
   }, []);
 
