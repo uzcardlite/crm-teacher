@@ -327,6 +327,15 @@
       "aboutTitle": "О приложении",
       "version": "Версия",
       "contactAdmin": "Связаться с админом"
+    },
+    "notifications": {
+      "title": "Уведомления",
+      "empty": "Пока нет уведомлений",
+      "now": "только что",
+      "minutesAgo": "{{count}} мин назад",
+      "hoursAgo": "{{count}} ч назад",
+      "daysAgo": "{{count}} дн назад",
+      "count": "{{count}}"
     }
   }
 }

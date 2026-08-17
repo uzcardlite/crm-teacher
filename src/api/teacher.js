@@ -171,6 +171,11 @@ export function getChatUnreadCount() {
   return apiClient.get("/api/v1/teacher/chat/unread-count").then((res) => res.data);
 }
 
+// Platform announcements addressed to teachers (super-admin broadcasts).
+export function getTeacherAnnouncementFeed() {
+  return apiClient.get("/api/v1/announcements/teacher-feed").then((res) => res.data);
+}
+
 // --- Settings ---
 
 export function getGradingSettings() {

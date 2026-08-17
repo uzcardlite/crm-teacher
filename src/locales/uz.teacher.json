@@ -327,6 +327,15 @@
       "aboutTitle": "Ilova haqida",
       "version": "Versiya",
       "contactAdmin": "Admin bilan bog'lanish"
+    },
+    "notifications": {
+      "title": "Bildirishnomalar",
+      "empty": "Hozircha bildirishnoma yo'q",
+      "now": "hozir",
+      "minutesAgo": "{{count}} daqiqa oldin",
+      "hoursAgo": "{{count}} soat oldin",
+      "daysAgo": "{{count}} kun oldin",
+      "count": "{{count}} ta"
     }
   }
 }

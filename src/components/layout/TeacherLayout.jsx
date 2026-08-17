@@ -29,6 +29,7 @@ import {
 import { applyTabBarPrefs } from "../../utils/tabBarPrefs";
 import Avatar from "../ui/Avatar";
 import KoshinStar from "../ui/KoshinStar";
+import NotificationBell from "./NotificationBell";
 
 const CHAT_PATH = "/teacher/chat";
 const SETTINGS_PATH = "/teacher/settings";
@@ -153,6 +154,7 @@ export default function TeacherLayout() {
         {/* Right side: the "O'quvchim" chat pill (Farzandim's "Ustoz" pattern
             mirrored for teachers) + the avatar door into the drawer. */}
         <div className="flex shrink-0 items-center gap-2">
+          <NotificationBell />
           {canChat && (
             <button
               type="button"
