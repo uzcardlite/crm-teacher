@@ -87,7 +87,7 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[19rem] overflow-hidden rounded-card border border-line bg-surface-raised shadow-card">
+        <div className="fixed right-3 top-[3.75rem] z-50 w-[calc(100vw-1.5rem)] max-w-[22rem] overflow-hidden rounded-card border border-line bg-surface-raised shadow-card md:absolute md:right-0 md:top-full md:mt-2 md:w-80">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <span className="text-sm font-semibold text-fg">
               {t("teacher.notifications.title")}
