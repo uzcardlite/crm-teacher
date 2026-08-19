@@ -88,30 +88,35 @@ export default {
         },
       },
       borderRadius: {
-        card: "12px",
-        btn: "8px",
+        // Softer, more modern radii — cards and controls read as tactile
+        // "pebbles" rather than sharp panels (iOS / Telegram feel).
+        card: "18px",
+        btn: "12px",
       },
       backgroundImage: {
         "gradient-blue": "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
         "gradient-green": "linear-gradient(135deg, #10B981 0%, #0F6E56 100%)",
-        "gradient-orange": "linear-gradient(135deg, #C2760D 0%, #854F0B 100%)",
+        "gradient-orange": "linear-gradient(135deg, #CE7C0E 0%, #8A4E08 100%)",
         "gradient-purple": "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)",
         "gradient-rose": "linear-gradient(135deg, #FB7185 0%, #BE123C 100%)",
         "gradient-teal": "linear-gradient(135deg, #14B8A6 0%, #0F766E 100%)",
         // Brand gradients for the redesign: warm gilt and glazed feruza. Used
         // on the primary action, the salary hero, and stat cards.
-        "gradient-gold": "linear-gradient(135deg, #F8C25A 0%, #DE8A26 100%)",
+        "gradient-gold": "linear-gradient(135deg, #FFCE63 0%, #F2A11F 100%)",
         // Deep glazed feruza — dark enough that white text stays legible
         // across the whole sweep (the bright mint it started as failed WCAG on
         // its light end), and closer to real Samarkand tile besides.
         "gradient-feruza": "linear-gradient(135deg, #12897F 0%, #0B5F58 100%)",
         "gradient-clay": "linear-gradient(135deg, #D98552 0%, #B0532A 100%)",
-        "gradient-blue-dark": "linear-gradient(135deg, #1E3A8A 0%, #172554 100%)",
-        "gradient-green-dark": "linear-gradient(135deg, #065F46 0%, #0B4A3B 100%)",
-        "gradient-orange-dark": "linear-gradient(135deg, #92400E 0%, #6B370A 100%)",
-        "gradient-purple-dark": "linear-gradient(135deg, #4C1D95 0%, #3B1670 100%)",
-        "gradient-rose-dark": "linear-gradient(135deg, #881337 0%, #6B0F26 100%)",
-        "gradient-teal-dark": "linear-gradient(135deg, #115E59 0%, #134E4A 100%)",
+        // Dark-mode stat gradients, brightened one step for a more vivid,
+        // premium read while white text stays AA on the lighter (top-left)
+        // stop.
+        "gradient-blue-dark": "linear-gradient(135deg, #2653C9 0%, #1B3A8F 100%)",
+        "gradient-green-dark": "linear-gradient(135deg, #07724F 0%, #0A5540 100%)",
+        "gradient-orange-dark": "linear-gradient(135deg, #A85A0C 0%, #713A08 100%)",
+        "gradient-purple-dark": "linear-gradient(135deg, #6A2CC4 0%, #4A1C93 100%)",
+        "gradient-rose-dark": "linear-gradient(135deg, #A81745 0%, #7A0F2C 100%)",
+        "gradient-teal-dark": "linear-gradient(135deg, #147067 0%, #124F4A 100%)",
         // Girih tile: two overlapping squares (one rotated 45°) forming an
         // eight-pointed star outline. This is the ONLY place a raw hex is
         // allowed in the design system (accent #F5A623 at 6% opacity).
@@ -134,12 +139,17 @@ export default {
         ],
       },
       boxShadow: {
-        card: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        // Hover elevation for interactive cards — replaces `hover:shadow-md`,
-        // which is too heavy for this UI.
-        "card-hover": "0 4px 12px 0 rgb(0 0 0 / 0.06)",
+        // Card depth + a top light edge, both theme-aware via CSS variables
+        // (defined in index.css). Every `shadow-card` element gains soft
+        // elevation in light and a lifted, glossy edge in dark.
+        card: "var(--shadow-card)",
+        "card-hover": "var(--shadow-card-hover)",
         // Soft gilt glow under an active gold element (bottom-tab pill, FAB).
-        "glow-accent": "0 6px 18px -6px rgba(242, 169, 60, 0.55)",
+        "glow-accent": "0 8px 22px -8px rgba(242, 169, 60, 0.6)",
+        // Coloured glows for active status chips — a lit, tappable feel.
+        "glow-success": "0 8px 18px -8px rgba(16, 185, 129, 0.6)",
+        "glow-warning": "0 8px 18px -8px rgba(245, 166, 35, 0.55)",
+        "glow-danger": "0 8px 18px -8px rgba(220, 80, 80, 0.55)",
       },
     },
   },

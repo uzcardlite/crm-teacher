@@ -1,4 +1,5 @@
 import { useEffect, useId } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "../../utils/cn";
@@ -52,14 +53,18 @@ export default function Modal({
 
   // NOTE: clicking the backdrop deliberately does NOT close the dialog —
   // long forms would lose their data on a stray click.
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 px-4 py-6">
+  //
+  // Portalled to <body> so `fixed inset-0` is always relative to the viewport.
+  // Without this, an ancestor with a lingering transform (e.g. the page-enter
+  // animation) becomes the containing block and the dialog drifts up/down.
+  return createPortal(
+    <div className="modal-backdrop-in fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-md">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         className={cn(
-          "flex max-h-[90vh] w-full flex-col rounded-card bg-surface shadow-card",
+          "modal-in flex max-h-[90vh] w-full flex-col rounded-card bg-surface shadow-card-hover",
           !hasCustomWidth && (SIZE_STYLES[size] ?? SIZE_STYLES.md),
           className,
         )}
@@ -86,6 +91,7 @@ export default function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -9,6 +9,7 @@ const SIZE_STYLES = {
   sm: "h-8 w-8 text-xs",
   md: "h-10 w-10 text-sm",
   lg: "h-16 w-16 text-lg",
+  xl: "h-24 w-24 text-2xl",
 };
 
 // Big enough that a face is actually recognisable on zoom, not just a token bump.

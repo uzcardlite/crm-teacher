@@ -19,25 +19,69 @@
   --fg-secondary: 106 92 72;
   --fg-muted: 154 139 116;
   --fg-faint: 184 170 148;
+  /* Card elevation: a soft warm drop plus a bright top edge — light cards
+     lift off the aged-paper ground without a hard border. */
+  --shadow-card: 0 6px 16px -10px rgba(80, 54, 16, 0.22),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+  --shadow-card-hover: 0 14px 28px -12px rgba(80, 54, 16, 0.26),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
 .dark {
-  --page-bg: 20 16 23;
-  --surface: 30 25 34;
-  --surface-raised: 44 37 49;
-  --surface-sunken: 24 20 28;
-  --line: 46 40 52;
-  --line-strong: 64 56 72;
-  --fg: 244 236 222;
-  --fg-secondary: 185 172 154;
-  --fg-muted: 135 122 103;
-  --fg-faint: 96 87 76;
+  /* Deeper, near-OLED ground with a crisper step up to the surfaces, so cards
+     separate cleanly (high-contrast, professional — not a muddy wash). */
+  --page-bg: 13 10 16;
+  --surface: 30 25 36;
+  --surface-raised: 43 36 50;
+  --surface-sunken: 21 17 25;
+  --line: 50 43 58;
+  --line-strong: 72 63 82;
+  --fg: 247 240 228;
+  --fg-secondary: 190 177 159;
+  --fg-muted: 138 125 106;
+  --fg-faint: 98 89 78;
+  /* Crisp lift: a tight deep drop + a defined top light edge — the "glass
+     pebble" sheen from the reference widgets, sharpened. */
+  --shadow-card: 0 20px 40px -22px rgba(0, 0, 0, 0.9),
+    0 2px 8px -6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+  --shadow-card-hover: 0 26px 50px -20px rgba(0, 0, 0, 0.92),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
 }
 
 body {
   margin: 0;
+  position: relative;
   @apply bg-background text-fg antialiased;
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Ambient living ground: soft coloured blooms in the corners over the warm
+   base — the screen is never flat black/paper. Fixed to the viewport, painted
+   above the body fill but beneath the app content (#root sits at z-index 1).
+   Subtle in light, richer in dark — matching the reference mockups. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 30% at 3% -2%, rgba(245, 166, 35, 0.11), transparent 62%),
+    radial-gradient(44% 30% at 100% 1%, rgba(167, 139, 250, 0.06), transparent 62%),
+    radial-gradient(52% 38% at 97% 101%, rgba(18, 137, 127, 0.06), transparent 64%);
+}
+.dark body::before {
+  /* Tighter, brighter, more intentional blooms — a lit halo behind the hero
+     and a cool corner glow, rather than a full-screen wash. */
+  background:
+    radial-gradient(44% 30% at 2% -3%, rgba(245, 166, 35, 0.2), transparent 60%),
+    radial-gradient(42% 30% at 100% 0%, rgba(167, 139, 250, 0.14), transparent 60%),
+    radial-gradient(50% 40% at 98% 102%, rgba(32, 179, 164, 0.11), transparent 62%);
+}
+#root {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Launch splash + page transitions (Ustoz app) ───────────────────── */
@@ -85,11 +129,36 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Tab-bar / button taps feel springier without a library. */
+/* Dialog entrance: the blurred backdrop fades in, the card lifts + settles. */
+.modal-backdrop-in { animation: backdropIn 0.2s ease both; }
+.modal-in { animation: modalIn 0.28s cubic-bezier(0.18, 0.8, 0.24, 1) both; }
+@keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Tactile press: every button/tile physically depresses on tap, the way iOS
+   and Telegram controls do. `.u-press` for big controls, `.u-press-sm` for
+   icon-sized ones. Springy easing, no library. */
+.u-press {
+  transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.14s,
+    filter 0.14s, background-color 0.14s, opacity 0.14s;
+}
+.u-press:active { transform: scale(0.96); }
+.u-press-sm {
+  transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.14s,
+    background-color 0.14s;
+}
+.u-press-sm:active { transform: scale(0.9); }
+
+/* Legacy alias — kept so existing usages keep working. */
 .tap-press { transition: transform 0.12s ease; }
 .tap-press:active { transform: scale(0.93); }
 
 @media (prefers-reduced-motion: reduce) {
-  .splash__logo, .splash__title, .page-enter { animation: none !important; }
+  .splash__logo, .splash__title, .page-enter,
+  .modal-backdrop-in, .modal-in { animation: none !important; }
   .splash { transition: none; }
+  .u-press:active, .u-press-sm:active, .tap-press:active { transform: none; }
 }

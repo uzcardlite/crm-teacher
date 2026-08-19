@@ -42,12 +42,20 @@ export default function StatCard({
       className={cn(
         "relative overflow-hidden flex flex-col",
         compact ? "gap-2" : "gap-3",
-        onClick && "cursor-pointer transition-shadow hover:shadow-card-hover",
+        onClick && "u-press cursor-pointer hover:shadow-card-hover",
         isColored && VARIANT_STYLES[variant],
         isColored && "border-transparent",
         className,
       )}
     >
+      {/* Glossy top-light bloom on coloured tiles — the "lit glass" sheen from
+          the reference widgets. pointer-events-none so taps pass through. */}
+      {isColored && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-5 -top-8 h-24 w-24 rounded-full bg-white/25 blur-2xl"
+        />
+      )}
       {/* Faint national watermark; pointer-events-none so it never intercepts
           the card's onClick. Hidden in the locked state. */}
       {!locked && (

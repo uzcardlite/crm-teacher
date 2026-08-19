@@ -53,7 +53,13 @@
       "group": "Группа",
       "parentName": "Родитель",
       "parentPhone": "Телефон",
-      "birthDate": "Дата рождения"
+      "parent2Name": "2-й родитель",
+      "parent2Phone": "2-й телефон",
+      "birthDate": "Дата рождения",
+      "bio": "Заметка",
+      "enrolled": "Зачислен",
+      "contactInfo": "Контакты",
+      "aboutInfo": "Информация"
     },
     "attendance": {
       "groupsError": "Не удалось загрузить группы",

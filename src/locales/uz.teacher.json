@@ -53,7 +53,13 @@
       "group": "Guruh",
       "parentName": "Ota-ona",
       "parentPhone": "Telefon",
-      "birthDate": "Tug'ilgan sana"
+      "parent2Name": "2-ota-ona",
+      "parent2Phone": "2-telefon",
+      "birthDate": "Tug'ilgan sana",
+      "bio": "Izoh",
+      "enrolled": "Ro'yxatga olingan",
+      "contactInfo": "Bog'lanish",
+      "aboutInfo": "Ma'lumot"
     },
     "attendance": {
       "groupsError": "Guruhlarni yuklab bo'lmadi",

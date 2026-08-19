@@ -4,7 +4,7 @@ const VARIANT_STYLES = {
   primary: "bg-accent text-accent-dark hover:bg-accent-light",
   // Gilt gradient for the single most important action on a screen (login,
   // save attendance, start lesson). Use sparingly — one per screen.
-  brand: "bg-gradient-gold text-accent-fg shadow-card hover:opacity-95",
+  brand: "bg-gradient-gold text-accent-fg shadow-glow-accent hover:opacity-95",
   secondary: "bg-surface border border-line-strong text-fg-secondary hover:bg-surface-sunken",
   ghost: "bg-transparent text-fg-secondary hover:bg-surface-sunken",
   danger: "bg-danger text-white hover:bg-danger/90",
@@ -27,7 +27,7 @@ export default function Button({
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-btn font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+        "u-press inline-flex items-center justify-center gap-2 rounded-btn font-medium disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100",
         VARIANT_STYLES[variant],
         SIZE_STYLES[size],
         className,

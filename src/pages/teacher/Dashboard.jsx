@@ -41,22 +41,24 @@ const STATUS_CONFIG = {
   present: {
     labelKey: "growth.attendance.statusPresent",
     icon: Check,
-    activeClass: "border-success bg-success text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-success-bg",
+    // Active: filled + a coloured glow so the chosen status reads as "lit".
+    // Idle: a soft raised chip (own shadow) rather than a flat outline.
+    activeClass: "border-transparent bg-success text-white shadow-glow-success",
+    idleClass: "border-line bg-surface text-fg-muted shadow-card hover:bg-success-bg",
   },
   absent: {
     labelKey: "growth.attendance.statusAbsent",
     icon: X,
-    activeClass: "border-danger bg-danger text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-danger-bg",
+    activeClass: "border-transparent bg-danger text-white shadow-glow-danger",
+    idleClass: "border-line bg-surface text-fg-muted shadow-card hover:bg-danger-bg",
   },
   late: {
     labelKey: "growth.attendance.statusLate",
     icon: Clock,
     // Amber "warning", not the gold accent: gold is reserved for the primary
     // action, so a status never competes with a button for it.
-    activeClass: "border-warning bg-warning text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-warning-bg",
+    activeClass: "border-transparent bg-warning text-white shadow-glow-warning",
+    idleClass: "border-line bg-surface text-fg-muted shadow-card hover:bg-warning-bg",
   },
 };
 
@@ -209,7 +211,7 @@ function QuickAttendance() {
                             }
                             aria-label={t(config.labelKey)}
                             className={cn(
-                              "flex h-8 w-10 items-center justify-center rounded-btn border transition-colors",
+                              "u-press-sm flex h-9 w-11 items-center justify-center rounded-btn border",
                               isActive ? config.activeClass : config.idleClass,
                             )}
                           >
@@ -223,7 +225,12 @@ function QuickAttendance() {
               })}
             </ul>
             <div className="border-t border-line p-3">
-              <Button className="w-full" onClick={handleSave} disabled={saving}>
+              <Button
+                variant="brand"
+                className="h-12 w-full text-[15px]"
+                onClick={handleSave}
+                disabled={saving}
+              >
                 {saving ? t("teacher.common.saving") : t("teacher.attendance.saveToday")}
               </Button>
             </div>
@@ -286,10 +293,15 @@ export default function Dashboard() {
           stars. The greeting is large and warm; the teacher's calculated
           salary lives INSIDE this card, masked until the eye is pressed. */}
       <div className="relative overflow-hidden rounded-card bg-gradient-orange px-5 pb-5 pt-6 text-white shadow-card dark:bg-gradient-orange-dark">
-        {/* Soft light bloom top-left lifts the flat fill into a gilt sheen. */}
+        {/* Twin blooms turn the flat fill into polished gilt: a bright warm
+            sheen top-right and a soft white lift top-left. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full bg-white/15 blur-3xl"
+          className="pointer-events-none absolute -right-10 -top-20 h-52 w-52 rounded-full bg-accent-light/45 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full bg-white/20 blur-3xl"
         />
         <KoshinStar
           size={170}
@@ -326,8 +338,8 @@ export default function Dashboard() {
 
         {/* Salary pocket: frosted panel inside the hero. Masked by default on
             every load; the eye button is the only way to reveal it. */}
-        <div className="relative mt-5 flex items-center gap-3 rounded-card border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-sm">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-white/15">
+        <div className="relative mt-5 flex items-center gap-3 rounded-card border border-white/25 bg-black/15 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-md">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-white/20">
             <Banknote size={20} />
           </span>
           <div className="min-w-0 flex-1">

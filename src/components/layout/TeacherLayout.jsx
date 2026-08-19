@@ -131,8 +131,11 @@ export default function TeacherLayout() {
     "flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition-colors";
 
   return (
-    <div className="min-h-dvh bg-background">
-      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/85 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] shadow-card backdrop-blur-md">
+    // Transparent root so the ambient corner-glows painted on body::before show
+    // through the gaps between cards (see index.css). Surfaces paint their own
+    // backgrounds on top.
+    <div className="min-h-dvh">
+      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/80 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] shadow-card backdrop-blur-xl">
         {/* National accent: a koshin star in a soft amber chip next to the page
             title — a quiet, consistent brand cue across every screen. */}
         <div className="flex min-w-0 items-center gap-2.5">
@@ -140,7 +143,7 @@ export default function TeacherLayout() {
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label={t("teacher.nav.more")}
-            className="-ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-sunken"
+            className="u-press-sm -ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-fg-muted hover:bg-surface-sunken"
           >
             <Menu size={20} />
           </button>
@@ -165,7 +168,7 @@ export default function TeacherLayout() {
                   ? t("teacher.chatButton.ariaUnread", { count: unreadCount })
                   : t("teacher.chatButton.aria")
               }
-              className="relative flex items-center gap-1.5 rounded-full bg-accent-light/30 py-1.5 pl-3 pr-3.5 text-accent-dark transition-colors hover:bg-accent-light/50 active:bg-accent-light/60 dark:bg-accent/15 dark:text-accent-light dark:hover:bg-accent/25"
+              className="u-press relative flex items-center gap-1.5 rounded-full bg-accent-light/30 py-1.5 pl-3 pr-3.5 text-accent-dark hover:bg-accent-light/50 dark:bg-accent/15 dark:text-accent-light dark:hover:bg-accent/25"
             >
               <MessageCircle size={18} />
               <span className="text-sm font-semibold">{t("teacher.chatButton.label")}</span>
@@ -178,7 +181,7 @@ export default function TeacherLayout() {
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label={user?.full_name}
-            className="flex items-center rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="u-press-sm flex items-center rounded-full hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <Avatar photoUrl={user?.photo_url} name={user?.full_name} size="sm" />
           </button>
@@ -328,7 +331,7 @@ export default function TeacherLayout() {
         </div>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/90 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-md">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/80 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl">
         <div className="mx-auto flex max-w-lg items-stretch justify-around">
           {primaryTabs.map((item) => (
             <NavLink
@@ -337,7 +340,7 @@ export default function TeacherLayout() {
               onMouseEnter={() => prefetchRoute(item.to)}
               className={({ isActive }) =>
                 cn(
-                  "relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] transition-colors",
+                  "u-press-sm relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px]",
                   isActive
                     ? "text-accent-dark dark:text-accent font-semibold"
                     : "text-fg-muted font-medium hover:text-fg-secondary",
