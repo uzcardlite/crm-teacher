@@ -16,3 +16,17 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// Native (Capacitor) only: hand the native launch splash off to the in-app
+// splash for a seamless amber→amber start, and paint the status bar to match.
+// Accessed via the global Capacitor bridge so the web build needs no plugin
+// import (the plugins ship in the APK).
+const cap = typeof window !== 'undefined' ? window.Capacitor : undefined
+if (cap?.isNativePlatform?.()) {
+  const p = cap.Plugins || {}
+  requestAnimationFrame(() => {
+    p.SplashScreen?.hide?.({ fadeOutDuration: 200 })
+    p.StatusBar?.setBackgroundColor?.({ color: '#F5A623' })
+    p.StatusBar?.setStyle?.({ style: 'LIGHT' })
+  })
+}

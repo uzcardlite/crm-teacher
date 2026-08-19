@@ -322,7 +322,10 @@ export default function TeacherLayout() {
       )}
 
       <main>
-        <Outlet />
+        {/* Re-keyed on the path so each section fades + lifts in (see index.css). */}
+        <div key={location.pathname} className="page-enter">
+          <Outlet />
+        </div>
       </main>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/90 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-md">

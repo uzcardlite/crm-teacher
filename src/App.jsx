@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ModuleRoute from "./components/layout/ModuleRoute";
 import TeacherLayout from "./components/layout/TeacherLayout";
 import Toast from "./components/ui/Toast";
+import Splash from "./components/Splash";
+import UpdateGate from "./components/UpdateGate";
 import Login from "./pages/auth/Login";
 import Spinner from "./components/ui/Spinner";
 import { routeImports } from "./utils/prefetch";
@@ -128,6 +130,8 @@ function TeacherApp() {
 export default function App() {
   return (
     <BrowserRouter>
+      <Splash />
+      <UpdateGate />
       <Toast />
       <Routes>
         <Route path="/*" element={<TeacherApp />} />
