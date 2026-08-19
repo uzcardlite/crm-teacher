@@ -24,9 +24,20 @@ createRoot(document.getElementById('root')).render(
 const cap = typeof window !== 'undefined' ? window.Capacitor : undefined
 if (cap?.isNativePlatform?.()) {
   const p = cap.Plugins || {}
+  const applyStatusBar = () => {
+    const dark = document.documentElement.classList.contains('dark')
+    // Overlay so the header's own background sits behind the status bar; icon
+    // colour follows the theme (light icons on dark, dark icons on light).
+    p.StatusBar?.setOverlaysWebView?.({ overlay: true })
+    p.StatusBar?.setStyle?.({ style: dark ? 'LIGHT' : 'DARK' })
+  }
   requestAnimationFrame(() => {
     p.SplashScreen?.hide?.({ fadeOutDuration: 200 })
-    p.StatusBar?.setBackgroundColor?.({ color: '#F5A623' })
-    p.StatusBar?.setStyle?.({ style: 'LIGHT' })
+    applyStatusBar()
+  })
+  // Keep the status bar in step with light/dark toggles.
+  new MutationObserver(applyStatusBar).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
   })
 }

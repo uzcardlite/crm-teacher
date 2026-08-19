@@ -132,7 +132,7 @@ export default function TeacherLayout() {
 
   return (
     <div className="min-h-dvh bg-background">
-      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/85 px-4 py-3 shadow-card backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/85 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] shadow-card backdrop-blur-md">
         {/* National accent: a koshin star in a soft amber chip next to the page
             title — a quiet, consistent brand cue across every screen. */}
         <div className="flex min-w-0 items-center gap-2.5">

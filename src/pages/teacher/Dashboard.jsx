@@ -278,7 +278,6 @@ export default function Dashboard() {
   }
 
   const summary = data.summary || {};
-  const firstName = data.full_name?.split(" ")[0] || "";
   const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
 
   return (
@@ -316,11 +315,11 @@ export default function Dashboard() {
             <p className="text-xs font-medium uppercase tracking-wider text-white/70">
               {formatLongDate()}
             </p>
-            <p className="mt-1 truncate font-display text-2xl font-semibold leading-tight">
-              {t("teacher.dashboard.greeting", { name: firstName })}
+            <p className="mt-1 truncate font-display text-[19px] font-bold leading-snug tracking-tight">
+              {data.full_name}
             </p>
             {data.subject && (
-              <p className="mt-0.5 truncate text-sm text-white/75">{data.subject}</p>
+              <p className="mt-0.5 truncate text-[13px] text-white/75">{data.subject}</p>
             )}
           </div>
         </div>
