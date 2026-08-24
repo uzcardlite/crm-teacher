@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Banknote,
+  BookOpen,
   CalendarCheck,
   Check,
   Clock,
-  Eye,
-  EyeOff,
   Users,
   UsersRound,
   X,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   bulkMarkMyAttendance,
   getTeacherMe,
@@ -29,7 +28,7 @@ import Skeleton from "../../components/ui/Skeleton";
 import StatCard from "../../components/ui/StatCard";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
-import { formatLongDate, formatMoney } from "../../utils/format";
+import { formatLongDate } from "../../utils/format";
 import { cn } from "../../utils/cn";
 
 // Cabinet home: the teacher's own scope only — no centre-wide finance stats.
@@ -247,8 +246,6 @@ export default function Dashboard() {
   const { hasPermission } = useTenantModules();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  // Salary stays masked on every visit — it only shows while the eye is open.
-  const [salaryVisible, setSalaryVisible] = useState(false);
 
   useEffect(() => {
     getTeacherMe()
@@ -286,6 +283,11 @@ export default function Dashboard() {
 
   const summary = data.summary || {};
   const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
+  const todayLessons = summary.today_lessons || [];
+  const todayCount = todayLessons.length;
+  const nextLesson = summary.next_lesson_time
+    ? todayLessons.find((lesson) => lesson.time === summary.next_lesson_time)
+    : null;
 
   return (
     <div className={PAGE_CLASS}>
@@ -336,33 +338,35 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Salary pocket: frosted panel inside the hero. Masked by default on
-            every load; the eye button is the only way to reveal it. */}
-        <div className="relative mt-5 flex items-center gap-3 rounded-card border border-white/25 bg-black/15 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-md">
+        {/* Today's timetable replaces the salary pocket: it is what a teacher
+            actually needs on open, and it never has to be masked. Salary now
+            lives only in "Oyligim", visible once the centre opens it. */}
+        <Link
+          to="/teacher/schedule"
+          className="relative mt-5 flex items-center gap-3 rounded-card border border-white/25 bg-black/15 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-md transition-colors hover:bg-black/20"
+        >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-white/20">
-            <Banknote size={20} />
+            <BookOpen size={20} />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-medium text-white/70">
-              {t("teacher.dashboard.calculatedSalary")}
+              {t("teacher.dashboard.todayLessons")}
             </p>
             <p className="mt-0.5 truncate text-lg font-bold tracking-wide">
-              {salaryVisible ? formatMoney(summary.calculated_salary) : "•• ••• •••"}
+              {todayCount === 0
+                ? t("teacher.dashboard.noLessonsToday")
+                : t("teacher.dashboard.lessonsCount", { count: todayCount })}
             </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setSalaryVisible((v) => !v)}
-            aria-label={t(
-              salaryVisible
-                ? "teacher.dashboard.hideSalary"
-                : "teacher.dashboard.showSalary",
+            {nextLesson && (
+              <p className="mt-0.5 truncate text-xs text-white/75">
+                {t("teacher.dashboard.nextLesson", {
+                  time: nextLesson.time,
+                  group: nextLesson.group_name,
+                })}
+              </p>
             )}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-          >
-            {salaryVisible ? <EyeOff size={19} /> : <Eye size={19} />}
-          </button>
-        </div>
+          </div>
+        </Link>
       </div>
 
       {/* Overview: the teacher's own scope. Salary moved into the hero, so

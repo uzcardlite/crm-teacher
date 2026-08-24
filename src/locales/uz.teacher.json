@@ -29,14 +29,20 @@
     "dashboard": {
       "loadError": "Ma'lumotlarni yuklab bo'lmadi",
       "greeting": "Assalomu alaykum, {{name}} ustoz",
-      "calculatedSalary": "Hisoblangan maosh",
       "showSalary": "Maoshni ko'rsatish",
       "hideSalary": "Maoshni yashirish",
       "groupsCount": "Guruhlar",
       "studentsCount": "O'quvchilar",
       "lessonsThisMonth": "Bu oydagi darslar",
       "overviewTitle": "Ko'rsatkichlar",
-      "quickAttendanceTitle": "Tezkor davomat"
+      "quickAttendanceTitle": "Tezkor davomat",
+      "todayLessons": "Bugungi darslar",
+      "noLessonsToday": "Bugun dars yo'q",
+      "lessonsCount_one": "Bugun {{count}} ta dars",
+      "lessonsCount_other": "Bugun {{count}} ta dars",
+      "nextLesson": "Keyingisi: {{time}} — {{group}}",
+      "lessonsCount_few": "Bugun {{count}} ta dars",
+      "lessonsCount_many": "Bugun {{count}} ta dars"
     },
     "groups": {
       "loadError": "Guruhlarni yuklab bo'lmadi",
@@ -230,7 +236,10 @@
       "historyTitle": "Oxirgi 6 oy",
       "hintHourly": "{{sessions}} ta dars × {{rate}} so'm",
       "hintFixed": "Belgilangan oylik maosh: {{rate}} so'm",
-      "hintPercentage": "Guruhlardan yig'ilgan to'lovlarning {{percent}}%"
+      "hintPercentage": "Guruhlardan yig'ilgan to'lovlarning {{percent}}%",
+      "notPublishedTitle": "Bu oy uchun oylik hali hisoblanmagan",
+      "notPublishedDescription": "Markaz oylikni hisoblab, tasdiqlagach shu yerda ko'rinadi.",
+      "publishedAt": "{{date}} da tasdiqlangan"
     },
     "chat": {
       "newThread": "Yangi suhbat",

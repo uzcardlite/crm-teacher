@@ -29,14 +29,20 @@
     "dashboard": {
       "loadError": "Не удалось загрузить данные",
       "greeting": "Здравствуйте, устоз {{name}}",
-      "calculatedSalary": "Начисленная зарплата",
       "showSalary": "Показать зарплату",
       "hideSalary": "Скрыть зарплату",
       "groupsCount": "Группы",
       "studentsCount": "Ученики",
       "lessonsThisMonth": "Занятий в этом месяце",
       "overviewTitle": "Показатели",
-      "quickAttendanceTitle": "Быстрая посещаемость"
+      "quickAttendanceTitle": "Быстрая посещаемость",
+      "todayLessons": "Сегодняшние уроки",
+      "noLessonsToday": "Сегодня уроков нет",
+      "lessonsCount_one": "Сегодня {{count}} урок",
+      "lessonsCount_few": "Сегодня {{count}} урока",
+      "lessonsCount_many": "Сегодня {{count}} уроков",
+      "lessonsCount_other": "Сегодня {{count}} уроков",
+      "nextLesson": "Далее: {{time}} — {{group}}"
     },
     "groups": {
       "loadError": "Не удалось загрузить группы",
@@ -230,7 +236,10 @@
       "historyTitle": "Последние 6 месяцев",
       "hintHourly": "{{sessions}} занятий × {{rate}} сум",
       "hintFixed": "Фиксированный оклад: {{rate}} сум",
-      "hintPercentage": "{{percent}}% от собранных оплат групп"
+      "hintPercentage": "{{percent}}% от собранных оплат групп",
+      "notPublishedTitle": "Зарплата за этот месяц ещё не рассчитана",
+      "notPublishedDescription": "Появится здесь после того, как центр рассчитает и подтвердит зарплату.",
+      "publishedAt": "Подтверждено {{date}}"
     },
     "chat": {
       "newThread": "Новый чат",

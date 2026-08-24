@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Banknote } from "lucide-react";
+import { Banknote, Calculator, Eye, EyeOff } from "lucide-react";
 import { getMyPayroll, getMyPayrollHistory } from "../../api/payroll";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
@@ -11,7 +11,7 @@ import Table from "../../components/ui/Table";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { cn } from "../../utils/cn";
-import { formatMoney, formatMonth, groupThousands } from "../../utils/format";
+import { formatDateTime, formatMoney, formatMonth, groupThousands } from "../../utils/format";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
 
@@ -36,7 +36,8 @@ function rateHint(t, history, sessionsTotal) {
 }
 
 // Horizontal single-series bar list: month label, thin accent bar scaled to
-// the 6-month max, value in text tokens. Tapping a row loads that month.
+// the 6-month max, value in text tokens. Tapping a row loads that month. Only
+// published months ever reach this list — the backend never returns the rest.
 function HistoryChart({ months, activeMonth, onSelect }) {
   const { t } = useTranslation();
   const max = Math.max(...months.map((m) => Number(m.total_amount) || 0));
@@ -100,13 +101,18 @@ function HistoryChart({ months, activeMonth, onSelect }) {
 }
 
 // The teacher's OWN payroll only — no centre finance, no other teacher, no
-// student payments, and never a finalize action.
+// student payments, and never a finalize action. The cabinet no longer
+// calculates anything itself: a month is either published (an administrator
+// finalized it AND chose to show it) or it simply carries no amount.
 export default function Salary() {
   const { t } = useTranslation();
   const [month, setMonth] = useState(currentMonth());
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState(null);
+  // Masked by default on every visit, same as the old dashboard pocket —
+  // someone glancing over a shoulder should not see a bare number.
+  const [amountVisible, setAmountVisible] = useState(false);
 
   useEffect(() => {
     getMyPayrollHistory()
@@ -116,6 +122,7 @@ export default function Salary() {
 
   useEffect(() => {
     setLoading(true);
+    setAmountVisible(false);
     getMyPayroll(month)
       .then(setData)
       .catch((error) => {
@@ -138,9 +145,10 @@ export default function Salary() {
     },
   ];
 
-  const breakdown = data?.breakdown || [];
-  const sessionsTotal = breakdown.reduce((sum, item) => sum + (item.sessions_count || 0), 0);
-  const isEmpty = data && Number(data.total_amount) === 0 && breakdown.length === 0;
+  const breakdown = data?.published ? data.breakdown || [] : [];
+  const sessionsTotal = data?.published
+    ? (data.sessions_count ?? breakdown.reduce((sum, item) => sum + (item.sessions_count || 0), 0))
+    : 0;
   const hint = rateHint(t, history, sessionsTotal);
 
   return (
@@ -156,36 +164,38 @@ export default function Salary() {
 
       {loading || !data ? (
         <>
-          <div className="grid grid-cols-2 gap-3">
-            <Card padding="p-4" className="flex flex-col gap-2">
-              <Skeleton className="h-8 w-8 rounded-btn" />
-              <Skeleton className="h-6 w-20" />
-            </Card>
-            <Card padding="p-4" className="flex flex-col gap-2">
-              <Skeleton className="h-8 w-8 rounded-btn" />
-              <Skeleton className="h-6 w-12" />
-            </Card>
-          </div>
+          <Skeleton className="h-28 w-full rounded-card" />
           <Table columns={columns} loading />
         </>
-      ) : isEmpty ? (
+      ) : !data.published ? (
         <EmptyState
           size="md"
-          icon={Banknote}
-          title={t("teacher.salary.emptyTitle")}
-          description={t("teacher.salary.emptyDescription")}
+          icon={Calculator}
+          title={t("teacher.salary.notPublishedTitle")}
+          description={t("teacher.salary.notPublishedDescription")}
         />
       ) : (
         <>
-          {/* Gilt-on-feruza hero: the month's calculated salary is the payoff,
+          {/* Gilt-on-feruza hero: the month's published salary is the payoff,
               set in the heritage serif, with sessions as the secondary metric
-              and a koshin watermark. */}
+              and a koshin watermark. The eye button masks the figure without
+              leaving the page — the amount stays loaded, just hidden. */}
           <div className="relative overflow-hidden rounded-card bg-gradient-feruza px-5 py-5 text-white shadow-card">
             <KoshinStar
               size={140}
               strokeWidth={4}
               className="pointer-events-none absolute -bottom-12 -right-8 text-accent-light/20"
             />
+            <button
+              type="button"
+              onClick={() => setAmountVisible((v) => !v)}
+              aria-label={t(
+                amountVisible ? "teacher.dashboard.hideSalary" : "teacher.dashboard.showSalary",
+              )}
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            >
+              {amountVisible ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
             <div className="relative flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="flex items-center gap-1.5 text-xs font-medium text-white/85">
@@ -193,7 +203,7 @@ export default function Salary() {
                   {t("teacher.salary.calculatedSalary")}
                 </p>
                 <p className="mt-1 truncate font-display text-3xl font-semibold tracking-wide tabular-nums">
-                  {formatMoney(data.total_amount)}
+                  {amountVisible ? formatMoney(data.total_amount) : "•• ••• •••"}
                 </p>
               </div>
               <div className="shrink-0 border-l border-white/25 pl-4 text-right">
@@ -203,6 +213,11 @@ export default function Salary() {
                 </p>
               </div>
             </div>
+            {data.published_at && (
+              <p className="relative mt-3 text-[11px] text-white/70">
+                {t("teacher.salary.publishedAt", { date: formatDateTime(data.published_at) })}
+              </p>
+            )}
           </div>
           {hint && <p className="px-0.5 text-xs text-fg-muted">{hint}</p>}
           {breakdown.length > 0 && (
