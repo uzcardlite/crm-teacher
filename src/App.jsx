@@ -23,6 +23,7 @@ const TeacherAttendance = lazy(routeImports["/teacher/attendance"]);
 const TeacherGrading = lazy(routeImports["/teacher/exams"]);
 const TeacherHomework = lazy(routeImports["/teacher/homework"]);
 const TeacherBehaviour = lazy(routeImports["/teacher/behaviour"]);
+const TeacherReactions = lazy(routeImports["/teacher/reactions"]);
 const TeacherBooking = lazy(routeImports["/teacher/booking"]);
 const TeacherSchedule = lazy(routeImports["/teacher/schedule"]);
 const TeacherSalary = lazy(routeImports["/teacher/salary"]);
@@ -84,6 +85,14 @@ function TeacherApp() {
                 element={
                   <ModuleRoute moduleKey="teacher_cabinet" requiredPermission="teacher_cabinet.behaviour">
                     <TeacherBehaviour />
+                  </ModuleRoute>
+                }
+              />
+              <Route
+                path="reactions"
+                element={
+                  <ModuleRoute moduleKey="teacher_cabinet" requiredPermission="teacher_cabinet.reactions">
+                    <TeacherReactions />
                   </ModuleRoute>
                 }
               />

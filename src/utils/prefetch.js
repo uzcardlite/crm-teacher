@@ -9,6 +9,7 @@ export const routeImports = {
   "/teacher/exams": () => import("../pages/teacher/Grading"),
   "/teacher/homework": () => import("../pages/teacher/Homework"),
   "/teacher/behaviour": () => import("../pages/teacher/Behaviour"),
+  "/teacher/reactions": () => import("../pages/teacher/Reactions"),
   "/teacher/booking": () => import("../pages/teacher/Booking"),
   "/teacher/schedule": () => import("../pages/teacher/Schedule"),
   "/teacher/salary": () => import("../pages/teacher/Salary"),

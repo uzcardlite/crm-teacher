@@ -7,6 +7,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   MessagesSquare,
+  Sparkles,
   Star,
   UsersRound,
 } from "lucide-react";
@@ -31,6 +32,7 @@ export const TEACHER_NAV_ITEMS = [
   { to: "/teacher/chat", labelKey: "teacher.nav.chat", icon: MessagesSquare, permission: "teacher_cabinet.chat", headerOnly: true },
   { to: "/teacher/homework", labelKey: "teacher.nav.homework", icon: ClipboardList, permission: "teacher_cabinet.homework" },
   { to: "/teacher/behaviour", labelKey: "teacher.nav.behaviour", icon: Star, permission: "teacher_cabinet.behaviour" },
+  { to: "/teacher/reactions", labelKey: "teacher.nav.reactions", icon: Sparkles, permission: "teacher_cabinet.reactions" },
   { to: "/teacher/booking", labelKey: "teacher.nav.booking", icon: CalendarClock, permission: "teacher_cabinet.booking" },
   { to: "/teacher/schedule", labelKey: "teacher.nav.schedule", icon: CalendarDays, permission: "teacher_cabinet.view" },
   { to: "/teacher/salary", labelKey: "teacher.nav.salary", icon: Banknote, permission: "teacher_cabinet.view" },

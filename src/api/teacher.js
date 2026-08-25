@@ -107,6 +107,30 @@ export function deleteBehaviour(id) {
   return apiClient.delete(`/api/v1/teacher/behaviour/${id}`).then((res) => res.data);
 }
 
+export function listMyReactions(groupId) {
+  return apiClient
+    .get("/api/v1/teacher/reactions", { params: { group_id: groupId } })
+    .then((res) => res.data);
+}
+
+export function createReaction(payload) {
+  return apiClient.post("/api/v1/teacher/reactions", payload).then((res) => res.data);
+}
+
+export function listMyGroupFriends(groupId) {
+  return apiClient
+    .get("/api/v1/teacher/friends", { params: { group_id: groupId } })
+    .then((res) => res.data);
+}
+
+export function createGroupFriendship(payload) {
+  return apiClient.post("/api/v1/teacher/friends", payload).then((res) => res.data);
+}
+
+export function deleteGroupFriendship(id) {
+  return apiClient.delete(`/api/v1/teacher/friends/${id}`).then((res) => res.data);
+}
+
 // Teacher booking: the teacher opens free time slots; parents book them from
 // the portal. Every route is scoped to the authenticated teacher on the
 // backend — no teacher_id is ever sent from the client. After any mutation the
