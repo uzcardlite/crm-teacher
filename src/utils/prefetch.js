@@ -4,7 +4,7 @@ export const routeImports = {
   // teacher cabinet pages (this standalone Ustoz app ships only these)
   "/teacher/dashboard": () => import("../pages/teacher/Dashboard"),
   "/teacher/groups": () => import("../pages/teacher/Groups"),
-  "/teacher/groups/:groupId": () => import("../pages/teacher/GroupDetail"),
+  "/teacher/students/:studentId": () => import("../pages/teacher/StudentDetail"),
   "/teacher/attendance": () => import("../pages/teacher/Attendance"),
   "/teacher/exams": () => import("../pages/teacher/Grading"),
   "/teacher/homework": () => import("../pages/teacher/Homework"),

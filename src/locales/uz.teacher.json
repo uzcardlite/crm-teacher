@@ -2,7 +2,7 @@
   "teacher": {
     "nav": {
       "dashboard": "Bosh sahifa",
-      "groups": "Guruhlarim",
+      "groups": "O'quvchilar",
       "attendance": "Davomat",
       "exams": "Baholar",
       "homework": "Vazifa",
@@ -49,7 +49,14 @@
       "loadError": "Guruhlarni yuklab bo'lmadi",
       "emptyTitle": "Guruh yo'q",
       "emptyDescription": "Sizga hali biror guruh biriktirilmagan.",
-      "studentsCount": "{{count}} o'quvchi"
+      "studentsCount": "{{count}} o'quvchi",
+      "rosterError": "O'quvchilarni yuklab bo'lmadi",
+      "emptyRoster": "Bu guruhda hali o'quvchi yo'q",
+      "actionsLabel": "Amallar",
+      "friendAction": "Do'st qo'shish",
+      "reactionAction": "Reaksiya bildirish",
+      "behaviourAction": "Xulq",
+      "pickFriendLabel": "Kim bilan do'stlashtiramiz?"
     },
     "groupDetail": {
       "loadError": "Guruhni yuklab bo'lmadi",

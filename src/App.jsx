@@ -18,7 +18,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const SubscriptionExpired = lazy(() => import("./pages/SubscriptionExpired"));
 const TeacherDashboard = lazy(routeImports["/teacher/dashboard"]);
 const TeacherGroups = lazy(routeImports["/teacher/groups"]);
-const TeacherGroupDetail = lazy(routeImports["/teacher/groups/:groupId"]);
+const TeacherStudentDetail = lazy(routeImports["/teacher/students/:studentId"]);
 const TeacherAttendance = lazy(routeImports["/teacher/attendance"]);
 const TeacherGrading = lazy(routeImports["/teacher/exams"]);
 const TeacherHomework = lazy(routeImports["/teacher/homework"]);
@@ -76,7 +76,7 @@ function TeacherApp() {
               <Route index element={<Navigate to="/teacher/dashboard" replace />} />
               <Route path="dashboard" element={<TeacherDashboard />} />
               <Route path="groups" element={<TeacherGroups />} />
-              <Route path="groups/:groupId" element={<TeacherGroupDetail />} />
+              <Route path="students/:studentId" element={<TeacherStudentDetail />} />
               <Route path="attendance" element={<TeacherAttendance />} />
               <Route path="exams" element={<TeacherGrading />} />
               <Route path="homework" element={<TeacherHomework />} />

@@ -43,6 +43,7 @@ export const TEACHER_NAV_ITEMS = [
 // still needs a header title.
 const EXTRA_TITLES = {
   "/teacher/settings": "teacher.nav.settings",
+  "/teacher/students": "teacher.nav.groups",
 };
 
 const TITLE_BY_PATH = {

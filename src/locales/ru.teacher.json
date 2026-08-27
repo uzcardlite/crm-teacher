@@ -2,7 +2,7 @@
   "teacher": {
     "nav": {
       "dashboard": "Главная",
-      "groups": "Мои группы",
+      "groups": "Ученики",
       "attendance": "Посещаемость",
       "exams": "Оценки",
       "homework": "ДЗ",
@@ -49,7 +49,14 @@
       "loadError": "Не удалось загрузить группы",
       "emptyTitle": "Групп нет",
       "emptyDescription": "К вам ещё не прикреплена ни одна группа.",
-      "studentsCount": "{{count}} учеников"
+      "studentsCount": "{{count}} учеников",
+      "rosterError": "Не удалось загрузить учеников",
+      "emptyRoster": "В этой группе пока нет учеников",
+      "actionsLabel": "Действия",
+      "friendAction": "Добавить друга",
+      "reactionAction": "Отправить реакцию",
+      "behaviourAction": "Поведение",
+      "pickFriendLabel": "С кем подружить?"
     },
     "groupDetail": {
       "loadError": "Не удалось загрузить группу",
