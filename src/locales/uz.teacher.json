@@ -8,6 +8,7 @@
       "homework": "Vazifa",
       "behaviour": "Xulq",
       "reactions": "Reaksiyalar",
+      "recognition": "Rag'batlantirish",
       "booking": "Yozilish",
       "schedule": "Jadval",
       "salary": "Maoshim",
@@ -212,6 +213,17 @@
       "removeFriendConfirm": "Bu do'stlik bog'lanishini o'chirmoqchimisiz?",
       "removeFriendSuccess": "Do'stlik o'chirildi",
       "removeFriendError": "O'chirib bo'lmadi"
+    },
+    "recognition": {
+      "tabReactions": "Reaksiya",
+      "tabFriends": "Do'stlar",
+      "tabBehaviour": "Xulq",
+      "groupLabel": "Guruh",
+      "selectGroup": "Guruhni tanlang",
+      "selectGroupTitle": "Guruhni tanlang",
+      "selectGroupDescription": "Reaksiya, do'stlik yoki xulq bahosini belgilash uchun avval guruhni tanlang.",
+      "groupsError": "Guruhlarni yuklab bo'lmadi",
+      "loadError": "Ma'lumotni yuklab bo'lmadi"
     },
     "booking": {
       "tabSlots": "Bo'sh vaqtlarim",

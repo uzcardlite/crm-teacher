@@ -102,9 +102,14 @@ export default function TeacherLayout() {
   // Permission gating first, then the teacher's own order/hidden list from
   // Sozlamalar. Prefs never widen access: an item the role cannot see stays
   // out either way.
-  const allowedTabs = TEACHER_NAV_ITEMS.filter(
-    (item) => !item.permission || hasPermission(item.permission),
-  );
+  const allowedTabs = TEACHER_NAV_ITEMS.filter((item) => {
+    if (!item.permission) return true;
+    // An array permission is "any of" — e.g. Rag'batlantirish stays visible
+    // to a teacher who only has reactions OR only behaviour, not both.
+    return Array.isArray(item.permission)
+      ? item.permission.some(hasPermission)
+      : hasPermission(item.permission);
+  });
   const visibleTabs = applyTabBarPrefs(
     allowedTabs.filter((item) => !item.headerOnly),
     user?.sidebar_prefs,

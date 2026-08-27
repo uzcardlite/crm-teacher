@@ -1,4 +1,5 @@
 import {
+  Award,
   Banknote,
   CalendarCheck,
   CalendarClock,
@@ -7,8 +8,6 @@ import {
   GraduationCap,
   LayoutDashboard,
   MessagesSquare,
-  Sparkles,
-  Star,
   UsersRound,
 } from "lucide-react";
 
@@ -24,6 +23,12 @@ import {
 export const TEACHER_NAV_ITEMS = [
   { to: "/teacher/dashboard", labelKey: "teacher.nav.dashboard", icon: LayoutDashboard, permission: "teacher_cabinet.view", primary: true },
   { to: "/teacher/exams", labelKey: "teacher.nav.exams", icon: GraduationCap, permission: "teacher_cabinet.grades", primary: true },
+  // Center tab, deliberately: Reaksiya + Do'stlar + Xulq used to be three
+  // separate destinations (two in this bar's overflow, one buried inside
+  // Reactions as a tab) — merged into one, it earns the bar's middle seat.
+  // `permission` as an array is "any of" — either half of the old feature
+  // set is enough to see the tab (see TeacherLayout's allowedTabs filter).
+  { to: "/teacher/recognition", labelKey: "teacher.nav.recognition", icon: Award, permission: ["teacher_cabinet.reactions", "teacher_cabinet.behaviour"], primary: true },
   { to: "/teacher/attendance", labelKey: "teacher.nav.attendance", icon: CalendarCheck, permission: "teacher_cabinet.attendance", primary: true },
   { to: "/teacher/groups", labelKey: "teacher.nav.groups", icon: UsersRound, permission: "teacher_cabinet.view", primary: true },
   // Chat deliberately has no `primary` flag and is excluded from the drawer:
@@ -31,8 +36,6 @@ export const TEACHER_NAV_ITEMS = [
   // here only for the route title and permission gate.
   { to: "/teacher/chat", labelKey: "teacher.nav.chat", icon: MessagesSquare, permission: "teacher_cabinet.chat", headerOnly: true },
   { to: "/teacher/homework", labelKey: "teacher.nav.homework", icon: ClipboardList, permission: "teacher_cabinet.homework" },
-  { to: "/teacher/behaviour", labelKey: "teacher.nav.behaviour", icon: Star, permission: "teacher_cabinet.behaviour" },
-  { to: "/teacher/reactions", labelKey: "teacher.nav.reactions", icon: Sparkles, permission: "teacher_cabinet.reactions" },
   { to: "/teacher/booking", labelKey: "teacher.nav.booking", icon: CalendarClock, permission: "teacher_cabinet.booking" },
   { to: "/teacher/schedule", labelKey: "teacher.nav.schedule", icon: CalendarDays, permission: "teacher_cabinet.view" },
   { to: "/teacher/salary", labelKey: "teacher.nav.salary", icon: Banknote, permission: "teacher_cabinet.view" },

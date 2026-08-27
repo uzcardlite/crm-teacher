@@ -8,6 +8,7 @@
       "homework": "ДЗ",
       "behaviour": "Поведение",
       "reactions": "Реакции",
+      "recognition": "Поощрение",
       "booking": "Запись",
       "schedule": "Расписание",
       "salary": "Зарплата",
@@ -212,6 +213,17 @@
       "removeFriendConfirm": "Удалить эту связь дружбы?",
       "removeFriendSuccess": "Связь удалена",
       "removeFriendError": "Не удалось удалить"
+    },
+    "recognition": {
+      "tabReactions": "Реакции",
+      "tabFriends": "Друзья",
+      "tabBehaviour": "Поведение",
+      "groupLabel": "Группа",
+      "selectGroup": "Выберите группу",
+      "selectGroupTitle": "Выберите группу",
+      "selectGroupDescription": "Чтобы отправить реакцию, отметить друзей или оценку поведения, сначала выберите группу.",
+      "groupsError": "Не удалось загрузить группы",
+      "loadError": "Не удалось загрузить данные"
     },
     "booking": {
       "tabSlots": "Свободное время",

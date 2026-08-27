@@ -22,8 +22,7 @@ const TeacherStudentDetail = lazy(routeImports["/teacher/students/:studentId"]);
 const TeacherAttendance = lazy(routeImports["/teacher/attendance"]);
 const TeacherGrading = lazy(routeImports["/teacher/exams"]);
 const TeacherHomework = lazy(routeImports["/teacher/homework"]);
-const TeacherBehaviour = lazy(routeImports["/teacher/behaviour"]);
-const TeacherReactions = lazy(routeImports["/teacher/reactions"]);
+const TeacherRecognition = lazy(routeImports["/teacher/recognition"]);
 const TeacherBooking = lazy(routeImports["/teacher/booking"]);
 const TeacherSchedule = lazy(routeImports["/teacher/schedule"]);
 const TeacherSalary = lazy(routeImports["/teacher/salary"]);
@@ -81,18 +80,13 @@ function TeacherApp() {
               <Route path="exams" element={<TeacherGrading />} />
               <Route path="homework" element={<TeacherHomework />} />
               <Route
-                path="behaviour"
+                path="recognition"
                 element={
-                  <ModuleRoute moduleKey="teacher_cabinet" requiredPermission="teacher_cabinet.behaviour">
-                    <TeacherBehaviour />
-                  </ModuleRoute>
-                }
-              />
-              <Route
-                path="reactions"
-                element={
-                  <ModuleRoute moduleKey="teacher_cabinet" requiredPermission="teacher_cabinet.reactions">
-                    <TeacherReactions />
+                  <ModuleRoute
+                    moduleKey="teacher_cabinet"
+                    requiredPermissions={["teacher_cabinet.reactions", "teacher_cabinet.behaviour"]}
+                  >
+                    <TeacherRecognition />
                   </ModuleRoute>
                 }
               />
