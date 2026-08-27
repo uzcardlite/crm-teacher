@@ -117,6 +117,16 @@ export default function TeacherLayout() {
   // Up to 5 primary items in the bottom bar; header-only items (chat) live in
   // the header pill; the rest open from the ☰ menu.
   const primaryTabs = visibleTabs.filter((item) => item.primary).slice(0, 5);
+  // Rag'batlantirish always keeps the bar's centre seat, even for a teacher
+  // whose saved tab order predates it (a stale order otherwise appends any
+  // route missing from it to the end — see utils/tabBarPrefs.js). Re-centring
+  // here means every teacher gets it in the middle without a data migration
+  // to clear everyone's saved order.
+  const recognitionIndex = primaryTabs.findIndex((item) => item.to === "/teacher/recognition");
+  if (recognitionIndex !== -1) {
+    const [recognitionTab] = primaryTabs.splice(recognitionIndex, 1);
+    primaryTabs.splice(Math.floor(primaryTabs.length / 2), 0, recognitionTab);
+  }
   const moreTabs = visibleTabs.filter((item) => !item.primary && !item.headerOnly);
 
   // If /auth/me ever reports the teacher's tenant subscription as blocked,
