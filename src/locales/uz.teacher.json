@@ -371,6 +371,7 @@
       "themeSystem": "Tizim",
       "tabBarTitle": "Menyu tartibi",
       "tabBarDescription": "Bo'limlarni tartiblang yoki yashiring",
+      "resetTabBarOrder": "Standart tartibga qaytarish",
       "moveUp": "Yuqoriga",
       "moveDown": "Pastga",
       "toggleVisibility": "Ko'rsatish/yashirish",

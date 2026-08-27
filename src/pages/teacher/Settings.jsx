@@ -13,6 +13,7 @@ import {
   LayoutGrid,
   Lock,
   Palette,
+  RotateCcw,
   Send,
   Star,
   User as UserIcon,
@@ -295,6 +296,13 @@ export default function Settings() {
     persistNavPrefs({ ...navPrefs, order });
   }
 
+  // An empty `order` isn't "no preference" to persist — orderNavItems falls
+  // back to TEACHER_NAV_ITEMS' own order for anything missing from it, so
+  // clearing it is exactly "go back to the shipped default order".
+  function resetNavOrder() {
+    persistNavPrefs({ order: [], hidden: navPrefs.hidden });
+  }
+
   function toggleNavHidden(path) {
     const hidden = navPrefs.hidden.includes(path)
       ? navPrefs.hidden.filter((item) => item !== path)
@@ -542,6 +550,14 @@ export default function Settings() {
             );
           })}
         </ul>
+        <button
+          type="button"
+          onClick={resetNavOrder}
+          className="flex items-center gap-2 self-start text-sm font-medium text-fg-muted transition-colors hover:text-fg-secondary"
+        >
+          <RotateCcw size={14} />
+          {t("teacher.settings.resetTabBarOrder")}
+        </button>
       </Section>
 
       {/* Bildirishnomalar */}

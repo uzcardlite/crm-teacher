@@ -371,6 +371,7 @@
       "themeSystem": "Системная",
       "tabBarTitle": "Порядок меню",
       "tabBarDescription": "Измените порядок разделов или скройте их",
+      "resetTabBarOrder": "Сбросить порядок по умолчанию",
       "moveUp": "Вверх",
       "moveDown": "Вниз",
       "toggleVisibility": "Показать/скрыть",
