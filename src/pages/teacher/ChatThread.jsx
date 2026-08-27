@@ -143,8 +143,10 @@ export default function ChatThread() {
           <p className="truncate text-sm font-semibold text-fg">
             {header?.student_full_name || ""}
           </p>
-          {header?.parent_name && (
-            <p className="truncate text-xs text-fg-muted">{header.parent_name}</p>
+          {(header?.parent_name || header?.parent_phone) && (
+            <p className="truncate text-xs text-fg-muted">
+              {header.parent_name || header.parent_phone}
+            </p>
           )}
         </div>
       </div>
