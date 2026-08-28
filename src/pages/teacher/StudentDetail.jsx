@@ -46,19 +46,30 @@ const REACTIONS = [
   { emoji: "✅", points: 1 },
 ];
 
-const POINT_CHIPS = [
-  { value: 1, tone: "positive" },
-  { value: 5, tone: "positive" },
-  { value: -1, tone: "negative" },
-  { value: -3, tone: "negative" },
+// Mirrors app/models/behaviour_score.py's BEHAVIOUR_CATEGORIES — Xulq is a
+// misconduct log only (positive reinforcement lives in the reaction action
+// above), grouped by how serious it is. The server derives the real point
+// value from the category regardless of what this page sends.
+const BEHAVIOUR_CATEGORIES = [
+  { key: "disrupted_lesson", points: -1 },
+  { key: "no_homework", points: -1 },
+  { key: "late_to_class", points: -1 },
+  { key: "unauthorized_phone", points: -1 },
+  { key: "disrespect", points: -2 },
+  { key: "lied", points: -2 },
+  { key: "upset_classmate", points: -2 },
+  { key: "insulted", points: -3 },
+  { key: "fought", points: -3 },
+  { key: "damaged_property", points: -3 },
+];
+const SEVERITY_GROUPS = [
+  { points: -1, labelKey: "teacher.behaviour.severityLight", dot: "#E3A857" },
+  { points: -2, labelKey: "teacher.behaviour.severityMedium", dot: "#D97A3E" },
+  { points: -3, labelKey: "teacher.behaviour.severityHeavy", dot: "#A32D2D" },
 ];
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
-}
-
-function signPoints(points) {
-  return `${points >= 0 ? "+" : "−"}${Math.abs(points)}`;
 }
 
 // One student, reached by tapping their row in the O'quvchilar accordion:
@@ -89,7 +100,7 @@ export default function StudentDetail() {
   const [reactionSaving, setReactionSaving] = useState(false);
 
   const [behaviourOpen, setBehaviourOpen] = useState(false);
-  const [behaviourPoints, setBehaviourPoints] = useState("");
+  const [behaviourCategory, setBehaviourCategory] = useState("");
   const [behaviourNote, setBehaviourNote] = useState("");
   const [behaviourDate, setBehaviourDate] = useState(todayISO());
   const [behaviourErrors, setBehaviourErrors] = useState({});
@@ -165,16 +176,15 @@ export default function StudentDetail() {
 
   function resetBehaviourModal() {
     setBehaviourOpen(false);
-    setBehaviourPoints("");
+    setBehaviourCategory("");
     setBehaviourNote("");
     setBehaviourDate(todayISO());
     setBehaviourErrors({});
   }
 
   async function handleSaveBehaviour() {
-    const points = Number(behaviourPoints);
     const errors = {};
-    if (!Number.isInteger(points) || points === 0) errors.points = t("teacher.behaviour.pointsError");
+    if (!behaviourCategory) errors.category = t("teacher.behaviour.categoryError");
     if (!behaviourDate) errors.date = t("teacher.behaviour.dateError");
     setBehaviourErrors(errors);
     if (Object.keys(errors).length > 0) return;
@@ -184,7 +194,7 @@ export default function StudentDetail() {
       await createBehaviour({
         group_id: groupId,
         student_id: studentId,
-        points,
+        category: behaviourCategory,
         note: behaviourNote.trim() || null,
         date: behaviourDate,
       });
@@ -466,31 +476,39 @@ export default function StudentDetail() {
         }
       >
         <div className="space-y-3">
-          <div>
-            <p className="mb-1.5 text-sm font-medium text-fg-secondary">
-              {t("teacher.behaviour.pointsLabel")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {POINT_CHIPS.map((chip) => (
-                <button
-                  key={chip.value}
-                  type="button"
-                  onClick={() => setBehaviourPoints(String(chip.value))}
-                  className={cn(
-                    "rounded-btn border px-3 py-2 text-sm font-semibold tabular-nums transition-colors",
-                    String(chip.value) === behaviourPoints
-                      ? chip.tone === "positive"
-                        ? "border-success bg-success-bg text-success"
-                        : "border-danger bg-danger-bg text-danger"
-                      : "border-line-strong hover:bg-surface-sunken",
-                  )}
-                >
-                  {signPoints(chip.value)}
-                </button>
-              ))}
-            </div>
-            {behaviourErrors.points && (
-              <p className="mt-1 text-xs text-danger">{behaviourErrors.points}</p>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-fg-secondary">{t("teacher.behaviour.categoryLabel")}</p>
+            {SEVERITY_GROUPS.map((group) => (
+              <div key={group.points} className="space-y-2">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-fg-faint">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: group.dot }} />
+                  {t(group.labelKey)}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {BEHAVIOUR_CATEGORIES.filter((cat) => cat.points === group.points).map((cat) => (
+                    <button
+                      key={cat.key}
+                      type="button"
+                      onClick={() => setBehaviourCategory(cat.key)}
+                      className={cn(
+                        "flex items-center gap-2 rounded-btn border px-2.5 py-2 text-left text-xs font-medium transition-colors",
+                        behaviourCategory === cat.key
+                          ? "border-danger bg-danger-bg text-danger"
+                          : "border-line-strong text-fg-secondary hover:bg-surface-sunken",
+                      )}
+                    >
+                      <span
+                        className="h-1.5 w-1.5 flex-none rounded-full"
+                        style={{ background: behaviourCategory === cat.key ? undefined : group.dot }}
+                      />
+                      {t(`teacher.behaviour.categories.${cat.key}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {behaviourErrors.category && (
+              <p className="text-xs text-danger">{behaviourErrors.category}</p>
             )}
           </div>
           <DateInput
