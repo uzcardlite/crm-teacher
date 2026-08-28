@@ -34,15 +34,16 @@ import { cn } from "../../utils/cn";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-5 px-4 pb-24 pt-5";
 
-// Mirrors app/models/student_reaction.py's REACTION_POINTS.
+// Mirrors app/models/student_reaction.py's REACTION_POINTS — every emoji is
+// worth 1 star.
 const REACTIONS = [
-  { emoji: "⚡️", points: 5 },
-  { emoji: "👍", points: 3 },
-  { emoji: "⭐️", points: 5 },
-  { emoji: "🔥", points: 5 },
-  { emoji: "❤️", points: 3 },
-  { emoji: "❗️", points: 2 },
-  { emoji: "✅", points: 3 },
+  { emoji: "⚡️", points: 1 },
+  { emoji: "👍", points: 1 },
+  { emoji: "⭐️", points: 1 },
+  { emoji: "🔥", points: 1 },
+  { emoji: "❤️", points: 1 },
+  { emoji: "❗️", points: 1 },
+  { emoji: "✅", points: 1 },
 ];
 
 const POINT_CHIPS = [

@@ -41,17 +41,18 @@ import { cn } from "../../utils/cn";
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
 
-// Mirrors app/models/student_reaction.py's REACTION_POINTS — shown here only
-// so a teacher sees the star value before sending; the server decides the
-// real value regardless of what this page sends.
+// Mirrors app/models/student_reaction.py's REACTION_POINTS — every emoji is
+// worth 1 star; the emoji says what the praise was for, not how much. Shown
+// here only so a teacher sees the value before sending, the server decides
+// the real value regardless of what this page sends.
 const REACTIONS = [
-  { emoji: "⚡️", points: 5 },
-  { emoji: "👍", points: 3 },
-  { emoji: "⭐️", points: 5 },
-  { emoji: "🔥", points: 5 },
-  { emoji: "❤️", points: 3 },
-  { emoji: "❗️", points: 2 },
-  { emoji: "✅", points: 3 },
+  { emoji: "⚡️", points: 1 },
+  { emoji: "👍", points: 1 },
+  { emoji: "⭐️", points: 1 },
+  { emoji: "🔥", points: 1 },
+  { emoji: "❤️", points: 1 },
+  { emoji: "❗️", points: 1 },
+  { emoji: "✅", points: 1 },
 ];
 
 // Quick-pick point chips for the behaviour form. Positive -> success tone,
