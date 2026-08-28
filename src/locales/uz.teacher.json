@@ -180,7 +180,24 @@
       "groupError": "Guruhni tanlang",
       "studentError": "O'quvchini tanlang",
       "pointsError": "Noldan farqli butun son kiriting",
-      "dateError": "Sanani tanlang"
+      "dateError": "Sanani tanlang",
+      "categoryLabel": "Nima bo'ldi?",
+      "categoryError": "Xulq turini tanlang",
+      "severityLight": "Yengil",
+      "severityMedium": "O'rtacha",
+      "severityHeavy": "Jiddiy",
+      "categories": {
+        "disrupted_lesson": "Darsga xalaqit berdi",
+        "no_homework": "Uyga vazifa qilmadi",
+        "late_to_class": "Darsga kech qoldi",
+        "unauthorized_phone": "Ruxsatsiz telefondan foydalandi",
+        "disrespect": "Hurmatsizlik ko'rsatdi",
+        "lied": "Yolg'on gapirdi",
+        "upset_classmate": "Sinfdoshini xafa qildi",
+        "insulted": "So'kindi / haqorat qildi",
+        "fought": "Janjal / urishib qoldi",
+        "damaged_property": "Ashyoga ziyon yetkazdi"
+      }
     },
     "reactions": {
       "tabReactions": "Reaksiyalar",

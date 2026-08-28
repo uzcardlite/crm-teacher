@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  AlertTriangle,
   CalendarDays,
   Pencil,
-  Plus,
   Sparkles,
-  Star,
   Trash2,
   Users,
 } from "lucide-react";
@@ -29,7 +28,6 @@ import Card from "../../components/ui/Card";
 import DateInput from "../../components/ui/DateInput";
 import EmptyState from "../../components/ui/EmptyState";
 import IconButton from "../../components/ui/IconButton";
-import Input from "../../components/ui/Input";
 import Modal from "../../components/ui/Modal";
 import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
@@ -55,25 +53,41 @@ const REACTIONS = [
   { emoji: "✅", points: 1 },
 ];
 
-// Quick-pick point chips for the behaviour form. Positive -> success tone,
-// negative -> danger tone, mirroring the Attendance STATUS_CONFIG pattern.
-const POINT_CHIPS = [
-  { value: 1, tone: "positive" },
-  { value: 5, tone: "positive" },
-  { value: -1, tone: "negative" },
-  { value: -3, tone: "negative" },
+// Mirrors app/models/behaviour_score.py's BEHAVIOUR_CATEGORIES. Xulq is a
+// misconduct log, not a mixed reward/penalty ledger — positive reinforcement
+// already lives in the Reaksiya tab, so every category is a deduction, grouped
+// by how serious it is. The server decides the real point value regardless of
+// what this page sends.
+const BEHAVIOUR_CATEGORIES = [
+  { key: "disrupted_lesson", points: -1 },
+  { key: "no_homework", points: -1 },
+  { key: "late_to_class", points: -1 },
+  { key: "unauthorized_phone", points: -1 },
+  { key: "disrespect", points: -2 },
+  { key: "lied", points: -2 },
+  { key: "upset_classmate", points: -2 },
+  { key: "insulted", points: -3 },
+  { key: "fought", points: -3 },
+  { key: "damaged_property", points: -3 },
 ];
-
-const EMPTY_BEHAVIOUR_FORM = { group_id: "", student_id: "", points: "", note: "", date: "" };
+const SEVERITY_GROUPS = [
+  { points: -1, labelKey: "teacher.behaviour.severityLight", dot: "#E3A857" },
+  { points: -2, labelKey: "teacher.behaviour.severityMedium", dot: "#D97A3E" },
+  { points: -3, labelKey: "teacher.behaviour.severityHeavy", dot: "#A32D2D" },
+];
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// Signed display: "+3" / "−2" (U+2212 minus for negatives, never a hyphen).
+// Signed display: "+3" / "−2" (U+2212 minus for negatives, never a hyphen) —
+// still used for the handful of legacy free-form rows logged before
+// categories existed (their points aren't necessarily -1/-2/-3).
 function signPoints(points) {
   return `${points >= 0 ? "+" : "−"}${Math.abs(points)}`;
 }
+
+const EMPTY_BEHAVIOUR_ENTRY = { studentId: "", category: "", note: "", date: todayISO() };
 
 // Rag'batlantirish: one group picker, three tabs onto what used to be three
 // separate destinations (Reaksiyalar, a Do'stlar tab buried inside it, and
@@ -107,13 +121,13 @@ export default function Recognition() {
   const [friendDeleteTarget, setFriendDeleteTarget] = useState(null);
   const [deletingFriend, setDeletingFriend] = useState(false);
 
-  // --- behaviour ---
+  // --- behaviour: one inline entry form (no modal), same shape whether
+  // creating a fresh record or editing an existing one (editingId tracks which). ---
   const [behaviourRecords, setBehaviourRecords] = useState([]);
-  const [behaviourModalOpen, setBehaviourModalOpen] = useState(false);
-  const [editingBehaviour, setEditingBehaviour] = useState(null);
-  const [behaviourForm, setBehaviourForm] = useState(EMPTY_BEHAVIOUR_FORM);
+  const [behaviourEntry, setBehaviourEntry] = useState(EMPTY_BEHAVIOUR_ENTRY);
+  const [behaviourEditingId, setBehaviourEditingId] = useState(null);
   const [behaviourErrors, setBehaviourErrors] = useState({});
-  const [behaviourSubmitting, setBehaviourSubmitting] = useState(false);
+  const [behaviourSaving, setBehaviourSaving] = useState(false);
   const [behaviourDeleteTarget, setBehaviourDeleteTarget] = useState(null);
   const [deletingBehaviour, setDeletingBehaviour] = useState(false);
 
@@ -135,6 +149,7 @@ export default function Recognition() {
     setReactStudentId("");
     setFriendA("");
     setFriendB("");
+    resetBehaviourEntry();
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId]);
@@ -229,76 +244,59 @@ export default function Recognition() {
   }
 
   // --- behaviour handlers ---
-  function openCreateBehaviour() {
-    setEditingBehaviour(null);
-    setBehaviourForm({ ...EMPTY_BEHAVIOUR_FORM, group_id: groupId, date: todayISO() });
+  function resetBehaviourEntry() {
+    setBehaviourEntry(EMPTY_BEHAVIOUR_ENTRY);
+    setBehaviourEditingId(null);
     setBehaviourErrors({});
-    setBehaviourModalOpen(true);
   }
 
   function openEditBehaviour(row) {
-    setEditingBehaviour(row);
-    setBehaviourForm({
-      group_id: row.group_id,
-      student_id: row.student_id,
-      points: row.points,
+    setBehaviourEntry({
+      studentId: row.student_id,
+      category: row.category || "",
       note: row.note || "",
-      date: row.date ? row.date.slice(0, 10) : "",
+      date: row.date ? row.date.slice(0, 10) : todayISO(),
     });
+    setBehaviourEditingId(row.id);
     setBehaviourErrors({});
-    setBehaviourModalOpen(true);
   }
 
-  function closeBehaviourModal() {
-    if (behaviourSubmitting) return;
-    setBehaviourModalOpen(false);
-  }
-
-  function handleBehaviourFormChange(field) {
-    return (event) => setBehaviourForm((prev) => ({ ...prev, [field]: event.target.value }));
-  }
-
-  async function handleSubmitBehaviour(event) {
-    event.preventDefault();
+  async function handleSaveBehaviour() {
     const nextErrors = {};
-    if (!editingBehaviour && !groupId) nextErrors.group_id = t("teacher.behaviour.groupError");
-    if (!behaviourForm.student_id) nextErrors.student_id = t("teacher.behaviour.studentError");
-    const points = Number(behaviourForm.points);
-    if (behaviourForm.points === "" || !Number.isInteger(points) || points === 0) {
-      nextErrors.points = t("teacher.behaviour.pointsError");
-    }
-    if (!behaviourForm.date) nextErrors.date = t("teacher.behaviour.dateError");
+    if (!behaviourEntry.studentId) nextErrors.studentId = t("teacher.behaviour.studentError");
+    if (!behaviourEntry.category) nextErrors.category = t("teacher.behaviour.categoryError");
+    if (!behaviourEntry.date) nextErrors.date = t("teacher.behaviour.dateError");
     setBehaviourErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     const payload = {
-      group_id: behaviourForm.group_id,
-      student_id: behaviourForm.student_id,
-      points: Number(behaviourForm.points),
-      note: behaviourForm.note.trim() || null,
-      date: behaviourForm.date,
+      group_id: groupId,
+      student_id: behaviourEntry.studentId,
+      category: behaviourEntry.category,
+      note: behaviourEntry.note.trim() || null,
+      date: behaviourEntry.date,
     };
 
-    setBehaviourSubmitting(true);
+    setBehaviourSaving(true);
     try {
-      if (editingBehaviour) {
-        await updateBehaviour(editingBehaviour.id, payload);
+      if (behaviourEditingId) {
+        await updateBehaviour(behaviourEditingId, payload);
         toast.success(t("teacher.behaviour.updateSuccess"));
       } else {
         await createBehaviour(payload);
         toast.success(t("teacher.behaviour.createSuccess"));
       }
-      setBehaviourModalOpen(false);
+      resetBehaviourEntry();
       setBehaviourRecords(await listMyBehaviour(groupId));
     } catch (error) {
       toast.error(
         getErrorMessage(
           error,
-          editingBehaviour ? t("teacher.behaviour.updateError") : t("teacher.behaviour.createError"),
+          behaviourEditingId ? t("teacher.behaviour.updateError") : t("teacher.behaviour.createError"),
         ),
       );
     } finally {
-      setBehaviourSubmitting(false);
+      setBehaviourSaving(false);
     }
   }
 
@@ -308,6 +306,7 @@ export default function Recognition() {
     try {
       await deleteBehaviour(behaviourDeleteTarget.id);
       toast.success(t("teacher.behaviour.deleteSuccess"));
+      if (behaviourEditingId === behaviourDeleteTarget.id) resetBehaviourEntry();
       setBehaviourDeleteTarget(null);
       setBehaviourRecords(await listMyBehaviour(groupId));
     } catch (error) {
@@ -536,10 +535,93 @@ export default function Recognition() {
 
           {tab === "behaviour" && canBehaviour && (
             <>
-              <Button variant="secondary" className="w-full" onClick={openCreateBehaviour}>
-                <Plus size={16} />
-                {t("teacher.behaviour.newBehaviour")}
-              </Button>
+              <Card padding="p-4" className="space-y-3">
+                <Select
+                  label={t("teacher.behaviour.studentLabel")}
+                  value={behaviourEntry.studentId}
+                  onChange={(event) =>
+                    setBehaviourEntry((prev) => ({ ...prev, studentId: event.target.value }))
+                  }
+                  error={behaviourErrors.studentId}
+                >
+                  <option value="">{t("teacher.behaviour.selectStudent")}</option>
+                  {students.map((student) => (
+                    <option key={student.student_id} value={student.student_id}>
+                      {student.student_full_name}
+                    </option>
+                  ))}
+                </Select>
+
+                <div className="space-y-3">
+                  {SEVERITY_GROUPS.map((group) => (
+                    <div key={group.points} className="space-y-2">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-fg-faint">
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ background: group.dot }}
+                        />
+                        {t(group.labelKey)}
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {BEHAVIOUR_CATEGORIES.filter((cat) => cat.points === group.points).map((cat) => (
+                          <button
+                            key={cat.key}
+                            type="button"
+                            onClick={() =>
+                              setBehaviourEntry((prev) => ({ ...prev, category: cat.key }))
+                            }
+                            className={cn(
+                              "flex items-center gap-2 rounded-btn border px-2.5 py-2 text-left text-xs font-medium transition-colors",
+                              behaviourEntry.category === cat.key
+                                ? "border-danger bg-danger-bg text-danger"
+                                : "border-line-strong text-fg-secondary hover:bg-surface-sunken",
+                            )}
+                          >
+                            <span
+                              className="h-1.5 w-1.5 flex-none rounded-full"
+                              style={{ background: behaviourEntry.category === cat.key ? undefined : group.dot }}
+                            />
+                            {t(`teacher.behaviour.categories.${cat.key}`)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  {behaviourErrors.category && (
+                    <p className="text-xs text-danger">{behaviourErrors.category}</p>
+                  )}
+                </div>
+
+                <Textarea
+                  label={t("teacher.behaviour.noteLabel")}
+                  rows={2}
+                  maxLength={500}
+                  value={behaviourEntry.note}
+                  onChange={(event) =>
+                    setBehaviourEntry((prev) => ({ ...prev, note: event.target.value }))
+                  }
+                />
+
+                <DateInput
+                  label={t("teacher.behaviour.dateLabel")}
+                  value={behaviourEntry.date}
+                  onChange={(event) =>
+                    setBehaviourEntry((prev) => ({ ...prev, date: event.target.value }))
+                  }
+                  error={behaviourErrors.date}
+                />
+
+                <div className="flex gap-2">
+                  {behaviourEditingId && (
+                    <Button variant="secondary" className="flex-1" onClick={resetBehaviourEntry}>
+                      {t("teacher.common.cancel")}
+                    </Button>
+                  )}
+                  <Button className="flex-1" disabled={behaviourSaving} onClick={handleSaveBehaviour}>
+                    {behaviourSaving ? t("teacher.common.saving") : t("teacher.common.save")}
+                  </Button>
+                </div>
+              </Card>
 
               {loading ? (
                 Array.from({ length: 3 }).map((_, index) => (
@@ -551,7 +633,7 @@ export default function Recognition() {
               ) : behaviourRecords.length === 0 ? (
                 <EmptyState
                   size="md"
-                  icon={Star}
+                  icon={AlertTriangle}
                   title={t("teacher.behaviour.emptyTitle")}
                   description={t("teacher.behaviour.emptyDescription")}
                 />
@@ -565,6 +647,12 @@ export default function Recognition() {
                           <h3 className="truncate font-display text-base font-semibold text-fg">
                             {row.student_full_name}
                           </h3>
+                          {row.category && (
+                            <p className="flex items-center gap-1.5 text-xs font-semibold text-danger">
+                              <AlertTriangle size={12} />
+                              {t(`teacher.behaviour.categories.${row.category}`)}
+                            </p>
+                          )}
                           <p className="flex items-center gap-1.5 text-xs text-fg-muted">
                             <CalendarDays size={14} className="text-fg-faint" />
                             {formatDate(row.date)}
@@ -618,97 +706,6 @@ export default function Recognition() {
         }
       >
         <p className="text-sm text-fg-secondary">{t("teacher.reactions.removeFriendConfirm")}</p>
-      </Modal>
-
-      {/* Xulq bahosi qo'shish/tahrirlash */}
-      <Modal
-        open={behaviourModalOpen}
-        onClose={closeBehaviourModal}
-        title={editingBehaviour ? t("teacher.behaviour.editTitle") : t("teacher.behaviour.createTitle")}
-        footer={
-          <>
-            <Button variant="secondary" onClick={closeBehaviourModal} disabled={behaviourSubmitting}>
-              {t("teacher.common.cancel")}
-            </Button>
-            <Button type="submit" form="teacher-recognition-behaviour-form" disabled={behaviourSubmitting}>
-              {behaviourSubmitting ? t("teacher.common.saving") : t("teacher.common.save")}
-            </Button>
-          </>
-        }
-      >
-        <form
-          id="teacher-recognition-behaviour-form"
-          onSubmit={handleSubmitBehaviour}
-          className="flex flex-col gap-4"
-          noValidate
-        >
-          <Select
-            label={t("teacher.behaviour.studentLabel")}
-            value={behaviourForm.student_id}
-            onChange={handleBehaviourFormChange("student_id")}
-            error={behaviourErrors.student_id}
-          >
-            <option value="">{t("teacher.behaviour.selectStudent")}</option>
-            {students.map((student) => (
-              <option key={student.student_id} value={student.student_id}>
-                {student.student_full_name}
-              </option>
-            ))}
-          </Select>
-
-          <div className="space-y-2">
-            <Input
-              label={t("teacher.behaviour.pointsLabel")}
-              name="points"
-              type="number"
-              value={behaviourForm.points}
-              onChange={handleBehaviourFormChange("points")}
-              error={behaviourErrors.points}
-            />
-            <div className="flex flex-wrap gap-2">
-              {POINT_CHIPS.map((chip) => {
-                const isActive = behaviourForm.points !== "" && Number(behaviourForm.points) === chip.value;
-                const isPositive = chip.tone === "positive";
-                return (
-                  <button
-                    key={chip.value}
-                    type="button"
-                    onClick={() => setBehaviourForm((prev) => ({ ...prev, points: chip.value }))}
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-btn border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                      isActive
-                        ? isPositive
-                          ? "border-success bg-success text-white"
-                          : "border-danger bg-danger text-white"
-                        : isPositive
-                          ? "border-line-strong text-fg-muted hover:bg-success-bg"
-                          : "border-line-strong text-fg-muted hover:bg-danger-bg",
-                    )}
-                  >
-                    <span className="tabular-nums">{signPoints(chip.value)}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <Textarea
-            label={t("teacher.behaviour.noteLabel")}
-            name="note"
-            rows={4}
-            maxLength={500}
-            value={behaviourForm.note}
-            onChange={handleBehaviourFormChange("note")}
-          />
-
-          <DateInput
-            label={t("teacher.behaviour.dateLabel")}
-            name="date"
-            value={behaviourForm.date}
-            onChange={handleBehaviourFormChange("date")}
-            error={behaviourErrors.date}
-          />
-        </form>
       </Modal>
 
       <Modal

@@ -180,7 +180,24 @@
       "groupError": "Выберите группу",
       "studentError": "Выберите ученика",
       "pointsError": "Введите целое число, отличное от нуля",
-      "dateError": "Выберите дату"
+      "dateError": "Выберите дату",
+      "categoryLabel": "Что произошло?",
+      "categoryError": "Выберите тип поведения",
+      "severityLight": "Лёгкое",
+      "severityMedium": "Среднее",
+      "severityHeavy": "Серьёзное",
+      "categories": {
+        "disrupted_lesson": "Мешал(а) уроку",
+        "no_homework": "Не сделал(а) домашнее задание",
+        "late_to_class": "Опоздал(а) на урок",
+        "unauthorized_phone": "Пользовался(-лась) телефоном без разрешения",
+        "disrespect": "Проявил(а) неуважение",
+        "lied": "Соврал(а)",
+        "upset_classmate": "Обидел(а) одноклассника",
+        "insulted": "Оскорбил(а) / нецензурно выразился(-лась)",
+        "fought": "Подрался(-лась)",
+        "damaged_property": "Повредил(а) имущество"
+      }
     },
     "reactions": {
       "tabReactions": "Реакции",
