@@ -56,8 +56,13 @@ const TITLE_BY_PATH = {
 
 // Longest matching prefix wins so /teacher/groups/:id keeps the "Guruhlarim"
 // title. `t` is passed in — this plain module cannot use the hook itself.
+//
+// The dashboard is the app's home screen — its own hero card already greets
+// the teacher by name, so a redundant "Bosh sahifa" header title is skipped
+// there (empty string; TeacherLayout hides the <h1> when title is empty).
 export function teacherRouteTitle(pathname, t) {
   if (!pathname) return "CRM";
+  if (pathname === "/teacher/dashboard") return "";
   const match = Object.keys(TITLE_BY_PATH)
     .filter((path) => pathname === path || pathname.startsWith(`${path}/`))
     .sort((a, b) => b.length - a.length)[0];

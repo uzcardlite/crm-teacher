@@ -353,16 +353,18 @@ export default function Dashboard() {
               {t("teacher.dashboard.todayLessons")}
             </p>
             <p className="mt-0.5 truncate text-lg font-bold tracking-wide">
-              {todayCount === 0
-                ? t("teacher.dashboard.noLessonsToday")
-                : t("teacher.dashboard.lessonsCount", { count: todayCount })}
+              {nextLesson
+                ? t("teacher.dashboard.nextLesson", {
+                    time: nextLesson.time,
+                    group: nextLesson.group_name,
+                  })
+                : todayCount === 0
+                  ? t("teacher.dashboard.noLessonsToday")
+                  : t("teacher.dashboard.lessonsCount", { count: todayCount })}
             </p>
-            {nextLesson && (
+            {nextLesson && todayCount > 0 && (
               <p className="mt-0.5 truncate text-xs text-white/75">
-                {t("teacher.dashboard.nextLesson", {
-                  time: nextLesson.time,
-                  group: nextLesson.group_name,
-                })}
+                {t("teacher.dashboard.lessonsCount", { count: todayCount })}
               </p>
             )}
           </div>

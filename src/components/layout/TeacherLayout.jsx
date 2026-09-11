@@ -165,9 +165,11 @@ export default function TeacherLayout() {
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
             <KoshinStar size={15} strokeWidth={7} />
           </span>
-          <h1 className="truncate text-base font-semibold text-fg">
-            {teacherRouteTitle(location.pathname, t)}
-          </h1>
+          {teacherRouteTitle(location.pathname, t) && (
+            <h1 className="truncate text-base font-semibold text-fg">
+              {teacherRouteTitle(location.pathname, t)}
+            </h1>
+          )}
         </div>
         {/* Right side: the "O'quvchim" chat pill (Farzandim's "Ustoz" pattern
             mirrored for teachers) + the avatar door into the drawer. */}
@@ -377,7 +379,7 @@ export default function TeacherLayout() {
                   >
                     <item.icon size={20} />
                   </span>
-                  <span className="w-full truncate px-0.5 text-center leading-tight">
+                  <span className="w-full text-center leading-[1.15] [text-wrap:balance]">
                     {t(item.labelKey)}
                   </span>
                 </>
