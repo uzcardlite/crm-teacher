@@ -48,6 +48,15 @@ jobs:
       - name: Sync Capacitor Android project
         run: npx cap sync android
 
+      # `cap add android` generates a fresh project with the default blank
+      # Capacitor icon every run — this bakes in the real app icon + splash
+      # from assets/ (icon-foreground.svg, icon-background.png, splash.png,
+      # splash-dark.png) every time, so it can never go stale again.
+      - name: Generate app icon & splash screen
+        run: >
+          npx @capacitor/assets generate --android
+          --iconBackgroundColor '#F5A623' --iconBackgroundColorDark '#F5A623'
+
       - name: Decode upload keystore
         run: echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
         env:

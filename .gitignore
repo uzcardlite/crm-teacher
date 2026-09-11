@@ -13,6 +13,10 @@ dist-ssr
 *.local
 .env
 
+# Generated fresh by every CI run (npx cap add android + cap sync) — never
+# committed, see .github/workflows/android-release.yml.
+android
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

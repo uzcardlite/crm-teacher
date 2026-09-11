@@ -310,16 +310,16 @@ export default function StudentDetail() {
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
                       <Icon size={16} />
                     </span>
-                    <span className="text-sm text-fg-muted">{row.label}</span>
+                    <span className="min-w-0 flex-1 text-sm text-fg-muted">{row.label}</span>
                     {row.tel ? (
                       <a
                         href={`tel:${row.value}`}
-                        className="u-press ml-auto truncate text-right text-sm font-semibold text-accent-dark dark:text-accent"
+                        className="u-press ml-auto shrink-0 max-w-[55%] truncate text-right text-sm font-semibold text-accent-dark dark:text-accent"
                       >
                         {row.value}
                       </a>
                     ) : (
-                      <span className="ml-auto truncate text-right text-sm font-semibold text-fg">
+                      <span className="ml-auto shrink-0 max-w-[55%] truncate text-right text-sm font-semibold text-fg">
                         {row.value}
                       </span>
                     )}

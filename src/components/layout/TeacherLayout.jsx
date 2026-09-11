@@ -355,7 +355,7 @@ export default function TeacherLayout() {
               onMouseEnter={() => prefetchRoute(item.to)}
               className={({ isActive }) =>
                 cn(
-                  "u-press-sm relative flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px]",
+                  "u-press-sm relative flex min-w-0 flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px]",
                   isActive
                     ? "text-accent-dark dark:text-accent font-semibold"
                     : "text-fg-muted font-medium hover:text-fg-secondary",
@@ -377,7 +377,9 @@ export default function TeacherLayout() {
                   >
                     <item.icon size={20} />
                   </span>
-                  <span>{t(item.labelKey)}</span>
+                  <span className="w-full truncate px-0.5 text-center leading-tight">
+                    {t(item.labelKey)}
+                  </span>
                 </>
               )}
             </NavLink>
