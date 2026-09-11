@@ -392,7 +392,7 @@ export default function Dashboard() {
           />
           <StatCard
             compact
-            variant="teal"
+            variant="plain"
             icon={CalendarCheck}
             label={t("teacher.dashboard.lessonsThisMonth")}
             value={summary.lessons_this_month}
