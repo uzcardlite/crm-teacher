@@ -91,7 +91,19 @@
       "selectGroupTitle": "Guruhni tanlang",
       "selectGroupDescription": "Davomatni belgilash uchun guruh va sanani tanlang.",
       "emptyTitle": "O'quvchi yo'q",
-      "emptyDescription": "Bu guruhda hali o'quvchi yo'q."
+      "emptyDescription": "Bu guruhda hali o'quvchi yo'q.",
+      "discipline": {
+        "title": "Belgilanmagan darslar",
+        "subtitle": "Bu darslarda davomat hali belgilanmagan",
+        "openLesson": "Belgilash",
+        "lockedTitle": "Muddati o'tgan darslar",
+        "lockedHint": "{{n}} kundan eski darslarni faqat administrator belgilay oladi. Administratorga murojaat qiling.",
+        "streak": "{{n}} kun ketma-ket o'z vaqtida",
+        "monthPercent": "Bu oyda o'z vaqtida: {{n}}%",
+        "allDone": "Hamma darslar belgilangan",
+        "pending": "Kutilmoqda",
+        "tooOld": "Muddati o'tgan"
+      }
     },
     "exams": {
       "groupsError": "Guruhlarni yuklab bo'lmadi",

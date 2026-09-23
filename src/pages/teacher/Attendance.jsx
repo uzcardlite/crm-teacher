@@ -7,6 +7,7 @@ import {
   listMyGroups,
   listMyGroupStudents,
 } from "../../api/teacher";
+import UnmarkedBanner from "../../components/attendance/UnmarkedBanner";
 import Avatar from "../../components/ui/Avatar";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -57,6 +58,8 @@ export default function Attendance() {
   const [attendanceMap, setAttendanceMap] = useState({});
   const [loadingDaily, setLoadingDaily] = useState(false);
   const [saving, setSaving] = useState(false);
+  // Bumped after a save so the unmarked list reloads without a page refresh.
+  const [disciplineKey, setDisciplineKey] = useState(0);
 
   useEffect(() => {
     listMyGroups()
@@ -113,6 +116,7 @@ export default function Attendance() {
     try {
       await bulkMarkMyAttendance({ group_id: groupId, date, records });
       toast.success(t("teacher.attendance.saved"));
+      setDisciplineKey((key) => key + 1);
       await loadDaily();
     } catch (error) {
       toast.error(getErrorMessage(error, t("teacher.attendance.saveError")));
@@ -123,6 +127,14 @@ export default function Attendance() {
 
   return (
     <div className={PAGE_CLASS}>
+      <UnmarkedBanner
+        refreshKey={disciplineKey}
+        onPick={(lesson) => {
+          setGroupId(String(lesson.group_id));
+          setDate(lesson.date);
+        }}
+      />
+
       <div className="flex flex-col gap-3">
         <Select
           label={t("teacher.attendance.groupLabel")}

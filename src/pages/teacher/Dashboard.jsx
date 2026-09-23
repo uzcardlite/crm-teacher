@@ -9,7 +9,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   bulkMarkMyAttendance,
   getTeacherMe,
@@ -22,6 +22,7 @@ import { useTenantModules } from "../../context/TenantModulesContext";
 import Avatar from "../../components/ui/Avatar";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
+import UnmarkedBanner from "../../components/attendance/UnmarkedBanner";
 import KoshinStar from "../../components/ui/KoshinStar";
 import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
@@ -283,6 +284,7 @@ export default function Dashboard() {
 
   const summary = data.summary || {};
   const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
+  const navigate = useNavigate();
   const todayLessons = summary.today_lessons || [];
   const todayCount = todayLessons.length;
   const nextLesson = summary.next_lesson_time
@@ -405,6 +407,10 @@ export default function Dashboard() {
       {/* Quick attendance replaces the old launcher tiles: marking today's
           lesson is the teacher's most frequent action, so it lives right on
           the home screen. */}
+      {canMarkAttendance && (
+        <UnmarkedBanner showStreak onPick={() => navigate("/teacher/attendance")} />
+      )}
+
       {canMarkAttendance && <QuickAttendance />}
     </div>
   );

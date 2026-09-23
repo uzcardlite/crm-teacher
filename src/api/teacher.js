@@ -39,6 +39,11 @@ export function bulkMarkMyAttendance(payload) {
     .then((res) => res.data);
 }
 
+// Registers this teacher still owes, plus their on-time streak.
+export function getMyAttendanceDiscipline() {
+  return apiClient.get("/api/v1/teacher/attendance/discipline").then((res) => res.data);
+}
+
 export function listMyDailyGrades(params) {
   return apiClient
     .get("/api/v1/teacher/daily-grades", { params })
