@@ -28,6 +28,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { useTenantModules } from "../../context/TenantModulesContext";
 import { TEACHER_NAV_ITEMS } from "../../constants/teacherNav";
+import { SUPPORT_BOT_URL } from "../../constants/support";
 import Avatar from "../../components/ui/Avatar";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -178,7 +179,7 @@ export default function Settings() {
     if (!passwordForm.current_password) {
       errors.current_password = t("teacher.settings.currentPasswordError");
     }
-    if (passwordForm.new_password.length < 6) {
+    if (passwordForm.new_password.length < 8) {
       errors.new_password = t("teacher.settings.newPasswordLengthError");
     }
     if (passwordForm.confirm_password !== passwordForm.new_password) {
@@ -654,7 +655,7 @@ export default function Settings() {
           <span className="tabular-nums text-fg-muted">{APP_VERSION}</span>
         </div>
         <a
-          href="https://t.me/ncrm_support"
+          href={SUPPORT_BOT_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 rounded-btn border border-line-strong px-3 py-2.5 text-sm font-medium text-fg-secondary transition-colors hover:bg-surface-sunken"
