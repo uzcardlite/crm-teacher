@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   ChevronRight,
   Globe,
+  Headset,
   LogOut,
   Menu,
   MessageCircle,
@@ -18,6 +19,7 @@ import SubscriptionExpired from "../../pages/SubscriptionExpired";
 import { TEACHER_NAV_ITEMS, teacherRouteTitle } from "../../constants/teacherNav";
 import { getChatUnreadCount } from "../../api/teacher";
 import { prefetchAllRoutes, prefetchRoute } from "../../utils/prefetch";
+import { SUPPORT_URL, openSupport } from "../../utils/support";
 import { cn } from "../../utils/cn";
 import { getStoredLang } from "../../i18n";
 import {
@@ -299,6 +301,17 @@ export default function TeacherLayout() {
                 <span className="flex-1 text-left">{t("teacher.nav.settings")}</span>
                 <ChevronRight size={14} className="text-fg-faint" />
               </NavLink>
+              <a
+                href={SUPPORT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={openSupport}
+                className={cn(drawerRowClass, "text-fg-secondary hover:bg-surface-sunken")}
+              >
+                <Headset size={20} className="shrink-0 text-fg-faint" />
+                <span className="flex-1 text-left">{t("teacher.nav.support")}</span>
+                <ChevronRight size={14} className="text-fg-faint" />
+              </a>
               <button
                 type="button"
                 onClick={toggleTheme}
