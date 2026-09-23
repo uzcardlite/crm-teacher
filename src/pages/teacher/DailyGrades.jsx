@@ -25,7 +25,9 @@ import {
   usesButtons,
 } from "../../utils/grading";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-28 pt-4";
+// Room for the fixed save bar plus the tab bar (its height comes from TeacherLayout).
+const PAGE_CLASS =
+  "mx-auto max-w-lg space-y-4 px-4 pb-[calc(var(--tab-bar-h,4rem)+5rem)] pt-4";
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -291,7 +293,7 @@ export default function DailyGrades() {
 
       {/* Sticky save bar */}
       {roster.length > 0 && (
-        <div className="fixed inset-x-0 bottom-16 z-20 px-4 pb-2">
+        <div className="fixed inset-x-0 bottom-[var(--tab-bar-h,4rem)] z-20 px-4 pb-2">
           <div className="mx-auto max-w-lg">
             <Button
               variant={allGraded ? "primary" : "brand"}

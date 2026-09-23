@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -48,6 +48,24 @@ export default function TeacherLayout() {
   const { hasPermission } = useTenantModules();
   const [unreadCount, setUnreadCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const tabBarRef = useRef(null);
+
+  // Publish the tab bar's real height (labels can wrap, and iPhones add a
+  // home-indicator inset) so pages can park a fixed bar right above it.
+  useEffect(() => {
+    const node = tabBarRef.current;
+    if (!node) return undefined;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty("--tab-bar-h", `${node.offsetHeight}px`);
+    publish();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(publish);
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--tab-bar-h");
+    };
+  }, []);
   const [theme, setTheme] = useState(getStoredTheme);
   const [lang, setLang] = useState(getStoredLang);
 
@@ -348,7 +366,7 @@ export default function TeacherLayout() {
         </div>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/80 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl">
+      <nav ref={tabBarRef} className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/80 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl">
         <div className="mx-auto flex max-w-lg items-stretch justify-around">
           {primaryTabs.map((item) => (
             <NavLink
