@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell } from "lucide-react";
+import { ArrowRight, Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTeacherAnnouncementFeed } from "../../api/teacher";
 import { cn } from "../../utils/cn";
@@ -27,6 +28,7 @@ function formatWhen(iso, t) {
 // audience). Unread tracked per-device in localStorage.
 export default function NotificationBell() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [seenAt, setSeenAt] = useState(getSeenAt);
@@ -139,6 +141,19 @@ export default function NotificationBell() {
                             <p className="mt-0.5 whitespace-pre-wrap break-words text-xs text-fg-secondary">
                               {a.body}
                             </p>
+                          )}
+                          {a.action_path && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpen(false);
+                                navigate(a.action_path);
+                              }}
+                              className="mt-2 inline-flex items-center gap-1.5 rounded-btn bg-accent px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-accent-light"
+                            >
+                              {t("teacher.notifications.go")}
+                              <ArrowRight size={14} />
+                            </button>
                           )}
                           {a.media_type === "photo" && a.media_url && (
                             <img

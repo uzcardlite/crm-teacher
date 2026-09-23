@@ -414,6 +414,7 @@
       "contactAdmin": "Texnik yordam"
     },
     "notifications": {
+      "go": "O'tish",
       "title": "Bildirishnomalar",
       "empty": "Hozircha bildirishnoma yo'q",
       "now": "hozir",
