@@ -36,6 +36,10 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        # The default also installs the long-removed "tools" package, which the
+        # current runner's sdkmanager no longer has — the step then fails.
+        with:
+          packages: platform-tools
 
       - name: Build web assets
         run: npm run build
