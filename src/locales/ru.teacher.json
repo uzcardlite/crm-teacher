@@ -418,7 +418,7 @@
       "confirmPassword": "Подтвердите новый пароль",
       "changePassword": "Сменить пароль",
       "currentPasswordError": "Введите текущий пароль",
-      "newPasswordLengthError": "Пароль должен быть не короче 6 символов",
+      "newPasswordLengthError": "Пароль должен быть не короче 8 символов",
       "passwordMismatchError": "Пароли не совпадают",
       "passwordSaved": "Пароль изменён, войдите заново",
       "passwordError": "Не удалось изменить пароль",

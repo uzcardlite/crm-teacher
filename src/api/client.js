@@ -90,4 +90,17 @@ apiClient.interceptors.response.use(
   },
 );
 
+// Best-effort server-side logout (revokes the refresh token). Uses plain axios,
+// not apiClient, so a 401 here never triggers the refresh interceptor. Errors
+// (404 before the backend ships it, 401 on an expired token) are swallowed.
+export function revokeSession(accessToken) {
+  if (!accessToken) return;
+  axios
+    .post(`${baseURL}/api/v1/auth/logout`, null, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      timeout: 5000,
+    })
+    .catch(() => {});
+}
+
 export default apiClient;

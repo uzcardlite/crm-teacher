@@ -525,7 +525,7 @@
       "saveError": "Saqlashda xatolik yuz berdi",
       "currentPasswordError": "Joriy parolni kiriting",
       "newPasswordError": "Yangi parolni kiriting",
-      "newPasswordLengthError": "Yangi parol kamida 6 belgidan iborat bo'lsin",
+      "newPasswordLengthError": "Yangi parol kamida 8 belgidan iborat bo'lsin",
       "passwordMismatchError": "Parollar mos kelmadi",
       "passwordUpdateSuccess": "Parol yangilandi — qayta kirishingiz kerak",
       "passwordUpdateError": "Parolni yangilab bo'lmadi",

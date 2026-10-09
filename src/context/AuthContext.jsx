@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { getMe, login as loginRequest } from "../api/auth";
+import { revokeSession } from "../api/client";
 import {
   clearTokens,
   getAccessToken,
@@ -56,6 +57,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
+    // Fire-and-forget: capture the token before clearing, never block the UI.
+    revokeSession(getAccessToken());
     clearTokens();
     setUser(null);
   }, []);

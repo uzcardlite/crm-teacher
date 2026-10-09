@@ -245,6 +245,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { hasPermission } = useTenantModules();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -284,7 +285,6 @@ export default function Dashboard() {
 
   const summary = data.summary || {};
   const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
-  const navigate = useNavigate();
   const todayLessons = summary.today_lessons || [];
   const todayCount = todayLessons.length;
   const nextLesson = summary.next_lesson_time

@@ -525,7 +525,7 @@
       "saveError": "Произошла ошибка при сохранении",
       "currentPasswordError": "Введите текущий пароль",
       "newPasswordError": "Введите новый пароль",
-      "newPasswordLengthError": "Новый пароль должен содержать минимум 6 символов",
+      "newPasswordLengthError": "Новый пароль должен содержать минимум 8 символов",
       "passwordMismatchError": "Пароли не совпадают",
       "passwordUpdateSuccess": "Пароль обновлён — нужно войти заново",
       "passwordUpdateError": "Не удалось обновить пароль",

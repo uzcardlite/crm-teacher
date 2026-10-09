@@ -418,7 +418,7 @@
       "confirmPassword": "Yangi parolni tasdiqlang",
       "changePassword": "Parolni o'zgartirish",
       "currentPasswordError": "Joriy parolni kiriting",
-      "newPasswordLengthError": "Parol kamida 6 belgidan iborat bo'lsin",
+      "newPasswordLengthError": "Parol kamida 8 belgidan iborat bo'lsin",
       "passwordMismatchError": "Parollar mos kelmadi",
       "passwordSaved": "Parol o'zgartirildi, qaytadan kiring",
       "passwordError": "Parolni o'zgartirib bo'lmadi",
