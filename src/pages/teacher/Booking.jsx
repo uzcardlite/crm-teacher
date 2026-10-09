@@ -177,7 +177,7 @@ export default function Booking() {
 
   return (
     <div className={PAGE_CLASS}>
-      <Tabs tabs={tabs} value={activeTab} onChange={setActiveTab} />
+      <Tabs className="w-full" tabs={tabs} value={activeTab} onChange={setActiveTab} />
 
       {activeTab === "slots" ? (
         <>

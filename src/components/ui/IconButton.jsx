@@ -6,7 +6,7 @@ import { cn } from "../../utils/cn";
 const TONE_STYLES = {
   default: "text-fg-muted hover:bg-surface-sunken hover:text-fg-secondary",
   danger: "text-fg-faint hover:bg-danger-bg hover:text-danger",
-  accent: "text-accent hover:bg-accent-light/30 hover:text-accent-dark",
+  accent: "text-accent hover:bg-accent-light/30 hover:text-accent-dark dark:hover:text-accent",
 };
 
 export default function IconButton({

@@ -3,7 +3,7 @@ import { cn } from "../../utils/cn";
 const VARIANT_STYLES = {
   success: "bg-success-bg text-success",
   danger: "bg-danger-bg text-danger",
-  warning: "bg-accent-light/40 text-accent-dark",
+  warning: "bg-accent-light/40 text-accent-dark dark:text-accent",
   neutral: "bg-surface-sunken text-fg-secondary",
   teal: "bg-scheduleBlock-teal-bg text-scheduleBlock-teal-text",
   rose: "bg-scheduleBlock-rose-bg text-scheduleBlock-rose-text",

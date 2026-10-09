@@ -4,7 +4,10 @@ export default function Tabs({ tabs, value, onChange, className }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-1 overflow-x-auto rounded-btn bg-surface-sunken p-1",
+        // inline-flex, not flex: the pill background must hug however many
+        // tabs there are. A page that genuinely wants it full-width (e.g.
+        // Students.jsx's status filter) already passes an explicit w-full.
+        "inline-flex items-center gap-1 overflow-x-auto rounded-btn bg-surface-sunken p-1",
         className,
       )}
     >

@@ -16,6 +16,7 @@ export default function Grading() {
     <>
       <div className="mx-auto max-w-lg px-4 pt-4">
         <Tabs
+          className="w-full"
           value={tab}
           onChange={(next) =>
             setParams(next === "daily" ? { tab: "daily" } : {}, { replace: true })
