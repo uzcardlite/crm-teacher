@@ -98,5 +98,11 @@
     "expiredTitle": "Obuna muddati tugadi",
     "expiredDescription": "Administratsiya bilan bog'laning",
     "logout": "Chiqish"
+  },
+  "guide": {
+    "next": "Keyingi",
+    "back": "Orqaga",
+    "finish": "Tushunarli",
+    "close": "Yopish"
   }
 }

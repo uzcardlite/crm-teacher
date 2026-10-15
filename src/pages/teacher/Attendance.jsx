@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Check, CheckCheck, Clock, X } from "lucide-react";
 import {
@@ -45,15 +46,26 @@ const STATUS_CONFIG = {
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
 
+// The device's own calendar day — toISOString() is UTC, which in Tashkent
+// still shows yesterday until 05:00.
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
+
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 export default function Attendance() {
   const { t } = useTranslation();
   const [groups, setGroups] = useState([]);
-  const [groupId, setGroupId] = useState("");
-  const [date, setDate] = useState(todayISO());
+  // The timetable links here with ?group=&date= for one lesson.
+  const [searchParams] = useSearchParams();
+  const [groupId, setGroupId] = useState(searchParams.get("group") || "");
+  const [date, setDate] = useState(() => {
+    const wanted = searchParams.get("date");
+    return wanted && ISO_DAY.test(wanted) ? wanted : todayISO();
+  });
   const [roster, setRoster] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [loadingDaily, setLoadingDaily] = useState(false);

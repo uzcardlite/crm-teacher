@@ -27,6 +27,14 @@ export function getMySchedule() {
   return apiClient.get("/api/v1/teacher/schedule").then((res) => res.data);
 }
 
+// One week of dated lessons (Mon..Sun around `start`, default this week):
+// { start, end, today, lessons: [{ date, time, end_time, group_name, state, ... }] }.
+export function getMyWeek(start) {
+  return apiClient
+    .get("/api/v1/teacher/schedule/week", { params: start ? { start } : {} })
+    .then((res) => res.data);
+}
+
 export function listMyAttendance(params) {
   return apiClient
     .get("/api/v1/teacher/attendance", { params })
