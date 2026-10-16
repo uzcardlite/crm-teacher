@@ -45,7 +45,21 @@
       "lessonsCount_other": "Bugun {{count}} ta dars",
       "nextLesson": "Keyingisi: {{time}} — {{group}}",
       "lessonsCount_few": "Bugun {{count}} ta dars",
-      "lessonsCount_many": "Bugun {{count}} ta dars"
+      "lessonsCount_many": "Bugun {{count}} ta dars",
+      "markedThisMonth": "Bu oy belgilangan",
+      "nowInClass": "Hozir darsdasiz · {{left}} qoldi",
+      "nextIn": "Keyingi dars · {{time}}dan keyin",
+      "allDoneToday": "Bugungi darslar tugadi",
+      "doneOf": "{{done}} / {{total}} darsda davomat olindi",
+      "restHint": "Dam oling yoki jadvalni oching",
+      "guide": {
+        "heroTitle": "Hozir nima qilish kerak",
+        "heroBody": "Oltin karta hozirgi darsingizni (qancha vaqt qolgani bilan) yoki keyingi darsni ko'rsatadi. Dars ketayotganda «Davomat olish» bir bosishda kerakli guruhni ochadi.",
+        "tilesTitle": "Ko'rsatkichlar",
+        "tilesBody": "Guruhlar, o'quvchilar va bu oy nechta darsda davomat olingani (masalan 18/22). Plitkani bossangiz, tegishli bo'lim ochiladi.",
+        "owedTitle": "Belgilanmagan darslar",
+        "owedBody": "Davomati olinmagan darslar shu yerda. Birinchi 3 tasi ko'rinadi, qolganini «Yana» bilan ochasiz."
+      }
     },
     "groups": {
       "loadError": "Guruhlarni yuklab bo'lmadi",
@@ -102,7 +116,9 @@
         "monthPercent": "Bu oyda o'z vaqtida: {{n}}%",
         "allDone": "Hamma darslar belgilangan",
         "pending": "Kutilmoqda",
-        "tooOld": "Muddati o'tgan"
+        "tooOld": "Muddati o'tgan",
+        "showMore": "Yana {{n}} ta",
+        "showLess": "Yig'ish"
       }
     },
     "exams": {

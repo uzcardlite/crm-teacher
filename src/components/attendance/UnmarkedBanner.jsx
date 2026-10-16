@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, Flame, Lock } from "lucide-react";
+import { AlertTriangle, ChevronDown, Flame, Lock } from "lucide-react";
 import { getMyAttendanceDiscipline } from "../../api/teacher";
 import Card from "../ui/Card";
 import { cn } from "../../utils/cn";
+
+// How many owed lessons show before "Yana N ta" — a long list buried the page.
+const PREVIEW = 3;
 
 // "2026-03-10" -> "10.03"
 function shortDate(iso) {
@@ -22,6 +25,7 @@ export default function UnmarkedBanner({ onPick, showStreak = false, refreshKey 
   const { t } = useTranslation();
   const ns = "teacher.attendance.discipline";
   const [data, setData] = useState(null);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,7 +48,7 @@ export default function UnmarkedBanner({ onPick, showStreak = false, refreshKey 
     // Positive reinforcement only; never an empty red box.
     if (!showStreak || streak < 1) return null;
     return (
-      <Card padding="p-4" className="flex items-center gap-3 border-success/40 bg-success-bg">
+      <Card padding="p-4" className="flex items-center gap-3 border-success/30 bg-success/10">
         <Flame size={18} className="shrink-0 text-success" />
         <p className="text-sm font-semibold text-success">{t(`${ns}.streak`, { n: streak })}</p>
       </Card>
@@ -52,18 +56,20 @@ export default function UnmarkedBanner({ onPick, showStreak = false, refreshKey 
   }
 
   return (
-    <Card padding="p-4" className="border-danger/40 bg-danger-bg">
+    <Card padding="p-4" className="border-danger/30 bg-danger/10">
       <div className="flex items-start gap-3">
-        <AlertTriangle size={18} className="mt-0.5 shrink-0 text-danger" />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn bg-danger text-white shadow-glow-danger">
+          <AlertTriangle size={18} />
+        </span>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-bold text-danger">
-            {t(`${ns}.title`)} · {toMark.length + locked.length}
+          <p className="text-sm font-bold text-fg">
+            {t(`${ns}.title`)} · <span className="text-danger">{toMark.length + locked.length}</span>
           </p>
-          <p className="mt-0.5 text-xs text-danger/80">{t(`${ns}.subtitle`)}</p>
+          <p className="mt-0.5 text-xs text-fg-muted">{t(`${ns}.subtitle`)}</p>
 
           {toMark.length > 0 && (
             <ul className="mt-3 flex flex-col gap-1.5">
-              {toMark.map((lesson) => (
+              {(expanded ? toMark : toMark.slice(0, PREVIEW)).map((lesson) => (
                 <li key={`${lesson.date}-${lesson.group_id}`}>
                   <button
                     type="button"
@@ -87,6 +93,18 @@ export default function UnmarkedBanner({ onPick, showStreak = false, refreshKey 
                   </button>
                 </li>
               ))}
+              {toMark.length > PREVIEW && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => setExpanded((open) => !open)}
+                    className="flex min-h-[40px] w-full items-center justify-center gap-1 text-xs font-semibold text-fg-secondary transition-colors hover:text-fg"
+                  >
+                    {expanded ? t(`${ns}.showLess`) : t(`${ns}.showMore`, { n: toMark.length - PREVIEW })}
+                    <ChevronDown size={14} className={cn(expanded && "rotate-180")} />
+                  </button>
+                </li>
+              )}
             </ul>
           )}
 

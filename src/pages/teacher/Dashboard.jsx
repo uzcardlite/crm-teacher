@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  BookOpen,
   CalendarCheck,
+  CalendarDays,
   Check,
+  ClipboardCheck,
   Clock,
   Users,
   UsersRound,
@@ -12,6 +13,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import {
   bulkMarkMyAttendance,
+  getMyWeek,
   getTeacherMe,
   listMyAttendance,
   listMyGroups,
@@ -23,10 +25,10 @@ import Avatar from "../../components/ui/Avatar";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import UnmarkedBanner from "../../components/attendance/UnmarkedBanner";
+import FirstVisitGuide from "../../components/ui/FirstVisitGuide";
 import KoshinStar from "../../components/ui/KoshinStar";
 import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
-import StatCard from "../../components/ui/StatCard";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { formatLongDate } from "../../utils/format";
@@ -241,6 +243,187 @@ function QuickAttendance() {
   );
 }
 
+const TONES = {
+  gold: "bg-gradient-gold text-accent-fg",
+  feruza: "bg-gradient-feruza text-white",
+  clay: "bg-clay text-white",
+};
+
+function OverviewTile({ icon: Icon, tone, value, label, to }) {
+  return (
+    <Link
+      to={to}
+      className="u-press flex flex-col gap-2 rounded-card border border-line bg-surface p-3 shadow-card transition-shadow hover:shadow-card-hover"
+    >
+      <span className={cn("flex h-9 w-9 items-center justify-center rounded-btn", TONES[tone])}>
+        <Icon size={18} />
+      </span>
+      <span className="font-display text-2xl font-bold leading-none text-fg tabular-nums">{value ?? "—"}</span>
+      <span className="text-[12px] leading-tight text-fg-muted">{label}</span>
+    </Link>
+  );
+}
+
+function localISO(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function minutesOf(time) {
+  if (!time) return null;
+  const [h, m] = time.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function waitLabel(minutes, t) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h && m) return t("teacher.schedule.hoursMinutes", { h, m });
+  if (h) return t("teacher.schedule.hours", { count: h });
+  return t("teacher.schedule.minutes", { count: m });
+}
+
+const CHIP_DOT = {
+  done: "bg-success-bg",
+  late: "bg-warning-bg",
+  missed: "bg-danger",
+  pending: "bg-warning-bg",
+  live: "bg-accent-light",
+  upcoming: "bg-white/40",
+};
+
+// The gilt hero answers "what now?": the lesson in progress (with time left
+// and a one-tap register) or the next one, plus today's lessons as chips.
+function TodayHero({ fullName, subject, photoUrl, canMark }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [lessons, setLessons] = useState(null);
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    getMyWeek()
+      .then((week) => setLessons(week.lessons.filter((lesson) => lesson.date === localISO())))
+      .catch(() => setLessons([]));
+    const timer = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const current = now.getHours() * 60 + now.getMinutes();
+  const today = (lessons || []).map((lesson) => {
+    if (lesson.state === "done" || lesson.state === "late" || !lesson.time) return lesson;
+    const start = minutesOf(lesson.time);
+    const end = start + lesson.duration_minutes;
+    if (current >= start && current < end) return { ...lesson, state: "live" };
+    if (current < start) return { ...lesson, state: "upcoming" };
+    return lesson.state === "upcoming" || lesson.state === "live" ? { ...lesson, state: "pending" } : lesson;
+  });
+  const live = today.find((lesson) => lesson.state === "live");
+  const next = today.find((lesson) => lesson.state === "upcoming" && lesson.time);
+  const focus = live || next;
+  const doneCount = today.filter((lesson) => lesson.state === "done" || lesson.state === "late").length;
+
+  function mark(lesson) {
+    navigate(`/teacher/attendance?group=${lesson.group_id}&date=${lesson.date}`);
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-card bg-gradient-orange px-5 pb-5 pt-5 text-white shadow-card dark:bg-gradient-orange-dark">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-20 h-52 w-52 rounded-full bg-accent-light/45 blur-3xl" />
+      <KoshinStar size={170} strokeWidth={3} className="pointer-events-none absolute -right-12 -top-14 text-white/[0.14]" />
+      <KoshinStar size={56} strokeWidth={4} className="pointer-events-none absolute -bottom-6 left-6 text-white/[0.08]" />
+
+      {/* who + when, kept small: the lesson is the headline */}
+      <div className="relative flex items-center gap-3">
+        <span className="rounded-full bg-white/15 p-0.5">
+          <Avatar photoUrl={photoUrl} name={fullName} size="md" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-white/75">{formatLongDate()}</p>
+          <p className="truncate font-display text-base font-bold leading-snug">
+            {fullName}
+            {subject ? <span className="font-sans text-xs font-medium text-white/75"> · {subject}</span> : null}
+          </p>
+        </div>
+        <Link
+          to="/teacher/schedule"
+          aria-label={t("teacher.nav.schedule")}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-white/15 transition-colors hover:bg-white/25"
+        >
+          <CalendarDays size={20} />
+        </Link>
+      </div>
+
+      {/* headline */}
+      <div className="relative mt-5">
+        {lessons === null ? (
+          <Skeleton className="h-16 w-full rounded-card bg-white/20" />
+        ) : focus ? (
+          <>
+            <p className="text-xs font-semibold uppercase tracking-wider text-white/80">
+              {live
+                ? t("teacher.dashboard.nowInClass", { left: waitLabel(minutesOf(live.time) + live.duration_minutes - current, t) })
+                : t("teacher.dashboard.nextIn", { time: waitLabel(minutesOf(next.time) - current, t) })}
+            </p>
+            <p className="mt-1 truncate font-display text-[26px] font-bold leading-tight">{focus.group_name}</p>
+            <p className="mt-1 text-[13px] text-white/80">
+              {focus.time}–{focus.end_time}
+              {focus.room_name ? ` · ${focus.room_name}` : ""} · {t("teacher.schedule.students", { count: focus.students })}
+            </p>
+            {live && (
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-black/20">
+                <div
+                  className="h-full rounded-full bg-accent-light"
+                  style={{ width: `${Math.min(100, Math.round(((current - minutesOf(live.time)) / live.duration_minutes) * 100))}%` }}
+                />
+              </div>
+            )}
+            {canMark && live && (
+              <button
+                type="button"
+                onClick={() => mark(live)}
+                className="u-press mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-btn bg-black/25 text-[15px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-md transition-colors hover:bg-black/30"
+              >
+                <ClipboardCheck size={18} />
+                {t("teacher.schedule.mark")}
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="font-display text-[22px] font-bold leading-tight">
+              {today.length ? t("teacher.dashboard.allDoneToday") : t("teacher.dashboard.noLessonsToday")}
+            </p>
+            <p className="mt-1 text-[13px] text-white/80">
+              {today.length
+                ? t("teacher.dashboard.doneOf", { done: doneCount, total: today.length })
+                : t("teacher.dashboard.restHint")}
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* today's lessons as chips */}
+      {today.length > 0 && (
+        <div className="relative mt-4 flex flex-wrap gap-1.5">
+          {today.map((lesson) => (
+            <Link
+              key={`${lesson.group_id}-${lesson.time}`}
+              to="/teacher/schedule"
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold transition-colors",
+                lesson.state === "live" ? "bg-accent-light text-accent-fg" : "bg-black/15 text-white hover:bg-black/25",
+              )}
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full", CHIP_DOT[lesson.state] || CHIP_DOT.upcoming)} />
+              {lesson.time || "—"}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -285,123 +468,44 @@ export default function Dashboard() {
 
   const summary = data.summary || {};
   const canMarkAttendance = hasPermission("teacher_cabinet.attendance");
-  const todayLessons = summary.today_lessons || [];
-  const todayCount = todayLessons.length;
-  const nextLesson = summary.next_lesson_time
-    ? todayLessons.find((lesson) => lesson.time === summary.next_lesson_time)
-    : null;
 
   return (
     <div className={PAGE_CLASS}>
-      {/* National hero: a deep amber girih gradient with layered koshin
-          stars. The greeting is large and warm; the teacher's calculated
-          salary lives INSIDE this card, masked until the eye is pressed. */}
-      <div className="relative overflow-hidden rounded-card bg-gradient-orange px-5 pb-5 pt-6 text-white shadow-card dark:bg-gradient-orange-dark">
-        {/* Twin blooms turn the flat fill into polished gilt: a bright warm
-            sheen top-right and a soft white lift top-left. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -top-20 h-52 w-52 rounded-full bg-accent-light/45 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full bg-white/20 blur-3xl"
-        />
-        <KoshinStar
-          size={170}
-          strokeWidth={3}
-          className="pointer-events-none absolute -right-12 -top-14 text-white/[0.14]"
-        />
-        <KoshinStar
-          size={72}
-          strokeWidth={4}
-          className="pointer-events-none absolute -bottom-8 right-24 text-white/[0.08]"
-        />
-        <KoshinStar
-          size={40}
-          strokeWidth={5}
-          className="pointer-events-none absolute bottom-10 left-2 text-white/[0.07]"
-        />
+      <TodayHero
+        fullName={data.full_name}
+        subject={data.subject}
+        photoUrl={user?.photo_url}
+        canMark={canMarkAttendance}
+      />
 
-        <div className="relative flex items-center gap-4">
-          <span className="rounded-full bg-white/15 p-1">
-            <Avatar photoUrl={user?.photo_url} name={data.full_name} size="lg" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium uppercase tracking-wider text-white/70">
-              {formatLongDate()}
-            </p>
-            <p className="mt-1 truncate font-display text-[19px] font-bold leading-snug tracking-tight">
-              {data.full_name}
-            </p>
-            {data.subject && (
-              <p className="mt-0.5 truncate text-[13px] text-white/75">{data.subject}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Today's timetable replaces the salary pocket: it is what a teacher
-            actually needs on open, and it never has to be masked. Salary now
-            lives only in "Oyligim", visible once the centre opens it. */}
-        <Link
-          to="/teacher/schedule"
-          className="relative mt-5 flex items-center gap-3 rounded-card border border-white/25 bg-black/15 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-md transition-colors hover:bg-black/20"
-        >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-white/20">
-            <BookOpen size={20} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-white/70">
-              {t("teacher.dashboard.todayLessons")}
-            </p>
-            <p className="mt-0.5 truncate text-lg font-bold tracking-wide">
-              {nextLesson
-                ? t("teacher.dashboard.nextLesson", {
-                    time: nextLesson.time,
-                    group: nextLesson.group_name,
-                  })
-                : todayCount === 0
-                  ? t("teacher.dashboard.noLessonsToday")
-                  : t("teacher.dashboard.lessonsCount", { count: todayCount })}
-            </p>
-            {nextLesson && todayCount > 0 && (
-              <p className="mt-0.5 truncate text-xs text-white/75">
-                {t("teacher.dashboard.lessonsCount", { count: todayCount })}
-              </p>
-            )}
-          </div>
-        </Link>
-      </div>
-
-      {/* Overview: the teacher's own scope. Salary moved into the hero, so
-          three compact colour-coded tiles sit in one row. */}
-      <section className="space-y-3">
-        <h2 className="px-0.5 text-xs font-semibold uppercase tracking-wide text-fg-muted">
-          {t("teacher.dashboard.overviewTitle")}
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          <StatCard
-            compact
-            variant="purple"
-            icon={UsersRound}
-            label={t("teacher.dashboard.groupsCount")}
-            value={summary.groups_count}
-          />
-          <StatCard
-            compact
-            variant="blue"
-            icon={Users}
-            label={t("teacher.dashboard.studentsCount")}
-            value={summary.students_count}
-          />
-          <StatCard
-            compact
-            variant="plain"
-            icon={CalendarCheck}
-            label={t("teacher.dashboard.lessonsThisMonth")}
-            value={summary.lessons_this_month}
-          />
-        </div>
+      {/* Overview: the teacher's own scope, in the cabinet's own palette
+          (gilt, feruza, clay) instead of unrelated purple/blue gradients. */}
+      <section className="grid grid-cols-3 gap-3">
+        <OverviewTile
+          icon={UsersRound}
+          tone="gold"
+          value={summary.groups_count}
+          label={t("teacher.dashboard.groupsCount")}
+          to="/teacher/groups"
+        />
+        <OverviewTile
+          icon={Users}
+          tone="feruza"
+          value={summary.students_count}
+          label={t("teacher.dashboard.studentsCount")}
+          to="/teacher/groups"
+        />
+        <OverviewTile
+          icon={CalendarCheck}
+          tone="clay"
+          value={
+            summary.lessons_due_this_month
+              ? `${summary.lessons_this_month}/${summary.lessons_due_this_month}`
+              : summary.lessons_this_month
+          }
+          label={t("teacher.dashboard.markedThisMonth")}
+          to="/teacher/attendance"
+        />
       </section>
 
       {/* Quick attendance replaces the old launcher tiles: marking today's
@@ -412,6 +516,14 @@ export default function Dashboard() {
       )}
 
       {canMarkAttendance && <QuickAttendance />}
+
+      <FirstVisitGuide
+        id="dashboard-v2"
+        steps={["hero", "tiles", "owed"].map((key) => ({
+          title: t(`teacher.dashboard.guide.${key}Title`),
+          body: t(`teacher.dashboard.guide.${key}Body`),
+        }))}
+      />
     </div>
   );
 }
