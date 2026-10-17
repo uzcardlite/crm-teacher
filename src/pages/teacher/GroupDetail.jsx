@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Wallet } from "lucide-react";
-import { getMyGroupPayments, listMyGroups, listMyGroupStudents } from "../../api/teacher";
+import { getMyGroupFinance, listMyGroups } from "../../api/teacher";
 import MonthGrid from "../../components/attendance/MonthGrid";
 import Avatar from "../../components/ui/Avatar";
 import EmptyState from "../../components/ui/EmptyState";
@@ -14,6 +14,7 @@ import Segmented from "../../components/ui/Segmented";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { useTenantModules } from "../../context/TenantModulesContext";
+import { formatDate, groupThousands } from "../../utils/format";
 import { getErrorMessage } from "../../utils/apiError";
 import { cn } from "../../utils/cn";
 
@@ -25,71 +26,131 @@ const PAYMENT_TONE = {
   unpaid: "text-danger",
 };
 
-function StudentsTab({ groupId }) {
-  const { t } = useTranslation();
-  const [rows, setRows] = useState(null);
-  useEffect(() => {
-    listMyGroupStudents(groupId)
-      .then(setRows)
-      .catch((error) => {
-        setRows([]);
-        toast.error(getErrorMessage(error, t("teacher.groups.rosterError")));
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupId]);
-  if (rows === null) return <Skeleton className="h-48 w-full rounded-card" />;
-  if (rows.length === 0) return <EmptyState size="md" title={t("teacher.groups.emptyRoster")} />;
-  return (
-    <GroupedList>
-      {rows.map((student) => (
-        <ListRow
-          key={student.student_id}
-          to={`/teacher/students/${student.student_id}?group=${groupId}`}
-          leading={<Avatar photoUrl={student.photo_url} name={student.student_full_name} size="sm" />}
-          title={student.student_full_name}
-        />
-      ))}
-    </GroupedList>
-  );
+function shortDate(iso) {
+  return iso ? formatDate(iso).slice(0, 5) : "";
 }
 
-function PaymentsTab({ groupId, month }) {
+// Students with their money for the month: what each paid, what is left,
+// the group's totals and the teacher's own estimated share — so the teacher
+// can reckon their pay without asking the office.
+function StudentsTab({ groupId, month }) {
   const { t } = useTranslation();
-  const [rows, setRows] = useState(null);
+  const [data, setData] = useState(null);
+  const [filter, setFilter] = useState("all");
+
   useEffect(() => {
-    setRows(null);
-    getMyGroupPayments(groupId, month)
-      .then(setRows)
+    setData(null);
+    getMyGroupFinance(groupId, month)
+      .then(setData)
       .catch((error) => {
-        setRows([]);
+        setData({ students: [] });
         toast.error(getErrorMessage(error, t("teacher.groupPayments.loadError")));
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId, month]);
-  if (rows === null) return <Skeleton className="h-48 w-full rounded-card" />;
-  if (rows.length === 0) return <EmptyState size="md" icon={Wallet} title={t("teacher.groups.emptyRoster")} />;
-  const count = (status) => rows.filter((row) => row.status === status).length;
+
+  if (data === null) return <Skeleton className="h-72 w-full rounded-card" />;
+  if (!data.students?.length) return <EmptyState size="md" icon={Wallet} title={t("teacher.groups.emptyRoster")} />;
+
+  const expected = Number(data.expected) || 0;
+  const collected = Number(data.collected) || 0;
+  const pct = expected > 0 ? Math.min(100, Math.round((collected / expected) * 100)) : 0;
+  const owing = data.students.filter((row) => row.status !== "paid");
+  const rows = filter === "owing" ? owing : data.students;
+  const currency = t("finance.currency");
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 rounded-card bg-surface py-3.5 shadow-card">
-        {["paid", "partial", "unpaid"].map((status, index) => (
-          <div key={status} className={cn("text-center", index > 0 && "border-l border-line")}>
-            <p className={cn("text-[22px] font-bold tabular-nums", PAYMENT_TONE[status])}>{count(status)}</p>
-            <p className="mt-0.5 text-xs text-fg-muted">{t(`teacher.groupPayments.${status}`)}</p>
+      {/* group totals */}
+      <section className="rounded-card bg-surface p-4 shadow-card">
+        <p className="text-[13px] font-medium text-fg-muted">{t("teacher.groupFinance.collected")}</p>
+        <p className="mt-1 text-[28px] font-bold tracking-tight tabular-nums text-fg">
+          {groupThousands(collected)} <span className="text-lg font-semibold text-fg-muted">{currency}</span>
+        </p>
+        <p className="text-[13px] text-fg-secondary">
+          {t("teacher.groupFinance.ofExpected", { amount: `${groupThousands(expected)} ${currency}`, pct })}
+        </p>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-sunken">
+          <div className="h-full rounded-full bg-success" style={{ width: `${pct}%` }} />
+        </div>
+        <div className="mt-3 grid grid-cols-3 border-t border-line pt-3">
+          {[
+            ["paid", data.paid_count, PAYMENT_TONE.paid],
+            ["partial", data.partial_count, PAYMENT_TONE.partial],
+            ["unpaid", data.unpaid_count, PAYMENT_TONE.unpaid],
+          ].map(([key, value, tone], index) => (
+            <div key={key} className={cn("text-center", index > 0 && "border-l border-line")}>
+              <p className={cn("text-lg font-bold tabular-nums", tone)}>{value}</p>
+              <p className="text-xs text-fg-muted">{t(`teacher.groupPayments.${key}`)}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* the teacher's own estimate */}
+      {data.share_estimate !== null && data.share_estimate !== undefined ? (
+        <section className="flex items-center gap-3 rounded-card bg-surface p-4 shadow-card">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-success text-white">
+            <Wallet size={20} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[13px] font-medium text-fg-muted">{t("teacher.groupFinance.share")}</p>
+            <p className="text-xl font-bold tabular-nums text-fg">
+              ≈ {groupThousands(data.share_estimate)} {currency}
+            </p>
+            <p className="text-xs text-fg-secondary">
+              {data.salary_type === "percentage"
+                ? t("teacher.groupFinance.sharePercent", { rate: Number(data.salary_rate) })
+                : t("teacher.groupFinance.sharePerStudent", { rate: groupThousands(data.salary_rate), count: data.students.length })}
+            </p>
           </div>
-        ))}
-      </div>
-      <GroupedList>
-        {rows.map((row) => (
-          <ListRow
-            key={row.student_id}
-            leading={<Avatar photoUrl={row.photo_url} name={row.full_name} size="sm" />}
-            title={row.full_name}
-            trailing={<span className={cn("font-medium", PAYMENT_TONE[row.status])}>{t(`teacher.groupPayments.${row.status}`)}</span>}
-          />
-        ))}
-      </GroupedList>
-      <p className="px-1 text-xs text-fg-muted">{t("teacher.groupPayments.hint")}</p>
+        </section>
+      ) : (
+        <p className="px-1 text-xs text-fg-muted">{t("teacher.groupFinance.shareOther")}</p>
+      )}
+
+      <Segmented
+        options={[
+          { value: "all", label: t("teacher.groupFinance.filterAll", { count: data.students.length }) },
+          { value: "owing", label: t("teacher.groupFinance.filterOwing", { count: owing.length }) },
+        ]}
+        value={filter}
+        onChange={setFilter}
+        ariaLabel={t("teacher.groupDetail.tabs.students")}
+      />
+
+      {rows.length === 0 ? (
+        <EmptyState size="sm" title={t("teacher.groupFinance.nobodyOwes")} />
+      ) : (
+        <GroupedList>
+          {rows.map((row) => (
+            <ListRow
+              key={row.student_id}
+              to={`/teacher/students/${row.student_id}?group=${groupId}`}
+              leading={<Avatar photoUrl={row.photo_url} name={row.full_name} size="sm" />}
+              title={row.full_name}
+              subtitle={
+                Number(row.paid) > 0
+                  ? t("teacher.groupFinance.paidOn", { date: shortDate(row.last_payment_date) })
+                  : t("teacher.groupFinance.notPaidYet")
+              }
+              trailing={
+                <span className="flex flex-col items-end leading-tight">
+                  <span className={cn("text-[15px] font-semibold tabular-nums", PAYMENT_TONE[row.status])}>
+                    {groupThousands(row.paid)}
+                  </span>
+                  <span className="text-xs tabular-nums text-fg-muted">
+                    {row.status === "paid"
+                      ? t("teacher.groupFinance.fullyPaid")
+                      : t("teacher.groupFinance.debt", { amount: groupThousands(row.debt) })}
+                  </span>
+                </span>
+              }
+            />
+          ))}
+        </GroupedList>
+      )}
+      <p className="px-1 text-xs text-fg-muted">{t("teacher.groupFinance.hint")}</p>
     </div>
   );
 }
@@ -106,7 +167,6 @@ export default function GroupDetail() {
 
   const tabs = [
     { value: "students", label: t("teacher.groupDetail.tabs.students") },
-    { value: "payments", label: t("teacher.groupDetail.tabs.payments") },
     ...(canAttendance ? [{ value: "attendance", label: t("teacher.groupDetail.tabs.attendance") }] : []),
   ];
   const tab = tabs.some((item) => item.value === searchParams.get("tab")) ? searchParams.get("tab") : "students";
@@ -130,14 +190,13 @@ export default function GroupDetail() {
         onChange={(value) => setSearchParams({ tab: value }, { replace: true })}
         ariaLabel={group?.name}
       />
-      {tab !== "students" && <MonthSwitcher value={month} onChange={setMonth} />}
-      {tab === "students" && <StudentsTab groupId={groupId} />}
-      {tab === "payments" && <PaymentsTab groupId={groupId} month={month} />}
+      <MonthSwitcher value={month} onChange={setMonth} />
+      {tab === "students" && <StudentsTab groupId={groupId} month={month} />}
       {tab === "attendance" && <MonthGrid groupId={groupId} month={month} />}
 
       <FirstVisitGuide
-        id="group-detail-v1"
-        steps={["tabs", "payments", "register"].map((key) => ({
+        id="group-detail-v2"
+        steps={["tabs", "money", "register"].map((key) => ({
           title: t(`teacher.groupDetail.guide.${key}Title`),
           body: t(`teacher.groupDetail.guide.${key}Body`),
         }))}

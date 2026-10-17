@@ -248,3 +248,11 @@ export function getMyGroupPayments(groupId, month) {
     .get(`/api/v1/teacher/groups/${groupId}/payments`, { params: month ? { month } : {} })
     .then((res) => res.data);
 }
+
+// A group's month in money terms: per-student charge / paid / debt, group
+// totals and (for percentage or per-student pay) the teacher's estimated share.
+export function getMyGroupFinance(groupId, month) {
+  return apiClient
+    .get(`/api/v1/teacher/groups/${groupId}/finance`, { params: month ? { month } : {} })
+    .then((res) => res.data);
+}

@@ -130,9 +130,9 @@
       },
       "guide": {
         "tabsTitle": "Guruh sahifasi",
-        "tabsBody": "Bu yerda guruhning o'quvchilari, kim to'lov qilgani va oylik davomat bir joyda.",
-        "paymentsTitle": "To'lovlar",
-        "paymentsBody": "Har bir o'quvchi uchun tanlangan oy bo'yicha holat: to'lagan, qisman yoki to'lamagan. Summalar ko'rsatilmaydi.",
+        "tabsBody": "O'quvchilar va oylik davomat bir joyda. Oyni tepadagi strelkalar bilan almashtirasiz.",
+        "moneyTitle": "Kim qancha to'lagan",
+        "moneyBody": "Har bir o'quvchi qancha to'lagani va qancha qarzi qolgani, guruh bo'yicha jami va taxminiy ulushingiz shu yerda.",
         "registerTitle": "Oylik davomat",
         "registerBody": "Butun oy bitta jadvalda: kunlar ustunlarda, o'quvchilar qatorlarda, oxirida davomat foizi."
       }
@@ -558,6 +558,22 @@
     "month": {
       "prev": "Oldingi oy",
       "next": "Keyingi oy"
+    },
+    "groupFinance": {
+      "collected": "Bu oy yig'ildi",
+      "ofExpected": "{{amount}} dan · {{pct}}%",
+      "share": "Taxminiy ulushingiz",
+      "sharePercent": "yig'ilgan pulning {{rate}}%",
+      "sharePerStudent": "{{rate}} so'm × {{count}} o'quvchi",
+      "shareOther": "Maoshingiz belgilangan summa yoki soat bo'yicha hisoblanadi — aniq summa «Maoshim» bo'limida.",
+      "filterAll": "Hammasi · {{count}}",
+      "filterOwing": "Qarzdorlar · {{count}}",
+      "nobodyOwes": "Bu oy hamma to'lagan",
+      "paidOn": "To'ladi · {{date}}",
+      "notPaidYet": "Hali to'lamagan",
+      "fullyPaid": "to'liq",
+      "debt": "qarz {{amount}}",
+      "hint": "Summalar shu guruh va tanlangan oy bo'yicha. Ulush taxminiy: yakuniy oylikni markaz hisoblaydi."
     }
   }
 }
