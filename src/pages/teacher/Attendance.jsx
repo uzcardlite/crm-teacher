@@ -8,7 +8,11 @@ import {
   listMyGroups,
   listMyGroupStudents,
 } from "../../api/teacher";
+import MonthGrid from "../../components/attendance/MonthGrid";
 import UnmarkedBanner from "../../components/attendance/UnmarkedBanner";
+import MonthSwitcher, { currentMonthValue } from "../../components/ui/MonthSwitcher";
+import PageTitle from "../../components/ui/PageTitle";
+import Segmented from "../../components/ui/Segmented";
 import Avatar from "../../components/ui/Avatar";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -27,7 +31,7 @@ const STATUS_CONFIG = {
   absent: { labelKey: "growth.attendance.statusAbsent", activeClass: "bg-danger text-white shadow-card" },
 };
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 
 // The device's own calendar day — toISOString() is UTC, which in Tashkent
 // still shows yesterday until 05:00.
@@ -50,6 +54,9 @@ export default function Attendance() {
     return wanted && ISO_DAY.test(wanted) ? wanted : todayISO();
   });
   const [roster, setRoster] = useState([]);
+  // "day": mark one lesson; "month": the whole month as a grid (read-only).
+  const [mode, setMode] = useState(searchParams.get("view") === "month" ? "month" : "day");
+  const [month, setMonth] = useState(currentMonthValue);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [loadingDaily, setLoadingDaily] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -143,6 +150,32 @@ export default function Attendance() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.attendance")} subtitle={selectedGroup?.name} />
+      <Segmented
+        options={[
+          { value: "day", label: t("teacher.attendance.modeDay") },
+          { value: "month", label: t("teacher.attendance.modeMonth") },
+        ]}
+        value={mode}
+        onChange={setMode}
+        ariaLabel={t("teacher.nav.attendance")}
+      />
+
+      {mode === "month" ? (
+        <>
+          {groups.length > 0 && (
+            <Segmented
+              options={groups.map((group) => ({ value: String(group.id), label: group.name }))}
+              value={String(groupId)}
+              onChange={setGroupId}
+              ariaLabel={t("teacher.attendance.groupLabel")}
+            />
+          )}
+          <MonthSwitcher value={month} onChange={setMonth} />
+          {groupId ? <MonthGrid groupId={groupId} month={month} /> : null}
+        </>
+      ) : (
+      <>
       <UnmarkedBanner
         refreshKey={disciplineKey}
         onPick={(lesson) => {
@@ -278,6 +311,8 @@ export default function Attendance() {
             {saving ? t("teacher.common.saving") : t("teacher.common.save")}
           </Button>
         </>
+      )}
+      </>
       )}
     </div>
   );

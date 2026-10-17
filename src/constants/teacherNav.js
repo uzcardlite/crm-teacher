@@ -59,9 +59,13 @@ const TITLE_BY_PATH = {
 // The dashboard is the app's home screen — its own hero card already greets
 // the teacher by name, so a redundant "Bosh sahifa" header title is skipped
 // there (empty string; TeacherLayout hides the <h1> when title is empty).
+// Pages that render their own large title (PageTitle) — the sticky header
+// then shows no small title of its own, so the name never appears twice.
+export const LARGE_TITLE_PATHS = ["/teacher/dashboard", "/teacher/groups", "/teacher/attendance"];
+
 export function teacherRouteTitle(pathname, t) {
   if (!pathname) return "CRM";
-  if (pathname === "/teacher/dashboard") return "";
+  if (LARGE_TITLE_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`))) return "";
   const match = Object.keys(TITLE_BY_PATH)
     .filter((path) => pathname === path || pathname.startsWith(`${path}/`))
     .sort((a, b) => b.length - a.length)[0];

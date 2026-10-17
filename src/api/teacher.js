@@ -234,3 +234,17 @@ export function updateNotificationSettings(payload) {
     .patch("/api/v1/teacher/settings/notifications", payload)
     .then((res) => res.data);
 }
+
+// One group's register for a month: { days: [{date, kind}], students: [{ full_name, marks, present, late, absent, rate }] }.
+export function getMyGroupMonthAttendance(groupId, month) {
+  return apiClient
+    .get(`/api/v1/teacher/groups/${groupId}/attendance/month`, { params: month ? { month } : {} })
+    .then((res) => res.data);
+}
+
+// Who has paid this month in a group — status only (paid / partial / unpaid), never amounts.
+export function getMyGroupPayments(groupId, month) {
+  return apiClient
+    .get(`/api/v1/teacher/groups/${groupId}/payments`, { params: month ? { month } : {} })
+    .then((res) => res.data);
+}

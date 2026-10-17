@@ -103,7 +103,9 @@
       "friendAction": "Do'st qo'shish",
       "reactionAction": "Reaksiya bildirish",
       "behaviourAction": "Xulq",
-      "pickFriendLabel": "Kim bilan do'stlashtiramiz?"
+      "pickFriendLabel": "Kim bilan do'stlashtiramiz?",
+      "title": "Guruhlar",
+      "summary": "{{groups}} ta guruh · {{students}} o'quvchi"
     },
     "groupDetail": {
       "loadError": "Guruhni yuklab bo'lmadi",
@@ -120,7 +122,20 @@
       "bio": "Izoh",
       "enrolled": "Ro'yxatga olingan",
       "contactInfo": "Bog'lanish",
-      "aboutInfo": "Ma'lumot"
+      "aboutInfo": "Ma'lumot",
+      "tabs": {
+        "students": "O'quvchilar",
+        "payments": "To'lovlar",
+        "attendance": "Davomat"
+      },
+      "guide": {
+        "tabsTitle": "Guruh sahifasi",
+        "tabsBody": "Bu yerda guruhning o'quvchilari, kim to'lov qilgani va oylik davomat bir joyda.",
+        "paymentsTitle": "To'lovlar",
+        "paymentsBody": "Har bir o'quvchi uchun tanlangan oy bo'yicha holat: to'lagan, qisman yoki to'lamagan. Summalar ko'rsatilmaydi.",
+        "registerTitle": "Oylik davomat",
+        "registerBody": "Butun oy bitta jadvalda: kunlar ustunlarda, o'quvchilar qatorlarda, oxirida davomat foizi."
+      }
     },
     "attendance": {
       "groupsError": "Guruhlarni yuklab bo'lmadi",
@@ -158,7 +173,12 @@
         "unmarked": "Belgilanmagan"
       },
       "allPresent": "Hammasi keldi",
-      "studentsTitle": "O'quvchilar"
+      "studentsTitle": "O'quvchilar",
+      "modeDay": "Kunlik",
+      "modeMonth": "Oylik",
+      "monthError": "Oylik davomatni yuklab bo'lmadi",
+      "monthEmpty": "Bu oyda dars yoki o'quvchi yo'q",
+      "notMarked": "belgilanmagan"
     },
     "exams": {
       "groupsError": "Guruhlarni yuklab bo'lmadi",
@@ -527,6 +547,17 @@
       "hoursAgo": "{{count}} soat oldin",
       "daysAgo": "{{count}} kun oldin",
       "count": "{{count}} ta"
+    },
+    "groupPayments": {
+      "paid": "To'lagan",
+      "partial": "Qisman",
+      "unpaid": "To'lamagan",
+      "loadError": "To'lov holatini yuklab bo'lmadi",
+      "hint": "Faqat holat ko'rsatiladi. Summa va qarz miqdori markaz ma'muriyatida."
+    },
+    "month": {
+      "prev": "Oldingi oy",
+      "next": "Keyingi oy"
     }
   }
 }
