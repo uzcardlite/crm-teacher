@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Tabs from "../../components/ui/Tabs";
+import PageTitle from "../../components/ui/PageTitle";
+import Segmented from "../../components/ui/Segmented";
 import DailyGrades from "./DailyGrades";
 import Exams from "./Exams";
 
@@ -14,17 +15,16 @@ export default function Grading() {
 
   return (
     <>
-      <div className="mx-auto max-w-lg px-4 pt-4">
-        <Tabs
-          className="w-full"
+      <div className="mx-auto max-w-lg space-y-4 px-4 pt-5">
+        <PageTitle title={t("teacher.nav.exams")} />
+        <Segmented
           value={tab}
-          onChange={(next) =>
-            setParams(next === "daily" ? { tab: "daily" } : {}, { replace: true })
-          }
-          tabs={[
-            { key: "exams", label: t("teacher.grading.examsTab") },
-            { key: "daily", label: t("teacher.grading.dailyTab") },
+          onChange={(next) => setParams(next === "daily" ? { tab: "daily" } : {}, { replace: true })}
+          options={[
+            { value: "exams", label: t("teacher.grading.examsTab") },
+            { value: "daily", label: t("teacher.grading.dailyTab") },
           ]}
+          ariaLabel={t("teacher.nav.exams")}
         />
       </div>
       {tab === "daily" ? <DailyGrades /> : <Exams />}

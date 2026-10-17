@@ -58,7 +58,7 @@ export default function UnmarkedBanner({ onPick, showStreak = false, refreshKey 
   return (
     <Card padding="p-4" className="border-danger/30 bg-danger/10">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn bg-danger text-white shadow-glow-danger">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn bg-danger text-white">
           <AlertTriangle size={18} />
         </span>
         <div className="min-w-0 flex-1">

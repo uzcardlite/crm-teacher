@@ -22,8 +22,9 @@ import Tabs from "../../components/ui/Tabs";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { formatDate } from "../../utils/format";
+import PageTitle from "../../components/ui/PageTitle";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 const EMPTY_FORM = { date: "", start_time: "", end_time: "" };
 
 // pending -> confirmed -> cancelled color mapping (canonical, from designer).
@@ -177,6 +178,7 @@ export default function Booking() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.booking")} />
       <Tabs className="w-full" tabs={tabs} value={activeTab} onChange={setActiveTab} />
 
       {activeTab === "slots" ? (

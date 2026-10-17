@@ -36,8 +36,9 @@ import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { behaviourTone, formatDate } from "../../utils/format";
 import { cn } from "../../utils/cn";
+import PageTitle from "../../components/ui/PageTitle";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 
 // Mirrors app/models/student_reaction.py's REACTION_POINTS — every emoji is
 // worth 1 star; the emoji says what the praise was for, not how much. Shown
@@ -324,6 +325,7 @@ export default function Recognition() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.recognition")} />
       <Select
         label={t("teacher.recognition.groupLabel")}
         className="w-full"
@@ -393,7 +395,7 @@ export default function Recognition() {
                       className={cn(
                         "flex items-center gap-1 rounded-btn border px-3 py-2 text-lg transition-colors",
                         reactEmoji === reaction.emoji
-                          ? "border-accent bg-gradient-gold"
+                          ? "border-primary bg-primary"
                           : "border-line-strong hover:bg-surface-sunken",
                       )}
                     >
@@ -401,7 +403,7 @@ export default function Recognition() {
                       <span
                         className={cn(
                           "text-xs font-semibold tabular-nums",
-                          reactEmoji === reaction.emoji ? "text-accent-fg" : "text-fg-muted",
+                          reactEmoji === reaction.emoji ? "text-primary-fg" : "text-fg-muted",
                         )}
                       >
                         +{reaction.points}

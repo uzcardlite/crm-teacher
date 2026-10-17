@@ -23,8 +23,9 @@ import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { formatChatTimestamp } from "../../utils/format";
 import { cn } from "../../utils/cn";
+import PageTitle from "../../components/ui/PageTitle";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 
 // Teacher-side chat inbox. Threads are grouped into sections by the student's
 // group (backend denormalizes group_name onto each thread); inside a section
@@ -223,6 +224,7 @@ export default function Chat() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.chat")} />
       <div className="grid grid-cols-2 gap-3">
         <Button variant="secondary" onClick={openNewChat}>
           <Plus size={16} />
@@ -429,7 +431,7 @@ export default function Chat() {
                       className={cn(
                         "flex w-full items-center gap-2.5 rounded-btn px-2 py-1.5 text-left text-sm transition-colors",
                         checked
-                          ? "bg-accent-light/20 text-fg"
+                          ? "bg-surface-sunken text-fg"
                           : "text-fg-secondary hover:bg-surface-sunken",
                       )}
                     >

@@ -15,13 +15,13 @@ import {
 import { getMyWeek } from "../../api/teacher";
 import Card from "../../components/ui/Card";
 import FirstVisitGuide from "../../components/ui/FirstVisitGuide";
-import KoshinStar from "../../components/ui/KoshinStar";
+import PageTitle from "../../components/ui/PageTitle";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { cn } from "../../utils/cn";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 const SWIPE_PX = 60;
 // A gap shorter than this between two lessons is not worth a "break" row.
@@ -72,7 +72,7 @@ const STATE_STYLE = {
   late: { dot: "bg-warning", chip: "bg-warning-bg text-warning" },
   missed: { dot: "bg-danger", chip: "bg-danger-bg text-danger" },
   pending: { dot: "bg-warning", chip: "bg-warning-bg text-warning" },
-  live: { dot: "bg-accent", chip: "bg-accent text-accent-fg" },
+  live: { dot: "bg-accent", chip: "bg-accent/15 text-accent-dark dark:text-accent" },
   upcoming: { dot: "bg-line-strong", chip: "bg-surface-sunken text-fg-secondary" },
 };
 
@@ -104,23 +104,23 @@ function WeekStrip({ days, selected, todayIso, counts, alerts, onPick, lang }) {
             className={cn(
               "u-press flex min-h-[64px] flex-col items-center justify-center gap-0.5 rounded-card border transition-colors",
               isSelected
-                ? "border-transparent bg-gradient-gold text-accent-fg shadow-glow-accent"
+                ? "border-transparent bg-primary text-primary-fg"
                 : isToday
                   ? "border-accent bg-surface text-fg"
                   : "border-line bg-surface text-fg-secondary",
             )}
           >
-            <span className={cn("text-[11px] font-medium", isSelected ? "text-accent-fg/80" : "text-fg-muted")}>
+            <span className={cn("text-[11px] font-medium", isSelected ? "text-primary-fg/70" : "text-fg-muted")}>
               {t(`pages.schedule.days.${WEEKDAYS[index]}`).slice(0, 2)}
             </span>
-            <span className="font-display text-lg font-bold leading-none">{parseIso(day).getDate()}</span>
+            <span className="text-lg font-bold leading-none">{parseIso(day).getDate()}</span>
             <span className="flex h-2 items-center gap-0.5" aria-hidden="true">
               {Array.from({ length: Math.min(count, 4) }).map((_, i) => (
                 <span
                   key={i}
                   className={cn(
                     "h-1 w-1 rounded-full",
-                    isSelected ? "bg-accent-fg/70" : alerts[day] ? "bg-danger" : "bg-secondary",
+                    isSelected ? "bg-primary-fg/70" : alerts[day] ? "bg-danger" : "bg-fg-faint",
                   )}
                 />
               ))}
@@ -141,17 +141,17 @@ function NowCard({ lesson, current, onMark }) {
   const left = live ? start + lesson.duration_minutes - current : start - current;
 
   return (
-    <Card padding="p-0" className="overflow-hidden border-transparent bg-gradient-feruza text-white">
+    <Card padding="p-0" className="overflow-hidden">
       <div className="flex items-center gap-3 p-4">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-secondary-dark/50">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-surface-sunken text-fg-secondary">
           {live ? <span className="h-3 w-3 rounded-full bg-accent ring-4 ring-accent/30" /> : <Clock size={20} />}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-white/80">
+          <p className={cn("text-[13px] font-semibold", live ? "text-accent-dark dark:text-accent" : "text-fg-secondary")}>
             {live ? t("teacher.schedule.now") : t("teacher.schedule.nextIn", { time: formatDuration(left, t) })}
           </p>
-          <p className="truncate font-display text-lg font-semibold">{lesson.group_name}</p>
-          <p className="text-xs text-white/80">
+          <p className="truncate text-lg font-bold tracking-tight text-fg">{lesson.group_name}</p>
+          <p className="text-[13px] text-fg-secondary">
             {lesson.time}–{lesson.end_time}
             {lesson.room_name ? ` · ${lesson.room_name}` : ""}
             {live ? ` · ${t("teacher.schedule.minutesLeft", { count: left })}` : ""}
@@ -161,7 +161,7 @@ function NowCard({ lesson, current, onMark }) {
           <button
             type="button"
             onClick={() => onMark(lesson)}
-            className="u-press flex min-h-[44px] items-center gap-1.5 rounded-btn bg-accent px-3 text-sm font-semibold text-accent-fg"
+            className="u-press flex min-h-[44px] items-center gap-1.5 rounded-btn bg-primary px-3 text-sm font-semibold text-primary-fg"
           >
             <ClipboardCheck size={16} />
             {t("teacher.schedule.mark")}
@@ -169,7 +169,7 @@ function NowCard({ lesson, current, onMark }) {
         )}
       </div>
       {live && (
-        <div className="h-1.5 bg-secondary-dark/50">
+        <div className="h-1 bg-surface-sunken">
           <div className="h-full bg-accent" style={{ width: `${progress}%` }} />
         </div>
       )}
@@ -187,7 +187,7 @@ function LessonRow({ lesson, onMark, onOpenGroup }) {
     <div className="flex gap-3">
       {/* time column */}
       <div className="flex w-12 shrink-0 flex-col items-end pt-3">
-        <span className="font-display text-sm font-bold text-fg">{lesson.time || "—"}</span>
+        <span className="text-sm font-bold text-fg">{lesson.time || "—"}</span>
         <span className="text-[11px] text-fg-muted">{lesson.end_time || ""}</span>
       </div>
       {/* rail */}
@@ -201,11 +201,11 @@ function LessonRow({ lesson, onMark, onOpenGroup }) {
       {/* card */}
       <Card
         padding="p-3.5"
-        className={cn("mb-3 min-w-0 flex-1", lesson.displayState === "live" && "border-accent shadow-glow-accent")}
+        className={cn("mb-3 min-w-0 flex-1", lesson.displayState === "live" && "ring-1 ring-accent")}
       >
         <button type="button" onClick={() => onOpenGroup(lesson)} className="block w-full text-left">
           <div className="flex items-start gap-2">
-            <p className="min-w-0 flex-1 truncate font-display text-base font-semibold text-fg">{lesson.group_name}</p>
+            <p className="min-w-0 flex-1 truncate text-base font-semibold text-fg">{lesson.group_name}</p>
             <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold", style.chip)}>
               {t(`teacher.schedule.state.${lesson.displayState}`)}
             </span>
@@ -256,7 +256,7 @@ function LessonRow({ lesson, onMark, onOpenGroup }) {
             onClick={() => onMark(lesson)}
             className={cn(
               "u-press mt-3 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-btn text-sm font-semibold",
-              lesson.displayState === "missed" ? "bg-danger text-white" : "bg-accent text-accent-dark",
+              lesson.displayState === "missed" ? "bg-danger text-white" : "bg-primary text-primary-fg",
             )}
           >
             <ClipboardCheck size={16} />
@@ -408,6 +408,7 @@ export default function Schedule() {
         if (Math.abs(dx) >= SWIPE_PX) shiftDay(dx < 0 ? 1 : -1);
       }}
     >
+      <PageTitle title={t("teacher.nav.schedule")} />
       {/* week header */}
       <div className="flex items-center gap-2">
         <button
@@ -419,7 +420,7 @@ export default function Schedule() {
           <ChevronLeft size={18} />
         </button>
         <div className="min-w-0 flex-1 text-center">
-          <p className="font-display text-base font-semibold capitalize text-fg">{weekLabel}</p>
+          <p className="text-base font-semibold capitalize text-fg">{weekLabel}</p>
           <p className="text-xs text-fg-muted">
             {t("teacher.schedule.weekSummary", { count: lessons.length, time: formatDuration(weekMinutes, t) })}
           </p>
@@ -439,7 +440,7 @@ export default function Schedule() {
       {/* selected day */}
       <div className="flex items-end justify-between gap-2">
         <div>
-          <p className="font-display text-xl font-bold capitalize text-fg">{selectedLabel}</p>
+          <p className="text-xl font-bold capitalize text-fg">{selectedLabel}</p>
           <p className="text-xs text-fg-muted">
             {dayLessons.length
               ? t("teacher.schedule.daySummary", { count: dayLessons.length, time: formatDuration(dayMinutes, t) })
@@ -464,10 +465,10 @@ export default function Schedule() {
           <NowCard lesson={focus} current={current} onMark={mark} />
           {dayLessons.length === 0 ? (
             <Card padding="p-6" className="flex flex-col items-center gap-2 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-feruza text-white">
-                <KoshinStar size={26} strokeWidth={6} />
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-sunken text-fg-muted">
+                <CalendarDays size={26} />
               </span>
-              <p className="font-display text-base font-semibold text-fg">{t("teacher.schedule.freeTitle")}</p>
+              <p className="text-base font-semibold text-fg">{t("teacher.schedule.freeTitle")}</p>
               <p className="text-xs text-fg-muted">{t("teacher.schedule.freeBody")}</p>
             </Card>
           ) : (

@@ -207,7 +207,7 @@ export default function ChatThread() {
             aria-label={t("teacher.chat.send")}
             onClick={handleSend}
             disabled={draft.trim() === "" || sending}
-            className="bg-accent text-accent-dark hover:bg-accent-light"
+            className="bg-primary text-primary-fg hover:opacity-90"
           />
         </div>
       </div>

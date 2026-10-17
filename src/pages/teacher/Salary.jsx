@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Banknote, Calculator, Eye, EyeOff } from "lucide-react";
 import { getMyPayroll, getMyPayrollHistory } from "../../api/payroll";
 import Card from "../../components/ui/Card";
+import MonthSwitcher from "../../components/ui/MonthSwitcher";
+import PageTitle from "../../components/ui/PageTitle";
 import EmptyState from "../../components/ui/EmptyState";
-import Input from "../../components/ui/Input";
 import Skeleton from "../../components/ui/Skeleton";
 import Table from "../../components/ui/Table";
 import { toast } from "../../components/ui/Toast";
@@ -12,7 +13,7 @@ import { getErrorMessage } from "../../utils/apiError";
 import { cn } from "../../utils/cn";
 import { formatDateTime, formatMoney, formatMonth, groupThousands } from "../../utils/format";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 
 function currentMonth() {
   return new Date().toISOString().slice(0, 7);
@@ -152,14 +153,9 @@ export default function Salary() {
 
   return (
     <div className={PAGE_CLASS}>
-      <Input
-        label={t("teacher.salary.monthLabel")}
-        type="month"
-        className="w-full max-w-[180px]"
-        value={month}
-        onChange={(event) => setMonth(event.target.value)}
-        disabled={loading}
-      />
+      <PageTitle title={t("teacher.nav.salary")} />
+      {/* month is "YYYY-MM"; the switcher speaks "YYYY-MM-01" */}
+      <MonthSwitcher value={`${month}-01`} onChange={(value) => setMonth(value.slice(0, 7))} />
 
       {loading || !data ? (
         <>
@@ -175,44 +171,34 @@ export default function Salary() {
         />
       ) : (
         <>
-          {/* Gilt-on-feruza hero: the month's published salary is the payoff,
-              set in the heritage serif, with sessions as the secondary metric
-              and a koshin watermark. The eye button masks the figure without
-              leaving the page — the amount stays loaded, just hidden. */}
-          <div className="relative overflow-hidden rounded-card bg-gradient-feruza px-5 py-5 text-white shadow-card">
+          {/* The month's published salary: a calm card, big figure, sessions
+              beside it. The eye masks the amount without reloading. */}
+          <Card padding="p-4" className="relative">
             <button
               type="button"
               onClick={() => setAmountVisible((v) => !v)}
-              aria-label={t(
-                amountVisible ? "teacher.dashboard.hideSalary" : "teacher.dashboard.showSalary",
-              )}
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              aria-label={t(amountVisible ? "teacher.dashboard.hideSalary" : "teacher.dashboard.showSalary")}
+              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-sunken"
             >
-              {amountVisible ? <EyeOff size={17} /> : <Eye size={17} />}
+              {amountVisible ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            <div className="relative flex items-center justify-between gap-4">
-              <div className="min-w-0">
-                <p className="flex items-center gap-1.5 text-xs font-medium text-white/85">
-                  <Banknote size={15} />
-                  {t("teacher.salary.calculatedSalary")}
-                </p>
-                <p className="mt-1 truncate font-display text-3xl font-semibold tracking-wide tabular-nums">
-                  {amountVisible ? formatMoney(data.total_amount) : "•• ••• •••"}
-                </p>
-              </div>
-              <div className="shrink-0 border-l border-white/25 pl-4 text-right">
-                <p className="font-display text-2xl font-semibold tabular-nums">{sessionsTotal}</p>
-                <p className="text-[11px] font-medium text-white/85">
-                  {t("teacher.salary.sessionsGiven")}
-                </p>
-              </div>
+            <p className="flex items-center gap-1.5 text-[13px] font-medium text-fg-muted">
+              <Banknote size={15} />
+              {t("teacher.salary.calculatedSalary")}
+            </p>
+            <p className="mt-1 truncate text-[32px] font-bold tracking-tight tabular-nums text-fg">
+              {amountVisible ? formatMoney(data.total_amount) : "•• ••• •••"}
+            </p>
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-[15px]">
+              <span className="text-fg-secondary">{t("teacher.salary.sessionsGiven")}</span>
+              <span className="font-semibold tabular-nums text-fg">{sessionsTotal}</span>
             </div>
             {data.published_at && (
-              <p className="relative mt-3 text-[11px] text-white/70">
+              <p className="mt-2 text-xs text-fg-muted">
                 {t("teacher.salary.publishedAt", { date: formatDateTime(data.published_at) })}
               </p>
             )}
-          </div>
+          </Card>
           {hint && <p className="px-0.5 text-xs text-fg-muted">{hint}</p>}
           {breakdown.length > 0 && (
             <Table columns={columns} data={breakdown} rowKey={(row) => row.group_id} />

@@ -228,7 +228,7 @@ export default function DailyGrades() {
                       {t("teacher.dailyGrades.graded")}
                     </span>
                   ) : (
-                    <span className="shrink-0 rounded-full bg-accent-light/25 px-2 py-0.5 text-[10px] font-bold text-accent-dark dark:text-accent">
+                    <span className="shrink-0 rounded-full bg-surface-sunken px-2 py-0.5 text-[10px] font-bold text-fg-secondary">
                       {t("teacher.dailyGrades.notGraded")}
                     </span>
                   )}

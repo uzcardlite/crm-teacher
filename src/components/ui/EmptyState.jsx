@@ -26,7 +26,7 @@ export default function EmptyState({
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center overflow-hidden rounded-card border border-dashed border-line-strong bg-surface text-center",
+        "relative flex flex-col items-center justify-center overflow-hidden rounded-card bg-surface text-center shadow-card",
         styles.wrapper,
         className,
       )}
@@ -35,7 +35,7 @@ export default function EmptyState({
       {Icon && (
         <span
           className={cn(
-            "relative flex items-center justify-center rounded-full bg-accent-light/30 text-accent-dark dark:text-accent",
+            "relative flex items-center justify-center rounded-full bg-surface-sunken text-fg-muted",
             styles.icon,
           )}
         >

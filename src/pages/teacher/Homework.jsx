@@ -22,8 +22,9 @@ import Textarea from "../../components/ui/Textarea";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
 import { formatDate, homeworkDueStatus } from "../../utils/format";
+import PageTitle from "../../components/ui/PageTitle";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 const EMPTY_FORM = { group_id: "", title: "", description: "", due_date: "" };
 
 export default function Homework() {
@@ -153,6 +154,7 @@ export default function Homework() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.homework")} />
       <div className="flex flex-col gap-3">
         <Select
           label={t("teacher.homework.groupLabel")}

@@ -61,7 +61,7 @@ const TITLE_BY_PATH = {
 // there (empty string; TeacherLayout hides the <h1> when title is empty).
 // Pages that render their own large title (PageTitle) — the sticky header
 // then shows no small title of its own, so the name never appears twice.
-export const LARGE_TITLE_PATHS = ["/teacher/dashboard", "/teacher/groups", "/teacher/attendance"];
+export const LARGE_TITLE_PATHS = ["/teacher/dashboard", "/teacher/groups", "/teacher/attendance", "/teacher/salary", "/teacher/schedule", "/teacher/exams", "/teacher/homework", "/teacher/recognition", "/teacher/settings", "/teacher/booking", "/teacher/chat"];
 
 export function teacherRouteTitle(pathname, t) {
   if (!pathname) return "CRM";

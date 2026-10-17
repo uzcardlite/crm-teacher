@@ -307,7 +307,7 @@ export default function StudentDetail() {
                 const Icon = row.icon;
                 return (
                   <div key={index} className="flex items-center gap-3 px-3.5 py-3">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-btn bg-surface-sunken text-fg-secondary">
                       <Icon size={16} />
                     </span>
                     <span className="min-w-0 flex-1 text-sm text-fg-muted">{row.label}</span>
@@ -352,7 +352,7 @@ export default function StudentDetail() {
                 onClick={() => setReactionOpen(true)}
                 className="flex flex-col items-center gap-2 rounded-card border border-line bg-[rgba(245,166,35,.08)] p-4 text-center shadow-card transition-shadow hover:shadow-card-hover"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-btn bg-gradient-gold text-accent-fg">
+                <span className="flex h-11 w-11 items-center justify-center rounded-btn bg-surface-sunken text-fg-secondary">
                   <Sparkles size={20} />
                 </span>
                 <span className="text-xs font-semibold leading-tight text-fg">
@@ -433,7 +433,7 @@ export default function StudentDetail() {
                 className={cn(
                   "flex items-center gap-1 rounded-btn border px-3 py-2 text-lg transition-colors",
                   reactionEmoji === reaction.emoji
-                    ? "border-accent bg-gradient-gold"
+                    ? "border-primary bg-primary"
                     : "border-line-strong hover:bg-surface-sunken",
                 )}
               >
@@ -441,7 +441,7 @@ export default function StudentDetail() {
                 <span
                   className={cn(
                     "text-xs font-semibold tabular-nums",
-                    reactionEmoji === reaction.emoji ? "text-accent-fg" : "text-fg-muted",
+                    reactionEmoji === reaction.emoji ? "text-primary-fg" : "text-fg-muted",
                   )}
                 >
                   +{reaction.points}

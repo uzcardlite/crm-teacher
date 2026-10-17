@@ -45,10 +45,10 @@ export default function FirstVisitGuide({ id, steps }) {
       <div
         role="dialog"
         aria-label={step.title}
-        className="w-full max-w-lg rounded-card border border-accent/40 bg-surface-raised p-4 shadow-card-hover"
+        className="w-full max-w-lg rounded-card border border-line bg-surface-raised p-4 shadow-card-hover"
       >
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn bg-gradient-gold text-accent-fg">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn bg-surface-sunken text-fg-secondary">
             <Sparkles size={18} />
           </span>
           <div className="min-w-0 flex-1">

@@ -49,8 +49,9 @@ import {
   MIN_DAILY_GRADE_MAX,
 } from "../../utils/grading";
 import { normalizePrefs, orderNavItems } from "../../utils/tabBarPrefs";
+import PageTitle from "../../components/ui/PageTitle";
 
-const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
+const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-5";
 const APP_VERSION = import.meta.env.VITE_APP_VERSION || "1.0.0";
 
 // Section shell: an icon + title strip over the card body, so the screen reads
@@ -59,7 +60,7 @@ function Section({ icon: Icon, title, description, children }) {
   return (
     <Card padding="p-4">
       <div className="mb-3 flex items-start gap-2.5">
-        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
+        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-btn bg-surface-sunken text-fg-secondary">
           <Icon size={16} />
         </span>
         <div className="min-w-0">
@@ -112,7 +113,7 @@ function ChoiceRow({ options, value, onChange, columns = 3 }) {
             className={cn(
               "flex h-11 items-center justify-center gap-1.5 rounded-btn border px-2 text-sm font-medium transition-colors",
               isActive
-                ? "border-accent bg-accent-light/25 text-accent-dark dark:text-accent"
+                ? "border-primary bg-primary text-primary-fg"
                 : "border-line-strong text-fg-secondary hover:bg-surface-sunken",
             )}
           >
@@ -337,6 +338,7 @@ export default function Settings() {
 
   return (
     <div className={PAGE_CLASS}>
+      <PageTitle title={t("teacher.nav.settings")} />
       {/* Profil */}
       <Section icon={UserIcon} title={t("teacher.settings.profileTitle")}>
         <form onSubmit={handleProfileSubmit} className="flex flex-col gap-4">
@@ -348,7 +350,7 @@ export default function Settings() {
               aria-label={t("teacher.settings.changePhoto")}
             >
               <Avatar photoUrl={photoPreview} name={profileForm.full_name} size="lg" />
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-fg shadow-card">
+              <span className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-fg shadow-card">
                 <Camera size={12} />
               </span>
             </button>
