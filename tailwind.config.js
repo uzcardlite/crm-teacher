@@ -150,6 +150,9 @@ export default {
         "glow-success": "0 8px 18px -8px rgba(16, 185, 129, 0.6)",
         "glow-warning": "0 8px 18px -8px rgba(245, 166, 35, 0.55)",
         "glow-danger": "0 8px 18px -8px rgba(220, 80, 80, 0.55)",
+        // Floating bottom dock and its raised centre button (active = ringed).
+        dock: "0 18px 40px -18px rgba(0, 0, 0, 0.55)",
+        "dock-center-active": "0 0 0 3px rgba(242, 169, 60, 0.35), 0 10px 24px -6px rgba(242, 169, 60, 0.7)",
       },
     },
   },

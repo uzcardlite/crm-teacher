@@ -17,7 +17,12 @@
       "close": "Закрыть",
       "dailyGrades": "Ежедн. оценка",
       "settings": "Настройки",
-      "support": "Техподдержка"
+      "support": "Техподдержка",
+      "short": {
+        "dashboard": "Главная",
+        "recognition": "Поощрения"
+      },
+      "attendanceOwed": "Посещаемость — неотмеченных уроков: {{count}}"
     },
     "common": {
       "save": "Сохранить",

@@ -21,14 +21,13 @@ import {
 // `primary: true` items live in the bottom tab-bar (max 5). The rest are
 // reached through the top-right ☰ menu, so the bar never overflows.
 export const TEACHER_NAV_ITEMS = [
-  { to: "/teacher/dashboard", labelKey: "teacher.nav.dashboard", icon: LayoutDashboard, permission: "teacher_cabinet.view", primary: true },
+  { to: "/teacher/dashboard", labelKey: "teacher.nav.dashboard", shortLabelKey: "teacher.nav.short.dashboard", icon: LayoutDashboard, permission: "teacher_cabinet.view", primary: true },
   { to: "/teacher/exams", labelKey: "teacher.nav.exams", icon: GraduationCap, permission: "teacher_cabinet.grades", primary: true },
-  // Center tab, deliberately: Reaksiya + Do'stlar + Xulq used to be three
-  // separate destinations (two in this bar's overflow, one buried inside
-  // Reactions as a tab) — merged into one, it earns the bar's middle seat.
+  // Reaksiya + Do'stlar + Xulq used to be three separate destinations — merged
+  // into one tab. The dock's raised centre belongs to Davomat (TeacherLayout).
   // `permission` as an array is "any of" — either half of the old feature
   // set is enough to see the tab (see TeacherLayout's allowedTabs filter).
-  { to: "/teacher/recognition", labelKey: "teacher.nav.recognition", icon: Award, permission: ["teacher_cabinet.reactions", "teacher_cabinet.behaviour"], primary: true },
+  { to: "/teacher/recognition", labelKey: "teacher.nav.recognition", shortLabelKey: "teacher.nav.short.recognition", icon: Award, permission: ["teacher_cabinet.reactions", "teacher_cabinet.behaviour"], primary: true },
   { to: "/teacher/attendance", labelKey: "teacher.nav.attendance", icon: CalendarCheck, permission: "teacher_cabinet.attendance", primary: true },
   { to: "/teacher/groups", labelKey: "teacher.nav.groups", icon: UsersRound, permission: "teacher_cabinet.view", primary: true },
   // Chat deliberately has no `primary` flag and is excluded from the drawer:

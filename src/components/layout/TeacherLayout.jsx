@@ -17,7 +17,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useTenantModules } from "../../context/TenantModulesContext";
 import SubscriptionExpired from "../../pages/SubscriptionExpired";
 import { TEACHER_NAV_ITEMS, teacherRouteTitle } from "../../constants/teacherNav";
-import { getChatUnreadCount } from "../../api/teacher";
+import { getChatUnreadCount, getMyAttendanceDiscipline } from "../../api/teacher";
 import { prefetchAllRoutes, prefetchRoute } from "../../utils/prefetch";
 import { SUPPORT_URL, openSupport } from "../../utils/support";
 import { cn } from "../../utils/cn";
@@ -36,6 +36,8 @@ import NotificationBell from "./NotificationBell";
 const CHAT_PATH = "/teacher/chat";
 const SETTINGS_PATH = "/teacher/settings";
 const UNREAD_POLL_MS = 12000;
+// The raised centre button of the dock: the teacher's most frequent action.
+const CENTER_PATH = "/teacher/attendance";
 
 // Mobile-first cabinet shell: a sticky light header + a page container + a
 // fixed bottom tab-bar (there is no desktop sidebar). The whole cabinet is
@@ -49,6 +51,8 @@ export default function TeacherLayout() {
   const { user, logout } = useAuth();
   const { hasPermission } = useTenantModules();
   const [unreadCount, setUnreadCount] = useState(0);
+  // Registers still owed — the badge on the centre "Davomat" button.
+  const [owedCount, setOwedCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const tabBarRef = useRef(null);
 
@@ -81,6 +85,16 @@ export default function TeacherLayout() {
   }, [location.pathname]);
 
   const canChat = hasPermission("teacher_cabinet.chat");
+  const canAttendance = hasPermission("teacher_cabinet.attendance");
+
+  // Refreshed on every page change, so the badge drops as soon as a register
+  // is saved and the teacher moves on.
+  useEffect(() => {
+    if (!canAttendance) return;
+    getMyAttendanceDiscipline()
+      .then((data) => setOwedCount((data?.to_mark?.length ?? 0) + (data?.locked?.length ?? 0)))
+      .catch(() => {});
+  }, [canAttendance, location.pathname]);
 
   // Global unread badge for the chat tab. Polled only when the teacher has the
   // chat permission and only while the tab is visible; same silent-refresh
@@ -137,15 +151,12 @@ export default function TeacherLayout() {
   // Up to 5 primary items in the bottom bar; header-only items (chat) live in
   // the header pill; the rest open from the ☰ menu.
   const primaryTabs = visibleTabs.filter((item) => item.primary).slice(0, 5);
-  // Rag'batlantirish always keeps the bar's centre seat, even for a teacher
-  // whose saved tab order predates it (a stale order otherwise appends any
-  // route missing from it to the end — see utils/tabBarPrefs.js). Re-centring
-  // here means every teacher gets it in the middle without a data migration
-  // to clear everyone's saved order.
-  const recognitionIndex = primaryTabs.findIndex((item) => item.to === "/teacher/recognition");
-  if (recognitionIndex !== -1) {
-    const [recognitionTab] = primaryTabs.splice(recognitionIndex, 1);
-    primaryTabs.splice(Math.floor(primaryTabs.length / 2), 0, recognitionTab);
+  // "Davomat" always takes the dock's raised centre seat, whatever order the
+  // teacher saved in Sozlamalar; the other tabs keep their order around it.
+  const centerIndex = primaryTabs.findIndex((item) => item.to === CENTER_PATH);
+  if (centerIndex !== -1) {
+    const [centerTab] = primaryTabs.splice(centerIndex, 1);
+    primaryTabs.splice(Math.floor(primaryTabs.length / 2), 0, centerTab);
   }
   const moreTabs = visibleTabs.filter((item) => !item.primary && !item.headerOnly);
 
@@ -372,53 +383,99 @@ export default function TeacherLayout() {
         </div>
       )}
 
-      <main>
+      {/* Room for the floating dock and its raised centre button. */}
+      <main className="pb-8">
         {/* Re-keyed on the path so each section fades + lifts in (see index.css). */}
         <div key={location.pathname} className="page-enter">
           <Outlet />
         </div>
       </main>
 
-      <nav ref={tabBarRef} className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/80 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl">
-        <div className="mx-auto flex max-w-lg items-stretch justify-around">
-          {primaryTabs.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onMouseEnter={() => prefetchRoute(item.to)}
-              className={({ isActive }) =>
-                cn(
-                  "u-press-sm relative flex min-w-0 flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px]",
-                  isActive
-                    ? "text-accent-dark dark:text-accent font-semibold"
-                    : "text-fg-muted font-medium hover:text-fg-secondary",
-                )
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  {/* Active tab: the icon rides a gilt gradient pill with a
-                      soft gold glow — a finished, tappable marker rather than a
-                      faint tint. Inactive icons sit flat. */}
-                  <span
-                    className={cn(
-                      "relative flex h-9 w-14 items-center justify-center rounded-full transition-all duration-200",
-                      isActive
-                        ? "bg-gradient-gold text-accent-fg shadow-glow-accent"
-                        : "text-fg-muted",
-                    )}
-                  >
-                    <item.icon size={20} />
-                  </span>
-                  <span className="w-full text-center leading-[1.15] [text-wrap:balance]">
-                    {t(item.labelKey)}
-                  </span>
-                </>
-              )}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
+      {/* Floating dock: inset from the edges, a gilt hairline, and the
+          register ("Davomat") as a raised gilt button with the owed count. */}
+      <div
+        ref={tabBarRef}
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      >
+        <nav
+          aria-label={t("teacher.nav.more")}
+          className="pointer-events-auto mx-auto grid h-[68px] max-w-lg items-center rounded-[24px] border border-accent/25 bg-surface/90 shadow-dock backdrop-blur-xl"
+          style={{ gridTemplateColumns: `repeat(${Math.max(primaryTabs.length, 1)}, minmax(0, 1fr))` }}
+        >
+          {primaryTabs.map((item) => {
+            const label = t(item.shortLabelKey || item.labelKey);
+            if (item.to === CENTER_PATH) {
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onMouseEnter={() => prefetchRoute(item.to)}
+                  aria-label={owedCount ? t("teacher.nav.attendanceOwed", { count: owedCount }) : label}
+                  className="u-press-sm flex flex-col items-center"
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={cn(
+                          "relative -mt-8 flex h-[62px] w-[62px] items-center justify-center rounded-full border-[5px] border-background bg-gradient-gold text-accent-fg transition-shadow",
+                          isActive ? "shadow-dock-center-active" : "shadow-glow-accent",
+                        )}
+                      >
+                        <item.icon size={24} strokeWidth={2.2} />
+                        {owedCount > 0 && (
+                          <span className="absolute -right-2 -top-1.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full border-2 border-background bg-danger px-1.5 text-[11px] font-extrabold leading-none text-white">
+                            {owedCount > 99 ? "99+" : owedCount}
+                          </span>
+                        )}
+                      </span>
+                      <span
+                        className={cn(
+                          "mt-0.5 text-[11px]",
+                          isActive ? "font-extrabold text-accent-dark dark:text-accent" : "font-semibold text-fg-muted",
+                        )}
+                      >
+                        {label}
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+              );
+            }
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onMouseEnter={() => prefetchRoute(item.to)}
+                className={({ isActive }) =>
+                  cn(
+                    "u-press-sm relative flex h-[60px] min-w-0 flex-col items-center justify-center gap-1 transition-colors",
+                    isActive ? "text-accent-dark dark:text-accent" : "text-fg-muted hover:text-fg-secondary",
+                  )
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {/* active marker: a short gilt bar hanging from the top edge */}
+                    <span
+                      aria-hidden="true"
+                      className={cn("absolute top-0 h-[3px] w-[22px] rounded-b", isActive ? "bg-accent" : "bg-transparent")}
+                    />
+                    <item.icon size={22} strokeWidth={isActive ? 2.4 : 1.9} />
+                    <span
+                      className={cn(
+                        "w-full truncate px-0.5 text-center text-[11px]",
+                        isActive ? "font-extrabold" : "font-semibold",
+                      )}
+                    >
+                      {label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 }

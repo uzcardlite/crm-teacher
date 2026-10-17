@@ -17,7 +17,12 @@
       "close": "Yopish",
       "dailyGrades": "Kunlik baho",
       "settings": "Sozlamalar",
-      "support": "Texnik yordam"
+      "support": "Texnik yordam",
+      "short": {
+        "dashboard": "Bosh",
+        "recognition": "Rag'bat"
+      },
+      "attendanceOwed": "Davomat — {{count}} ta belgilanmagan dars"
     },
     "common": {
       "save": "Saqlash",
