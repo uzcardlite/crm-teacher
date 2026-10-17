@@ -5,7 +5,6 @@ import { getMyPayroll, getMyPayrollHistory } from "../../api/payroll";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
 import Input from "../../components/ui/Input";
-import KoshinStar from "../../components/ui/KoshinStar";
 import Skeleton from "../../components/ui/Skeleton";
 import Table from "../../components/ui/Table";
 import { toast } from "../../components/ui/Toast";
@@ -181,11 +180,6 @@ export default function Salary() {
               and a koshin watermark. The eye button masks the figure without
               leaving the page — the amount stays loaded, just hidden. */}
           <div className="relative overflow-hidden rounded-card bg-gradient-feruza px-5 py-5 text-white shadow-card">
-            <KoshinStar
-              size={140}
-              strokeWidth={4}
-              className="pointer-events-none absolute -bottom-12 -right-8 text-accent-light/20"
-            />
             <button
               type="button"
               onClick={() => setAmountVisible((v) => !v)}

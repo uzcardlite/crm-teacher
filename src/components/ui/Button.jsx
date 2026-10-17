@@ -1,11 +1,12 @@
 import { cn } from "../../utils/cn";
 
+// Serious, system-like buttons: one solid primary (black in light, white in
+// dark), a quiet grey secondary, text-only ghost. `brand` is kept as an alias
+// of primary so older call sites need no change.
 const VARIANT_STYLES = {
-  primary: "bg-accent text-accent-dark hover:bg-accent-light",
-  // Gilt gradient for the single most important action on a screen (login,
-  // save attendance, start lesson). Use sparingly — one per screen.
-  brand: "bg-gradient-gold text-accent-fg shadow-glow-accent hover:opacity-95",
-  secondary: "bg-surface border border-line-strong text-fg-secondary hover:bg-surface-sunken",
+  primary: "bg-primary text-primary-fg hover:opacity-90",
+  brand: "bg-primary text-primary-fg hover:opacity-90",
+  secondary: "bg-surface-sunken text-fg hover:bg-line",
   ghost: "bg-transparent text-fg-secondary hover:bg-surface-sunken",
   danger: "bg-danger text-white hover:bg-danger/90",
 };

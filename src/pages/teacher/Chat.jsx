@@ -272,10 +272,6 @@ export default function Chat() {
                 className="relative flex cursor-pointer items-center gap-3 overflow-hidden"
                 onClick={() => navigate(`/teacher/chat/${thread.id}`)}
               >
-                <KoshinStar
-                  size={44}
-                  className="pointer-events-none absolute -right-3 -top-3 text-accent/[0.06]"
-                />
                 <Avatar photoUrl={thread.photo_url} name={thread.student_full_name} size="sm" />
                 <div className="min-w-0 flex-1">
                   <p

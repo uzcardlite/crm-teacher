@@ -1,5 +1,4 @@
 import Button from "./Button";
-import KoshinStar from "./KoshinStar";
 import { cn } from "../../utils/cn";
 
 // size="md" (default) — page-level empty state.
@@ -33,13 +32,6 @@ export default function EmptyState({
       )}
     >
       {/* Faint national watermark tying every empty screen to the brand. */}
-      {size !== "sm" && (
-        <KoshinStar
-          size={132}
-          strokeWidth={4}
-          className="pointer-events-none absolute -right-10 -top-10 text-accent/[0.05]"
-        />
-      )}
       {Icon && (
         <span
           className={cn(

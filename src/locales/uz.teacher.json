@@ -64,6 +64,32 @@
         "tilesBody": "Guruhlar, o'quvchilar va bu oy nechta darsda davomat olingani (masalan 18/22). Plitkani bossangiz, tegishli bo'lim ochiladi.",
         "owedTitle": "Belgilanmagan darslar",
         "owedBody": "Davomati olinmagan darslar shu yerda. Birinchi 3 tasi ko'rinadi, qolganini «Yana» bilan ochasiz."
+      },
+      "todayLabel": "Bugun",
+      "weekSchedule": "Haftalik jadval",
+      "now": "Hozir",
+      "next": "Keyingi dars",
+      "leftShort": "{{time}} qoldi",
+      "inShort": "{{time}}dan keyin",
+      "week": "Hafta",
+      "state": {
+        "done": "Belgilangan",
+        "late": "Kech belgilangan",
+        "missed": "Belgilanmagan",
+        "pending": "Kutilmoqda",
+        "live": "Hozir",
+        "upcoming": "Keyin"
+      },
+      "attention": "E'tibor bering",
+      "owed": "Belgilanmagan darslar",
+      "birthday": "Tug'ilgan kun",
+      "guide3": {
+        "heroTitle": "Hozirgi dars",
+        "heroBody": "Yuqoridagi karta hozirgi yoki keyingi darsingizni, qancha vaqt qolganini ko'rsatadi. «Davomat olish» kerakli guruh va sanani ochadi.",
+        "listTitle": "Bugungi jadval",
+        "listBody": "Bugungi darslar vaqt bo'yicha. O'ng tomonda holati: belgilangan, hozir yoki keyin.",
+        "owedTitle": "E'tibor bering",
+        "owedBody": "Belgilanmagan darslar, o'quvchilarning tug'ilgan kunlari va tez-tez kerak bo'ladigan bo'limlar shu ro'yxatda."
       }
     },
     "groups": {
@@ -124,7 +150,15 @@
         "tooOld": "Muddati o'tgan",
         "showMore": "Yana {{n}} ta",
         "showLess": "Yig'ish"
-      }
+      },
+      "short": {
+        "present": "Bor",
+        "late": "Kech",
+        "absent": "Yo'q",
+        "unmarked": "Belgilanmagan"
+      },
+      "allPresent": "Hammasi keldi",
+      "studentsTitle": "O'quvchilar"
     },
     "exams": {
       "groupsError": "Guruhlarni yuklab bo'lmadi",

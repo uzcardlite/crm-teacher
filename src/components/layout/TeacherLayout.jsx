@@ -30,7 +30,6 @@ import {
 } from "../../utils/appearance";
 import { applyTabBarPrefs } from "../../utils/tabBarPrefs";
 import Avatar from "../ui/Avatar";
-import KoshinStar from "../ui/KoshinStar";
 import NotificationBell from "./NotificationBell";
 
 const CHAT_PATH = "/teacher/chat";
@@ -181,9 +180,7 @@ export default function TeacherLayout() {
     // through the gaps between cards (see index.css). Surfaces paint their own
     // backgrounds on top.
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/80 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] shadow-card backdrop-blur-xl">
-        {/* National accent: a koshin star in a soft amber chip next to the page
-            title — a quiet, consistent brand cue across every screen. */}
+      <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-background/85 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-xl">
         <div className="flex min-w-0 items-center gap-2.5">
           <button
             type="button"
@@ -193,9 +190,6 @@ export default function TeacherLayout() {
           >
             <Menu size={20} />
           </button>
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-btn bg-accent-light/25 text-accent-dark dark:text-accent">
-            <KoshinStar size={15} strokeWidth={7} />
-          </span>
           {teacherRouteTitle(location.pathname, t) && (
             <h1 className="truncate text-base font-semibold text-fg">
               {teacherRouteTitle(location.pathname, t)}
@@ -216,7 +210,7 @@ export default function TeacherLayout() {
                   ? t("teacher.chatButton.ariaUnread", { count: unreadCount })
                   : t("teacher.chatButton.aria")
               }
-              className="u-press relative flex items-center gap-1.5 rounded-full bg-accent-light/30 py-1.5 pl-3 pr-3.5 text-accent-dark hover:bg-accent-light/50 dark:bg-accent/15 dark:text-accent-light dark:hover:bg-accent/25"
+              className="u-press relative flex items-center gap-1.5 rounded-full bg-surface-sunken py-1.5 pl-3 pr-3.5 text-fg hover:bg-line"
             >
               <MessageCircle size={18} />
               <span className="text-sm font-semibold">{t("teacher.chatButton.label")}</span>
@@ -245,29 +239,21 @@ export default function TeacherLayout() {
             onClick={() => setMenuOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-surface shadow-card">
-            {/* Profile header: glazed-feruza tile panel with a gilt koshin
-                watermark — the gold-on-turquoise pairing of a madrasa portal. */}
-            <div className="relative overflow-hidden bg-gradient-feruza px-4 pb-4 pt-4 text-white">
-              <KoshinStar
-                size={110}
-                strokeWidth={4}
-                className="pointer-events-none absolute -right-8 -top-8 text-accent-light/25"
-              />
+            {/* Profile header: a quiet grey panel with the teacher's identity. */}
+            <div className="relative overflow-hidden border-b border-line bg-surface-sunken px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] text-fg">
               <div className="flex items-start justify-between">
-                <span className="rounded-full bg-white/15 p-1">
-                  <Avatar photoUrl={user?.photo_url} name={user?.full_name} size="lg" />
-                </span>
+                <Avatar photoUrl={user?.photo_url} name={user?.full_name} size="lg" />
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
                   aria-label={t("teacher.nav.close")}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/15"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-line"
                 >
                   <X size={18} />
                 </button>
               </div>
               <p className="mt-3 truncate text-base font-semibold">{user?.full_name}</p>
-              <p className="truncate text-xs text-white/85">
+              <p className="truncate text-xs text-fg-muted">
                 {t("profile.roles.teacher")}
               </p>
             </div>
@@ -283,7 +269,7 @@ export default function TeacherLayout() {
                       cn(
                         drawerRowClass,
                         isActive
-                          ? "bg-accent-light/20 text-accent-dark"
+                          ? "bg-surface-sunken font-semibold text-fg"
                           : "text-fg-secondary hover:bg-surface-sunken",
                       )
                     }
@@ -391,15 +377,15 @@ export default function TeacherLayout() {
         </div>
       </main>
 
-      {/* Floating dock: inset from the edges, a gilt hairline, and the
-          register ("Davomat") as a raised gilt button with the owed count. */}
+      {/* Floating dock: inset from the edges, hairline border, and the register
+          ("Davomat") as a raised primary button carrying the owed count. */}
       <div
         ref={tabBarRef}
         className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
         <nav
           aria-label={t("teacher.nav.more")}
-          className="pointer-events-auto mx-auto grid h-[68px] max-w-lg items-center rounded-[24px] border border-accent/25 bg-surface/90 shadow-dock backdrop-blur-xl"
+          className="pointer-events-auto mx-auto grid h-[66px] max-w-lg items-center rounded-[22px] border border-line bg-surface/90 shadow-dock backdrop-blur-xl"
           style={{ gridTemplateColumns: `repeat(${Math.max(primaryTabs.length, 1)}, minmax(0, 1fr))` }}
         >
           {primaryTabs.map((item) => {
@@ -417,8 +403,8 @@ export default function TeacherLayout() {
                     <>
                       <span
                         className={cn(
-                          "relative -mt-8 flex h-[62px] w-[62px] items-center justify-center rounded-full border-[5px] border-background bg-gradient-gold text-accent-fg transition-shadow",
-                          isActive ? "shadow-dock-center-active" : "shadow-glow-accent",
+                          "relative -mt-7 flex h-[58px] w-[58px] items-center justify-center rounded-full border-4 border-background bg-primary text-primary-fg transition-shadow",
+                          isActive && "ring-2 ring-accent ring-offset-2 ring-offset-background",
                         )}
                       >
                         <item.icon size={24} strokeWidth={2.2} />
@@ -431,7 +417,7 @@ export default function TeacherLayout() {
                       <span
                         className={cn(
                           "mt-0.5 text-[11px]",
-                          isActive ? "font-extrabold text-accent-dark dark:text-accent" : "font-semibold text-fg-muted",
+                          isActive ? "font-semibold text-fg" : "font-medium text-fg-muted",
                         )}
                       >
                         {label}
@@ -449,22 +435,17 @@ export default function TeacherLayout() {
                 className={({ isActive }) =>
                   cn(
                     "u-press-sm relative flex h-[60px] min-w-0 flex-col items-center justify-center gap-1 transition-colors",
-                    isActive ? "text-accent-dark dark:text-accent" : "text-fg-muted hover:text-fg-secondary",
+                    isActive ? "text-fg" : "text-fg-faint hover:text-fg-secondary",
                   )
                 }
               >
                 {({ isActive }) => (
                   <>
-                    {/* active marker: a short gilt bar hanging from the top edge */}
-                    <span
-                      aria-hidden="true"
-                      className={cn("absolute top-0 h-[3px] w-[22px] rounded-b", isActive ? "bg-accent" : "bg-transparent")}
-                    />
                     <item.icon size={22} strokeWidth={isActive ? 2.4 : 1.9} />
                     <span
                       className={cn(
                         "w-full truncate px-0.5 text-center text-[11px]",
-                        isActive ? "font-extrabold" : "font-semibold",
+                        isActive ? "font-semibold" : "font-medium",
                       )}
                     >
                       {label}

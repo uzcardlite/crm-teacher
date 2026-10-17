@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Check, CheckCheck, Clock, X } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import {
   bulkMarkMyAttendance,
   listMyAttendance,
@@ -14,7 +14,6 @@ import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import EmptyState from "../../components/ui/EmptyState";
 import DateInput from "../../components/ui/DateInput";
-import Select from "../../components/ui/Select";
 import Skeleton from "../../components/ui/Skeleton";
 import { toast } from "../../components/ui/Toast";
 import { getErrorMessage } from "../../utils/apiError";
@@ -23,25 +22,9 @@ import { cn } from "../../utils/cn";
 // Same three-state config (and exact token classes) as the admin
 // DailyAttendance, so marking looks identical across cabinets.
 const STATUS_CONFIG = {
-  present: {
-    labelKey: "growth.attendance.statusPresent",
-    icon: Check,
-    activeClass: "border-success bg-success text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-success-bg",
-  },
-  absent: {
-    labelKey: "growth.attendance.statusAbsent",
-    icon: X,
-    activeClass: "border-danger bg-danger text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-danger-bg",
-  },
-  late: {
-    labelKey: "growth.attendance.statusLate",
-    icon: Clock,
-    // Amber "warning", not the gold accent — gold stays the action colour.
-    activeClass: "border-warning bg-warning text-white",
-    idleClass: "border-line-strong text-fg-muted hover:bg-warning-bg",
-  },
+  present: { labelKey: "growth.attendance.statusPresent", activeClass: "bg-success text-white shadow-card" },
+  late: { labelKey: "growth.attendance.statusLate", activeClass: "bg-warning text-white shadow-card" },
+  absent: { labelKey: "growth.attendance.statusAbsent", activeClass: "bg-danger text-white shadow-card" },
 };
 
 const PAGE_CLASS = "mx-auto max-w-lg space-y-4 px-4 pb-24 pt-4";
@@ -75,7 +58,10 @@ export default function Attendance() {
 
   useEffect(() => {
     listMyGroups()
-      .then(setGroups)
+      .then((list) => {
+        setGroups(list);
+        setGroupId((current) => current || (list[0] ? String(list[0].id) : ""));
+      })
       .catch((error) => toast.error(getErrorMessage(error, t("teacher.attendance.groupsError"))));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -137,6 +123,24 @@ export default function Attendance() {
     }
   }
 
+  const selectedGroup = groups.find((group) => String(group.id) === String(groupId));
+  const counts = { present: 0, late: 0, absent: 0 };
+  roster.forEach((student) => {
+    const status = attendanceMap[student.student_id];
+    if (status) counts[status] += 1;
+  });
+  const unmarked = roster.length - counts.present - counts.late - counts.absent;
+
+  function markAllPresent() {
+    setAttendanceMap((prev) => {
+      const next = { ...prev };
+      roster.forEach((student) => {
+        if (!next[student.student_id]) next[student.student_id] = "present";
+      });
+      return next;
+    });
+  }
+
   return (
     <div className={PAGE_CLASS}>
       <UnmarkedBanner
@@ -147,53 +151,54 @@ export default function Attendance() {
         }}
       />
 
-      <div className="flex flex-col gap-3">
-        <Select
-          label={t("teacher.attendance.groupLabel")}
-          className="w-full"
-          value={groupId}
-          onChange={(event) => setGroupId(event.target.value)}
-          disabled={groups.length === 0}
+      {/* Group switch: a system-style segmented strip (scrolls when long). */}
+      {groups.length > 0 && (
+        <div
+          role="tablist"
+          aria-label={t("teacher.attendance.groupLabel")}
+          className="flex gap-0.5 overflow-x-auto rounded-[10px] bg-surface-sunken p-0.5"
         >
-          <option value="">
-            {groups.length === 0
-              ? t("teacher.attendance.noGroups")
-              : t("teacher.attendance.selectGroup")}
-          </option>
-          {groups.map((group) => (
-            <option key={group.id} value={group.id}>
-              {group.name}
-            </option>
-          ))}
-        </Select>
-        <DateInput
-          label={t("teacher.attendance.dateLabel")}
-          className="w-full"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
-      </div>
+          {groups.map((group) => {
+            const active = String(group.id) === String(groupId);
+            return (
+              <button
+                key={group.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setGroupId(String(group.id))}
+                className={cn(
+                  "h-9 min-w-[30%] flex-1 shrink-0 truncate rounded-lg px-3 text-[13px] transition-colors",
+                  active ? "bg-surface font-semibold text-fg shadow-card" : "font-medium text-fg-secondary",
+                )}
+              >
+                {group.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <DateInput
+        label={t("teacher.attendance.dateLabel")}
+        className="w-full"
+        value={date}
+        onChange={(event) => setDate(event.target.value)}
+      />
 
       {!groupId ? (
         <EmptyState
           size="md"
           icon={CheckCheck}
-          title={t("teacher.attendance.selectGroupTitle")}
+          title={groups.length === 0 ? t("teacher.attendance.noGroups") : t("teacher.attendance.selectGroupTitle")}
           description={t("teacher.attendance.selectGroupDescription")}
         />
       ) : loadingDaily ? (
         <Card padding="p-0" className="overflow-hidden">
           {Array.from({ length: 5 }).map((_, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-0"
-            >
+            <div key={index} className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-0">
               <Skeleton className="h-4 w-32" />
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-8 w-12 rounded-btn" />
-                <Skeleton className="h-8 w-12 rounded-btn" />
-                <Skeleton className="h-8 w-12 rounded-btn" />
-              </div>
+              <Skeleton className="h-8 w-36 rounded-lg" />
             </div>
           ))}
         </Card>
@@ -206,29 +211,46 @@ export default function Attendance() {
         />
       ) : (
         <>
+          {/* Summary: one row of counts, like a system stats strip. */}
+          <Card padding="p-0" className="grid grid-cols-4 py-3.5">
+            {[
+              ["present", counts.present, "text-success"],
+              ["late", counts.late, "text-warning"],
+              ["absent", counts.absent, "text-danger"],
+              ["unmarked", unmarked, "text-fg-muted"],
+            ].map(([key, value, tone], index) => (
+              <div key={key} className={cn("text-center", index > 0 && "border-l border-line")}>
+                <p className={cn("text-[22px] font-bold tabular-nums", tone)}>{value}</p>
+                <p className="mt-0.5 text-xs text-fg-muted">{t(`teacher.attendance.short.${key}`)}</p>
+              </div>
+            ))}
+          </Card>
+
+          <div className="flex items-baseline justify-between px-1">
+            <p className="text-[13px] uppercase tracking-wide text-fg-muted">
+              {selectedGroup ? selectedGroup.name : t("teacher.attendance.studentsTitle")}
+            </p>
+            {unmarked > 0 && (
+              <button type="button" onClick={markAllPresent} className="min-h-[36px] text-[15px] text-accent-dark dark:text-accent">
+                {t("teacher.attendance.allPresent")}
+              </button>
+            )}
+          </div>
+
           <Card padding="p-0" className="overflow-hidden">
-            <ul className="divide-y divide-line">
-              {roster.map((student) => {
+            <ul>
+              {roster.map((student, index) => {
                 const currentStatus = attendanceMap[student.student_id];
                 return (
                   <li
                     key={student.student_id}
-                    className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+                    className={cn("flex items-center gap-3 py-2.5 pl-4 pr-3", index > 0 && "border-t border-line")}
                   >
-                    <span className="flex min-w-0 items-center gap-2">
-                      <Avatar
-                        photoUrl={student.photo_url}
-                        name={student.student_full_name}
-                        size="sm"
-                        zoomOnHover
-                      />
-                      <span className="truncate text-sm font-medium text-fg-secondary">
-                        {student.student_full_name}
-                      </span>
-                    </span>
-                    <div className="flex items-center gap-2">
+                    <Avatar photoUrl={student.photo_url} name={student.student_full_name} size="sm" zoomOnHover />
+                    <span className="min-w-0 flex-1 truncate text-base text-fg">{student.student_full_name}</span>
+                    {/* Bor / Kech / Yo'q — one segmented control per student */}
+                    <span className="grid shrink-0 grid-cols-3 gap-0.5 rounded-[9px] bg-surface-sunken p-0.5">
                       {Object.entries(STATUS_CONFIG).map(([status, config]) => {
-                        const Icon = config.icon;
                         const isActive = currentStatus === status;
                         return (
                           <button
@@ -236,23 +258,23 @@ export default function Attendance() {
                             type="button"
                             onClick={() => setStatus(student.student_id, status)}
                             aria-label={t(config.labelKey)}
+                            aria-pressed={isActive}
                             className={cn(
-                              "flex items-center gap-1.5 rounded-btn border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                              isActive ? config.activeClass : config.idleClass,
+                              "h-8 w-11 rounded-[7px] text-xs font-semibold transition-colors",
+                              isActive ? config.activeClass : "text-fg-muted",
                             )}
                           >
-                            <Icon size={14} />
-                            <span className="hidden sm:inline">{t(config.labelKey)}</span>
+                            {t(`teacher.attendance.short.${status}`)}
                           </button>
                         );
                       })}
-                    </div>
+                    </span>
                   </li>
                 );
               })}
             </ul>
           </Card>
-          <Button className="w-full" onClick={handleSave} disabled={saving}>
+          <Button className="h-12 w-full text-base" onClick={handleSave} disabled={saving}>
             {saving ? t("teacher.common.saving") : t("teacher.common.save")}
           </Button>
         </>

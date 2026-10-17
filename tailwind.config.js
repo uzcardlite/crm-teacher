@@ -16,6 +16,11 @@ export default {
           border: "#292F40",
         },
         background: "rgb(var(--page-bg) / <alpha-value>)",
+        // The single primary action colour (black in light, white in dark).
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          fg: "rgb(var(--on-primary) / <alpha-value>)",
+        },
         surface: {
           DEFAULT: "rgb(var(--surface) / <alpha-value>)",
           raised: "rgb(var(--surface-raised) / <alpha-value>)",
@@ -90,33 +95,33 @@ export default {
       borderRadius: {
         // Softer, more modern radii — cards and controls read as tactile
         // "pebbles" rather than sharp panels (iOS / Telegram feel).
-        card: "18px",
+        card: "16px",
         btn: "12px",
       },
       backgroundImage: {
-        "gradient-blue": "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
-        "gradient-green": "linear-gradient(135deg, #10B981 0%, #0F6E56 100%)",
-        "gradient-orange": "linear-gradient(135deg, #CE7C0E 0%, #8A4E08 100%)",
-        "gradient-purple": "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)",
-        "gradient-rose": "linear-gradient(135deg, #FB7185 0%, #BE123C 100%)",
-        "gradient-teal": "linear-gradient(135deg, #14B8A6 0%, #0F766E 100%)",
+        "gradient-blue": "linear-gradient(#0A84FF, #0A84FF)",
+        "gradient-green": "linear-gradient(#248A3D, #248A3D)",
+        "gradient-orange": "linear-gradient(#C27C0E, #C27C0E)",
+        "gradient-purple": "linear-gradient(#5E5CE6, #5E5CE6)",
+        "gradient-rose": "linear-gradient(#D70015, #D70015)",
+        "gradient-teal": "linear-gradient(#0F766E, #0F766E)",
         // Brand gradients for the redesign: warm gilt and glazed feruza. Used
         // on the primary action, the salary hero, and stat cards.
-        "gradient-gold": "linear-gradient(135deg, #FFCE63 0%, #F2A11F 100%)",
+        "gradient-gold": "linear-gradient(#E8A33A, #E8A33A)",
         // Deep glazed feruza — dark enough that white text stays legible
         // across the whole sweep (the bright mint it started as failed WCAG on
         // its light end), and closer to real Samarkand tile besides.
-        "gradient-feruza": "linear-gradient(135deg, #12897F 0%, #0B5F58 100%)",
-        "gradient-clay": "linear-gradient(135deg, #D98552 0%, #B0532A 100%)",
+        "gradient-feruza": "linear-gradient(#0F766E, #0F766E)",
+        "gradient-clay": "linear-gradient(#B85B30, #B85B30)",
         // Dark-mode stat gradients, brightened one step for a more vivid,
         // premium read while white text stays AA on the lighter (top-left)
         // stop.
-        "gradient-blue-dark": "linear-gradient(135deg, #2653C9 0%, #1B3A8F 100%)",
-        "gradient-green-dark": "linear-gradient(135deg, #07724F 0%, #0A5540 100%)",
-        "gradient-orange-dark": "linear-gradient(135deg, #A85A0C 0%, #713A08 100%)",
-        "gradient-purple-dark": "linear-gradient(135deg, #6A2CC4 0%, #4A1C93 100%)",
-        "gradient-rose-dark": "linear-gradient(135deg, #A81745 0%, #7A0F2C 100%)",
-        "gradient-teal-dark": "linear-gradient(135deg, #147067 0%, #124F4A 100%)",
+        "gradient-blue-dark": "linear-gradient(#0A84FF, #0A84FF)",
+        "gradient-green-dark": "linear-gradient(#30D158, #30D158)",
+        "gradient-orange-dark": "linear-gradient(#C27C0E, #C27C0E)",
+        "gradient-purple-dark": "linear-gradient(#5E5CE6, #5E5CE6)",
+        "gradient-rose-dark": "linear-gradient(#FF453A, #FF453A)",
+        "gradient-teal-dark": "linear-gradient(#0F766E, #0F766E)",
         // Girih tile: two overlapping squares (one rotated 45°) forming an
         // eight-pointed star outline. This is the ONLY place a raw hex is
         // allowed in the design system (accent #F5A623 at 6% opacity).
@@ -129,14 +134,9 @@ export default {
         // Pairing a serif display with the sans UI is what carries the
         // "milliy + zamonaviy" idea. System stack — no webfont to load, and
         // every face here covers Latin + Cyrillic (uz/ru).
-        display: [
-          "Iowan Old Style",
-          "Palatino Linotype",
-          "Palatino",
-          "Book Antiqua",
-          "Georgia",
-          "serif",
-        ],
+        // One typeface everywhere; `font-display` stays as an alias so
+        // existing headings simply render in Inter.
+        display: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       boxShadow: {
         // Card depth + a top light edge, both theme-aware via CSS variables
